@@ -9,7 +9,12 @@ CC				=		gcc
 
 SERVER_NAME		=		zappy_server
 
-SRC_SERVER		=		src_server/server.c
+SRC_SERVER		=		src_server/server/server.c \
+						src_server/server/handle_client.c \
+						src_server/server/handle_communication.c \
+						src_server/server/manage_server.c \
+						src_server/server/manage_init.c \
+						src_server/server/manage_data_send.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 
