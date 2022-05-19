@@ -44,4 +44,4 @@ jobs:
         password: ${{secrets.MAIL_PASSWORD}}
         to: nicolas.moreau@epitech.eu
         from: NilexBot
-        body: "Compilation was failed"%
+        body: "Compilation was failed"
