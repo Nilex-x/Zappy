@@ -10,7 +10,7 @@
 void init_buffer(buffer_t *buff, int length_command)
 {
     for (int i = 0; i < length_command; i++)
-       buff->buffer[i] = '\0';
+        buff->buffer[i] = '\0';
     buff->rdonly = buff->buffer;
     buff->wronly = buff->buffer;
 }
@@ -41,14 +41,14 @@ char *read_to_buffer(buffer_t *buff, char end_of_line, int length_max)
     value = malloc(sizeof(char) * (len + 2));
     if (!value)
         return (NULL);
-    for (; buff->rdonly[0] != end_of_line && i < length_max; buff->rdonly++, i++) {
+    for (; buff->rdonly[0] != end_of_line && i < length_max; i++) {
         if ((buff->rdonly - buff->buffer) == length_max)
             buff->rdonly = buff->buffer;
         value[i] = buff->rdonly[0];
         buff->rdonly[0] = '\0';
         value[i + 1] = '\n';
+        buff->rdonly++,
     }
-    value[i] = '\n';
     value[i + 1] = '\0';
     buff->rdonly++;
     return (value);

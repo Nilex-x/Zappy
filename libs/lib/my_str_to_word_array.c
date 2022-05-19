@@ -12,7 +12,8 @@ int count_arg(char *str)
     int separator = 0;
 
     for (int i = 0; str[i]; i++) {
-        if ((str[i] == ' ' || str[i] == '\t') && (str[i + 1] != ' ' && str[i + 1] != '\t'))
+        if ((str[i] == ' ' || str[i] == '\t') && \
+            (str[i + 1] != ' ' && str[i + 1] != '\t'))
             separator++;
     }
     return (separator);
