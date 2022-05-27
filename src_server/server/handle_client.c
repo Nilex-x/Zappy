@@ -39,6 +39,7 @@ client_t *add_client(server_t *info, int client)
     node->prev = temp;
     node->next = NULL;
     node->status = READ;
+    node->data_send = NULL;
     node->isQuit = false;
     init_buff_client(node);
     return (node);
@@ -73,22 +74,15 @@ void remove_client(server_t *info, int client)
 
 void accept_connect(server_t *info)
 {
-    printf("accept_connect\n");
     struct sockaddr_in client;
     socklen_t len = sizeof(struct sockaddr_in);
     client_t *new_client = NULL;
     int incomming_fd = accept(info->fd_server, (struct sockaddr *) &client, \
                                 &len);
-    printf("a\n");
     FD_SET(incomming_fd, &info->wfds);
-    printf("b\n");
     new_client = add_client(info, incomming_fd);
-    printf("c\n");
     new_client->data_send = add_send(new_client->data_send,"220\n");
-    printf("d\n");
     new_client->status = WRITE;
-    printf("e\n");
     if (incomming_fd > info->max_fd)
         info->max_fd = incomming_fd;
-    printf("f\n");
 }

@@ -17,9 +17,13 @@
     #include <netinet/ip.h>
 
     #define NB_LISTEN 32
-    #define WRITE 0
-    #define READ 1
     #define LENGTH_COMMAND 512
+
+typedef enum client_status {
+    WRITE,
+    READ,
+    EXECPT
+} status_e;
 
 typedef struct data_send_s {
     char *data;

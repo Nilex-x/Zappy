@@ -43,13 +43,13 @@ compil_server: $(OBJ_SERVER)
 compil_client: $(OBJ_CLIENT)
 	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB)
 
-debug:compil_lib debug_server debug_client
+debug: compil_lib debug_server debug_client
 
-debug_server: $(OBJ_SERV)
-	$(CC) -o $(SERV_NAME) $(OBJ_SERV) -I$(HEADER_DIR) -L$(LIB_PATH) -l$(NAME_LIB) -g3
+debug_server: $(OBJ_SERVER)
+	$(CC) -o $(SERVER_NAME) $(OBJ_SERVER) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB) -g3
 
 debug_client: $(OBJ_CLIENT)
-	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) -I$(HEADER_DIR) -L$(LIB_PATH) -l$(NAME_LIB) -g3
+	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB) -g3
 
 clean:
 	@make clean -C $(LIB_PATH)
