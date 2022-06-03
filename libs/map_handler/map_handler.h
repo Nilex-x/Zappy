@@ -37,6 +37,7 @@
         unsigned int life_left;
         int *inventory;
         direction_t direction;
+        struct tile_s *tile;
         struct trantorians_s *next;
     } trantorians_t;
 
