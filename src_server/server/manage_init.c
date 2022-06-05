@@ -23,17 +23,6 @@ void handle_command(server_t *info, client_t *cli)
         free(value);
         return;
     }
-    if (cli->socket == 0 && strstr(value, "quit")) {
-        free(value);
-        close_server(info);
-    }
-    if (strstr(value, "QUIT")) {
-        free(value);
-        cli->isQuit = true;
-        cli->data_send = add_send(cli->data_send, "304 Goodbye\n");
-        cli->status = WRITE;
-        return;
-    }
     printf("value client [%s]\n", value);
     free(value);
 }
