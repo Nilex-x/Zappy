@@ -8,6 +8,7 @@
 #ifndef SERVER_H_
     #define SERVER_H_
     #include "lib.h"
+    #include "zappy.h"
     #include <stdio.h>
     #include <unistd.h>
     #include <string.h>
@@ -48,7 +49,7 @@ typedef struct server_s
     fd_set wfds;
     fd_set rfds;
     client_t *list_client;
-    struct data_server_s *data;
+    zappy_data_t *data;
 }server_t;
 
 int create_socket(server_t *info);
