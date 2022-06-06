@@ -26,7 +26,6 @@ typedef struct trantorians_s {
     bool is_alive;
     unsigned int life_left;
     int *inventory;
-    unsigned int life_left;
     direction_t direction;
     struct tile_s *tile;
     struct trantorians_s *next;
