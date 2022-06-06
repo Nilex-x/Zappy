@@ -35,14 +35,9 @@
     typedef struct trantorians_s {
         bool is_alive;
         unsigned int life_left;
-        int food;
-        int linemate;
-        int deraumere;
-        int sibur;
-        int mendiane;
-        int phiras;
-        int thystame;
+        int *inventory;
         direction_t direction;
+        struct tile_s *tile;
         struct trantorians_s *next;
     } trantorians_t;
 

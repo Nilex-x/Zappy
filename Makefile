@@ -34,7 +34,7 @@ NAME_LIB		=		zappy
 
 CFLAGS			=		-W -Wall -Wextra -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB)
 
-all: compil_lib compil_server compil_client
+all: compil_lib compil_server
 
 compil_lib:
 	@make -C $(LIB_PATH)
@@ -45,7 +45,7 @@ compil_server: $(OBJ_SERVER)
 compil_client: $(OBJ_CLIENT)
 	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB)
 
-debug: compil_lib debug_server debug_client
+debug: compil_lib debug_server
 
 debug_server: $(OBJ_SERVER)
 	$(CC) -o $(SERVER_NAME) $(OBJ_SERVER) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB) -g3
