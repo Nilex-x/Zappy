@@ -30,9 +30,9 @@ HEADER_PATH		=		include
 
 LIB_PATH		=		libs
 
-NAME_LIB		=		zappy
+CFLAGS			=		-W -Wall -Wextra -I$(HEADER_PATH)
 
-CFLAGS			=		-W -Wall -Wextra -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB)
+LDFLAGS			=		-Llibs -lzappy -lmap
 
 all: compil_lib compil_server
 
@@ -40,18 +40,13 @@ compil_lib:
 	@make -C $(LIB_PATH)
 
 compil_server: $(OBJ_SERVER)
-	$(CC) -o $(SERVER_NAME) $(OBJ_SERVER) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB)
+	$(CC) -o $(SERVER_NAME) $(OBJ_SERVER) $(LDFLAGS)
 
 compil_client: $(OBJ_CLIENT)
-	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB)
+	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) $(LDFLAGS)
 
-debug: compil_lib debug_server
-
-debug_server: $(OBJ_SERVER)
-	$(CC) -o $(SERVER_NAME) $(OBJ_SERVER) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB) -g3
-
-debug_client: $(OBJ_CLIENT)
-	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB) -g3
+debug: CFLAGS += -g3
+debug: compil_lib compil_server
 
 clean:
 	@make clean -C $(LIB_PATH)

@@ -8,6 +8,26 @@
 #ifndef ZAPPY_H_
     #define ZAPPY_H_
 
+    #define bool unsigned int
+    #define true 1
+    #define false 0
+
+typedef enum directions {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+} direction_t;
+
+typedef struct trantorians_s {
+    bool is_alive;
+    unsigned int life_left;
+    int *inventory;
+    direction_t direction;
+    struct tile_s *tile;
+    struct trantorians_s *next;
+} trantorians_t;
+
 typedef struct team_s {
     char *name;
     int player_max;

@@ -16,30 +16,11 @@
     #define PHIRAS_DENSITY 0.08
     #define THYSTAME_DENSITY 0.05
 
-    #define bool unsigned int
-    #define true 1
-    #define false 0
-
     #include <stdlib.h>
+    #include "zappy.h"
 
-    const float density[7] = {FOOD_DENSITY, LINEMATE_DENSITY, DERAUMERE_DENSITY, SIBUR_DENSITY, MENDIANE_DENSITY, PHIRAS_DENSITY, THYSTAME_DENSITY};
-    const char *ressources[7] = {"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
-
-    typedef enum directions {
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST
-    } direction_t;
-
-    typedef struct trantorians_s {
-        bool is_alive;
-        unsigned int life_left;
-        int *inventory;
-        direction_t direction;
-        struct tile_s *tile;
-        struct trantorians_s *next;
-    } trantorians_t;
+    extern const float density[7];
+    extern const char *ressources[7];
 
     typedef struct tile_s {
         size_t x;
