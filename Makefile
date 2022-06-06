@@ -34,7 +34,7 @@ CFLAGS			=		-W -Wall -Wextra -I$(HEADER_PATH)
 
 LDFLAGS			=		-Llibs -lzappy -lmap
 
-all: compil_lib compil_server
+all: compil_lib compil_server compil_client
 
 compil_lib:
 	@make -C $(LIB_PATH)
