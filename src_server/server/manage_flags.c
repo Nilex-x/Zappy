@@ -11,8 +11,7 @@
 int get_name_team(server_t *info, char **name_list, int index)
 {
     while (name_list[index] && name_list[index][0] != '-') {
-        printf("i: %d, value: %s\n", optind, name_list[index]);
-        create_team(name_list[index], info->data);
+        create_team(name_list[index], &info->data);
         index++;
     }
     return (0);
@@ -25,16 +24,16 @@ int sort_flags(server_t *info, char **argv, int index, int ret)
             info->port = atoi(argv[index]);
             return (1);
         case 'x':
-            info->data->width = atoi(argv[index]);
+            info->data.width = atoi(argv[index]);
             return (1);
         case 'y':
-            info->data->height = atoi(argv[index]);
+            info->data.height = atoi(argv[index]);
             return (1);
         case 'f':
-            info->data->freq = atoi(argv[index]);
+            info->data.freq = atoi(argv[index]);
             return (1);
         case 'c':
-            info->data->max_teams_player = atoi(argv[index]);
+            info->data.max_teams_player = atoi(argv[index]);
             return (1);
     }
     return (0);
@@ -53,11 +52,10 @@ int init_zappy_data(zappy_data_t *data)
 int handle_flags(server_t *info, int argc, char **argv)
 {
     int ret = getopt(argc, argv, "pxyncf");
-    zappy_data_t *data = info->data;
-    init_zappy_data(info->data);
+    zappy_data_t *data = &info->data;
+    init_zappy_data(&info->data);
 
     while (ret != -1) {
-        printf("ret: %d index: %d, value: %s\n", ret, optind, argv[optind]);
         if (ret == 'n')
             get_name_team(info, argv, optind);
         else

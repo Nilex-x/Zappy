@@ -22,6 +22,8 @@
     extern const float density[7];
     extern const char *ressources[7];
 
+    typedef struct trantorians_s trantorians_t;
+
     typedef struct tile_s {
         size_t x;
         size_t y;

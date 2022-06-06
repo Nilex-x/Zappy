@@ -7,6 +7,7 @@
 
 #include "server.h"
 #include <signal.h>
+#include <stdio.h>
 
 server_t info;
 
@@ -30,7 +31,7 @@ int main(int argc, char **argv)
         return (84);
     }
     handle_flags(&info, argc, argv);
-    map_create(info.data->width, info.data->height);
+    info.data.map = map_create(info.data.width, info.data.height);
     if (create_socket(&info) == -1)
         return (84);
     handler_connection(&info);

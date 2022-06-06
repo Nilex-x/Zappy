@@ -7,10 +7,13 @@
 
 #ifndef ZAPPY_H_
     #define ZAPPY_H_
+    #include "map_handler.h"
 
     #define bool unsigned int
     #define true 1
     #define false 0
+
+typedef struct map_s map_t;
 
 typedef enum directions {
     NORTH,
@@ -41,6 +44,7 @@ typedef struct zappy_data_s {
     int freq;
     int max_teams_player;
     team_t *teams;
+    map_t *map;
 } zappy_data_t;
 
 typedef struct server_s server_t;

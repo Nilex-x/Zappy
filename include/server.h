@@ -49,7 +49,7 @@ typedef struct server_s
     fd_set wfds;
     fd_set rfds;
     client_t *list_client;
-    zappy_data_t *data;
+    zappy_data_t data;
 }server_t;
 
 int create_socket(server_t *info);
