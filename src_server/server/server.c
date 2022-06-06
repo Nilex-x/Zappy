@@ -24,19 +24,15 @@ void print_help(void)
 
 int main(int argc, char **argv)
 {
-    if ((argc == 2 && strcmp(argv[1], "-help") == 0) || argc != 2) {
+    signal(SIGINT, interrupt_sig);
+    if ((argc == 2 && strcmp(argv[1], "-help") == 0)) {
         print_help();
         return (84);
     }
-    info.port = atoi(argv[1]);
-    if (info.port < 1024) {
-        printf("0 to 1024 port number is not allowed to be used\n");
-        return (84);
-    }
-    if (create_socket(&info) == -1)
-        return (84);
-    signal(SIGINT, interrupt_sig);
-    handler_connection(&info);
-    close(info.fd_server);
+    handle_flags(&info, argc, argv);
+    // if (create_socket(&info) == -1)
+    //     return (84);
+    // handler_connection(&info);
+    // close(info.fd_server);
     return (0);
 }

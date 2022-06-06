@@ -14,7 +14,9 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/server/handle_communication.c \
 						src_server/server/manage_server.c \
 						src_server/server/manage_init.c \
-						src_server/server/manage_data_send.c
+						src_server/server/manage_data_send.c \
+						src_server/server/manage_flags.c\
+						src_server/zappy/manage_team.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 
