@@ -54,13 +54,11 @@ clean:
 	@make clean -C $(CLIENT_LIB_PATH)
 	@make clean -C $(LIB_PATH)
 	rm -f $(OBJ_SERV)
-	rm -f $(OBJ_CLIENT)
 
 fclean:
 	@make fclean -C $(LIB_PATH)
 	@make fclean -C $(CLIENT_LIB_PATH)
 	rm -f $(OBJ_SERV)
-	rm -f $(OBJ_CLIENT)
 	rm -f $(SERV_NAME)
 	rm -f $(CLIENT_NAME)
 
