@@ -30,6 +30,7 @@ def mainLoop(myClient):
         serverCommunication(clientLib.client_select(), myClient)
         myClient.writeBuff = input("INPUT: ")
         if (myClient.writeBuff != "wait"):
+            myClient.writeBuff += '\n'
             clientLib.test(myClient.writeBuff.encode('utf-8'))
     return 0
 
