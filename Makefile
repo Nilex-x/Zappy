@@ -20,9 +20,9 @@ OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 
 CLIENT_NAME		=		zappy_ai
 
-SRC_CLIENT		=		src_client/client.c
+SRC_CLIENT		=		src_client/ia/main.py
 
-OBJ_CLIENT		=		$(SRC_CLIENT:.c=.o)
+CLIENT_LIB_PATH	=		src_client/client
 
 HEADER_PATH		=		include
 
@@ -36,12 +36,14 @@ all: compil_lib compil_server compil_client
 
 compil_lib:
 	@make -C $(LIB_PATH)
+	@make -C $(CLIENT_LIB_PATH)
 
 compil_server: $(OBJ_SERVER)
 	$(CC) -o $(SERVER_NAME) $(OBJ_SERVER) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB)
 
-compil_client: $(OBJ_CLIENT)
-	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB)
+compil_client:
+	cp $(SRC_CLIENT) $(CLIENT_NAME)
+	chmod +x $(CLIENT_NAME)
 
 debug: compil_lib debug_server debug_client
 
@@ -52,12 +54,14 @@ debug_client: $(OBJ_CLIENT)
 	$(CC) -o $(CLIENT_NAME) $(OBJ_CLIENT) -I$(HEADER_PATH) -L$(LIB_PATH) -l$(NAME_LIB) -g3
 
 clean:
+	@make clean -C $(CLIENT_LIB_PATH)
 	@make clean -C $(LIB_PATH)
 	rm -f $(OBJ_SERV)
 	rm -f $(OBJ_CLIENT)
 
 fclean:
 	@make fclean -C $(LIB_PATH)
+	@make fclean -C $(CLIENT_LIB_PATH)
 	rm -f $(OBJ_SERV)
 	rm -f $(OBJ_CLIENT)
 	rm -f $(SERV_NAME)
