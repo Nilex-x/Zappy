@@ -7,6 +7,9 @@
 
 #include "map_handler.h"
 
+const float density[7] = {FOOD_DENSITY, LINEMATE_DENSITY, DERAUMERE_DENSITY, SIBUR_DENSITY, MENDIANE_DENSITY, PHIRAS_DENSITY, THYSTAME_DENSITY};
+const char *ressources[7] = {"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
+
 tile_t *init_tile(size_t x, size_t y)
 {
     tile_t *tile = malloc(sizeof(tile_t));

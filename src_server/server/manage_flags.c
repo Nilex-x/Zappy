@@ -36,26 +36,36 @@ int sort_flags(server_t *info, char **argv, int index, int ret)
         case 'c':
             info->data->max_teams_player = atoi(argv[index]);
             return (1);
-        default:
-            return (0);
     }
+    return (0);
+}
+
+int init_zappy_data(zappy_data_t *data)
+{
+    data->freq = 100;
+    data->width = 0;
+    data->height = 0;
+    data->teams = NULL;
+    data->max_teams_player = 0;
+    return (0);
 }
 
 int handle_flags(server_t *info, int argc, char **argv)
 {
-    int ret = getopt(argc, argv, "pxync");
-    bool find = false;
+    int ret = getopt(argc, argv, "pxyncf");
+    zappy_data_t *data = info->data;
+    init_zappy_data(info->data);
 
     while (ret != -1) {
         printf("ret: %d index: %d, value: %s\n", ret, optind, argv[optind]);
-        if (ret == 'n') {
+        if (ret == 'n')
             get_name_team(info, argv, optind);
-        } else if (!find && sort_flags(info, argv, optind, ret) == 0) {
-            fprintf(stderr, "Usage: %s -p port -x width -y height "
-            "-n name1 name2 ... -c clientsNb -f freq\n", argv[0]);
-            exit(84);
-        }
+        else
+            sort_flags(info, argv, optind, ret);
         ret = getopt(argc, argv, "pxyncf");
     }
+    if (data->height == 0 || data->width == 0 || data->max_teams_player == 0
+    || !data->teams)
+        exit(84);
     return (0);
 }
