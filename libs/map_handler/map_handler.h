@@ -34,6 +34,7 @@
 
     typedef struct trantorians_s {
         bool is_alive;
+        size_t lvl;
         unsigned int life_left;
         int *inventory;
         direction_t direction;
