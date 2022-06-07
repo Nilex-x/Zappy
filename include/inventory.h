@@ -11,10 +11,9 @@
     #include <unistd.h>
     #include <string.h>
     #include <stdlib.h>
-    #include <stdbool.h>
-    #include "server.h"
+    #include "zappy.h"
 
-    const char *world_ressources[7] = {"food", "linemate","deraumere","sibur","mendiane","phiras","thystame"};
+    extern const char *ressources[7];
     enum Inventory {
         FOOD,
         LINEMATE,
@@ -24,6 +23,5 @@
         PHIRAS,
         THYSTAME
     };
-
-    void display_inventory(client_t *client);
+    void display_inventory(trantorians_t *trant, char **args, zappy_data_t *data);
 #endif

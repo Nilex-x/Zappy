@@ -5,16 +5,18 @@
 ** inventory.c
 */
 
-#include "server.h"
 #include "inventory.h"
 
-void display_inventory(client_t *client)
+void display_inventory(trantorians_t *trant, char **args, zappy_data_t *data)
 {
-    dprintf(client->socket, "[");
+    (void) data;
+    (void) args;
+
+    printf("[");
     for (int i = 0; i < 8; i++) { 
-        dprintf(client->socket, "%s %d", world_ressources[i], client->inventory[i]);
+        printf("%s %d", ressources[i], trant->inventory[i]);
         if(i+1 != 8)
-            dprintf(client->socket, ", ");
+            printf(", ");
     }
-    dprintf(client->socket, "]\n");
+    printf("]\n");
 }

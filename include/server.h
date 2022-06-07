@@ -8,19 +8,16 @@
 #ifndef SERVER_H_
     #define SERVER_H_
     #include "lib.h"
-    #include "inventory.h"
-    #include <stdio.h>
-    #include <unistd.h>
-    #include <string.h>
-    #include <stdlib.h>
-    #include <stdbool.h>
-    #include <sys/socket.h>
-    #include <netinet/ip.h>
+    #include "zappy.h"
 
     #define NB_LISTEN 32
-    #define WRITE 0
-    #define READ 1
     #define LENGTH_COMMAND 512
+
+typedef enum client_status {
+    WRITE,
+    READ,
+    EXECPT
+} status_e;
 
 typedef struct data_send_s {
     char *data;
@@ -46,7 +43,7 @@ typedef struct server_s
     fd_set wfds;
     fd_set rfds;
     client_t *list_client;
-    struct data_server_s *data;
+    zappy_data_t data;
 }server_t;
 
 typedef struct cmd_s {

@@ -6,6 +6,10 @@
 */
 
 #include "server.h"
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 int read_client(server_t *info, client_t *client)
 {
@@ -20,6 +24,7 @@ int read_client(server_t *info, client_t *client)
         free(read_buffer);
         return (-1);
     }
+    printf("READ: %s\n", read_buffer);
     if (read_value == 0) {
         remove_client(info, client->socket);
         free(read_buffer);

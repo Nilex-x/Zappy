@@ -6,6 +6,8 @@
 */
 
 #include "lib.h"
+#include <stdlib.h>
+#include <string.h>
 
 int get_size_array(char **array)
 {
