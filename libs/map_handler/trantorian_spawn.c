@@ -6,12 +6,14 @@
 */
 
 #include "map_handler.h"
+#include <time.h>
 
 void trantorian_spawn(map_t *map, trantorians_t *trant)
 {
     tile_t *rand_tile = map->tiles[rand() % map->height][rand() % map->width];
     trantorians_t *list = rand_tile->trantorians;
 
+    srand(time(NULL));
     rand_tile->trantorians = trant;
     trant->next = list;
     trant->tile = rand_tile;

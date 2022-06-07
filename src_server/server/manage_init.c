@@ -28,14 +28,15 @@ int add_trantoriant(client_t *cli, server_t *info, char *cmd)
     }
     printf("get team: %s exist: %d\n", cmd, team ? 1 : 0);
     cli->trant = create_add_trantoriant(cli, &info->data);
-    // add spawn tile random
     asprintf(&line, "%d\n", (team->player_max - team->nb_player));
     cli->data_send = add_send(cli->data_send, line);
+    free(line);
     trantorian_spawn(info->data.map, cli->trant);
     add_trantoriant_to_team(cli->trant, team);
     asprintf(&line, "%ld %ld\n", cli->trant->tile->x,  cli->trant->tile->y);
     cli->data_send = add_send(cli->data_send, line);
     free(line);
+    printf("new trant team name: %s x: %ld y: %ld\n", team->name, cli->trant->tile->x, cli->trant->tile->y);
     return (0);
 }
 

@@ -61,7 +61,6 @@ void free_tile(tile_t *tile)
     if (tile == NULL)
         return;
     free(tile->ressources);
-    free(tile->trantorians);
     free(tile);
 }
 
