@@ -7,7 +7,6 @@
 
 #ifndef ZAPPY_H_
     #define ZAPPY_H_
-    #include "map_handler.h"
 
     #define bool unsigned int
     #define true 1

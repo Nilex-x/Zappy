@@ -69,7 +69,7 @@ void free_map(map_t *map)
 {
     for (size_t i = 0; i < map->height; i++) {
         for (size_t j = 0; j < map->width; j++) {
-            free(map->tiles[i][j]);
+            free_tile(map->tiles[i][j]);
         }
         free(map->tiles[i]);
     }

@@ -59,6 +59,13 @@ void write_client(server_t *info, int s_client)
     }
 }
 
+void free_data(zappy_data_t *data)
+{
+    free_teams(data->teams);
+    free_trantorians(data->trants);
+    free_map(data->map);
+}
+
 void close_server(server_t *info)
 {
     client_t *temp = info->list_client;
@@ -69,9 +76,11 @@ void close_server(server_t *info)
     while (temp) {
         next = temp->next;
         free(temp->buff_read);
+        free_data_send(temp->data_send);
         free(temp);
         temp = next;
     }
+    free_data(&info->data);
     close(info->fd_server);
     exit(0);
 }

@@ -8,7 +8,10 @@
 #ifndef SERVER_H_
     #define SERVER_H_
     #include "lib.h"
+    #include "map_handler.h"
     #include "zappy.h"
+
+    #include <sys/select.h>
 
     #define NB_LISTEN 32
     #define LENGTH_COMMAND 512
@@ -66,5 +69,6 @@ void init_data(server_t *info);
 data_send_t *add_send(data_send_t *data_send, char *data);
 char *get_next_data_to_send(data_send_t **data_send);
 size_t get_size_data_to_send(data_send_t *data_send);
+void free_data_send(data_send_t *data_send);
 
 #endif /* !SERVER_H_ */

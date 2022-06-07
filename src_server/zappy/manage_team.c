@@ -7,6 +7,7 @@
 
 #include "zappy.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 team_t *get_team_by_name(char *name, zappy_data_t *data)
@@ -26,6 +27,7 @@ team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team)
     trantorians_list_t *new = NULL;
     trantorians_list_t *temp = team->list;
 
+    printf("add to team\n");
     new = malloc(sizeof(trantorians_list_t));
     if (!new)
         return (NULL);
@@ -63,6 +65,17 @@ team_t *create_team(char *name, zappy_data_t *data)
     return (new);
 }
 
+void free_trant_in_team(trantorians_list_t *list)
+{
+    trantorians_list_t *next = NULL;
+
+    while (list) {
+        next = list->next;
+        free(list);
+        list = next;
+    }
+}
+
 void free_teams(team_t *teams)
 {
     team_t *next = NULL;
@@ -70,6 +83,7 @@ void free_teams(team_t *teams)
     while (teams) {
         next = teams->next;
         free(teams->name);
+        free_trant_in_team(teams->list);
         free(teams);
         teams = next;
     }

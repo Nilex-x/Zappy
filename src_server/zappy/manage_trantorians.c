@@ -35,7 +35,6 @@ void free_trant(trantorians_t *trant)
 
     while (trant) {
         next = trant->next;
-        // free(trant->inventory);
         free(trant);
         trant = next;
     }
