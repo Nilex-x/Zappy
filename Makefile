@@ -58,7 +58,7 @@ clean:
 fclean:
 	@make fclean -C $(LIB_PATH)
 	@make fclean -C $(CLIENT_LIB_PATH)
-	rm -f $(OBJ_SERV)
+	rm -f $(OBJ_SERVER)
 	rm -f $(SERVER_NAME)
 	rm -f $(CLIENT_NAME)
 

@@ -7,10 +7,6 @@
 
 #ifndef LIB_H_
     #define LIB_H_
-    #include <stdlib.h>
-    #include <stdio.h>
-    #include <unistd.h>
-    #include <string.h>
 
 typedef struct buffer_s {
     char buffer[512];

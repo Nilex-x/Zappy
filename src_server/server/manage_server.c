@@ -6,6 +6,9 @@
 */
 
 #include "server.h"
+#include <sys/socket.h>
+#include <netinet/ip.h>
+#include <stdio.h>
 
 void clear_list(server_t *info)
 {

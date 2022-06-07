@@ -6,6 +6,8 @@
 */
 
 #include "lib.h"
+#include <stdlib.h>
+#include <string.h>
 
 void init_buffer(buffer_t *buff, int length_command)
 {
