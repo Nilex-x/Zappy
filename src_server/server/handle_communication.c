@@ -6,6 +6,10 @@
 */
 
 #include "server.h"
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 int read_client(server_t *info, client_t *client)
 {

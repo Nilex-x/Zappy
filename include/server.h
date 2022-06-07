@@ -9,13 +9,6 @@
     #define SERVER_H_
     #include "lib.h"
     #include "zappy.h"
-    #include <stdio.h>
-    #include <unistd.h>
-    #include <string.h>
-    #include <stdlib.h>
-    #include <stdbool.h>
-    #include <sys/socket.h>
-    #include <netinet/ip.h>
 
     #define NB_LISTEN 32
     #define LENGTH_COMMAND 512

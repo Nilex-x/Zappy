@@ -6,6 +6,10 @@
 */
 
 #include "server.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <netinet/ip.h>
 
 void init_client(server_t *info)
 {

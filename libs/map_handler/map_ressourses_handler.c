@@ -6,6 +6,7 @@
 */
 
 #include "map_handler.h"
+#include <stdlib.h>
 
 void update_map_ressources(map_t *map)
 {
