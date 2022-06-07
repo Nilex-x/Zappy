@@ -11,6 +11,7 @@
     #include "map_handler.h"
     #include "zappy.h"
 
+    #include <string.h>
     #include <sys/select.h>
 
     #define NB_LISTEN 32

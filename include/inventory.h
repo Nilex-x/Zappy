@@ -12,6 +12,7 @@
     #include <string.h>
     #include <stdlib.h>
     #include "zappy.h"
+    #include "server.h"
 
     extern const char *ressources[7];
     enum Inventory {

@@ -5,24 +5,30 @@
 ** inventory.c
 */
 
+#define _GNU_SOURCE
 #include "inventory.h"
 
 int display_inventory(trantorians_t *trant, char **args, zappy_data_t *data)
 {
     (void) data;
     (void) args;
-    printf("trant1 %d\n", trant->lvl);
-    fflush(stdout);
-    return 1;
-    printf("trant2 %d\n", trant->inventory[0]);
-    fflush(stdout);
 
-    printf("[");
+
+    char *new_line = NULL;
+    new_line = malloc(500);
+    strcpy(new_line, "[");
+    trant->client->data_send = add_send(trant->client->data_send, "[");
     for (int i = 0; i < 7; i++) { 
-        printf("%s %d", ressources[i], trant->inventory[i]);
+        char *line = NULL;
+        asprintf(&line, "%s %d", ressources[i], trant->inventory[i]);
+        strcat(new_line, line);
+        //trant->client->data_send = add_send(trant->client->data_send, line);
         if(i+1 != 7)
-            printf(", ");
+            strcat(new_line, ", ");
+            //trant->client->data_send = add_send(trant->client->data_send, ", ");
     }
-    printf("]\n");
+    strcat(new_line, "]\n");
+    printf("%s\n", new_line);
+    trant->client->data_send = add_send(trant->client->data_send, new_line);
     return 0;
 }
