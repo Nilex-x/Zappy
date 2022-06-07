@@ -8,6 +8,7 @@
 #ifndef SERVER_H_
     #define SERVER_H_
     #include "lib.h"
+    #include "inventory.h"
     #include <stdio.h>
     #include <unistd.h>
     #include <string.h>
@@ -34,6 +35,7 @@ typedef struct client_s {
     buffer_t *buff_read;
     struct client_s *next;
     struct client_s *prev;
+    int inventory[7];
 } client_t;
 
 typedef struct server_s
@@ -46,6 +48,11 @@ typedef struct server_s
     client_t *list_client;
     struct data_server_s *data;
 }server_t;
+
+typedef struct cmd_s {
+    char *cmd;
+    void (*fct)(client_t *client);
+} cmd_t;
 
 int create_socket(server_t *info);
 int read_client(server_t *info, client_t *client);

@@ -7,6 +7,13 @@
 
 #include "server.h"
 
+static const cmd_t MY_CMDS[] = {
+    {
+        .cmd = "inventory",
+        .fct = &display_inventory
+    }
+};
+
 void init_buff_client(client_t *node)
 {
     node->buff_read = malloc(sizeof(buffer_t));
@@ -34,6 +41,11 @@ void handle_command(server_t *info, client_t *cli)
         cli->status = WRITE;
         return;
     }
+    int cmd_size = sizeof(MY_CMDS) / sizeof(*MY_CMDS);
+
+    for (int pos = 0; pos != cmd_size; pos++)
+        if (strstr(value, MY_CMDS[pos].cmd))
+            MY_CMDS[pos].fct(cli);
     printf("value client [%s]\n", value);
     free(value);
 }
