@@ -7,13 +7,13 @@
 
 #ifndef ZAPPY_H_
     #define ZAPPY_H_
-    #include "map_handler.h"
 
     #define bool unsigned int
     #define true 1
     #define false 0
 
 typedef struct map_s map_t;
+typedef struct client_s client_t;
 
 typedef enum directions {
     NORTH,
@@ -23,19 +23,26 @@ typedef enum directions {
 } direction_t;
 
 typedef struct trantorians_s {
+    int lvl;
     bool is_alive;
     unsigned int life_left;
     int inventory[8];
     direction_t direction;
-    int lvl;
+    client_t *client;
     struct tile_s *tile;
     struct trantorians_s *next;
 } trantorians_t;
+
+typedef struct trantorians_list_s {
+    trantorians_t *trant;
+    struct trantorians_list_s *next;
+} trantorians_list_t;
 
 typedef struct team_s {
     char *name;
     int player_max;
     int nb_player;
+    trantorians_list_t *list;
     struct team_s *next;
 } team_t;
 
@@ -45,6 +52,7 @@ typedef struct zappy_data_s {
     int freq;
     int max_teams_player;
     team_t *teams;
+    trantorians_t *trants;
     map_t *map;
 } zappy_data_t;
 
@@ -70,6 +78,43 @@ int get_name_team(server_t *info, char **name_list, int index);
  * @return int
  */
 int handle_flags(server_t *info, int argc, char **argv);
+
+/**
+ * @brief sort commands
+ *
+ * @param client Client who do command
+ * @param data Data struct
+ * @param cmd Commands
+ * @return int
+ */
+int sort_command(client_t *client, zappy_data_t *data, char *cmd);
+
+/**
+ * @brief Create a add trantoriant struct
+ *
+ * @param cli Client who do command
+ * @param data Data server struct
+ * @return trantorians_t*
+ */
+trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data);
+
+/**
+ * @brief Get the team by name string
+ *
+ * @param name name string
+ * @param data Data server struct
+ * @return team_t*
+ */
+team_t *get_team_by_name(char *name, zappy_data_t *data);
+
+/**
+ * @brief Add trantorians in team
+ *
+ * @param trant Trantorians to add
+ * @param team Team added trantorians
+ * @return team_t*
+ */
+team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team);
 
 /**
  * @brief Create a team struct

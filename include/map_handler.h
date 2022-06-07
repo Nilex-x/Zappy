@@ -47,4 +47,6 @@
     void update_map_ressources(map_t *map);
     void init_map_ressources(map_t *map);
 
+    void trantorian_spawn(map_t *map, trantorians_t *trant);
+
 #endif /* !MAP_HANDLER_H_ */
