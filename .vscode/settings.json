@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "server.h": "c",
+        "map_handler.h": "c"
+    }
+}
