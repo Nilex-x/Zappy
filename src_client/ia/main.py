@@ -32,6 +32,7 @@ class clientInfo:
         run = 1
         while (run > -1):
             run = clientLib.client_select()
+            print(run)
             self.serverCommunication(run)
             self.writeBuff = input("INPUT: ")
             if (self.writeBuff != "wait"):
@@ -65,13 +66,14 @@ def main():
         return 0
     port = int(av[1])
     teamName = av[3]
+    teamName += '\n'
     myIp = av[5].encode('utf-8')
     mySocket = clientLib.create_client(ctypes.c_char_p(myIp), ctypes.c_int(port))
     if (mySocket < 0 or clientLib.init_info(ctypes.c_int(mySocket)) < 0):
         print("failed connection")
         return 84
     myClient = clientInfo(mySocket)
-    # clientLib.test(teamName.encode('utf-8'))
+    clientLib.test(teamName.encode('utf-8'))
     myClient.mainLoop()
     return 0
 
