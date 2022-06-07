@@ -21,13 +21,15 @@ class clientInfo:
         self.posX = -1
         self.posY = -1
 
-    def validateConnection(self):
-        splited = self.readBuff.split()
-        if ((len(splited) == 1) and (splited[0].isdigit())):
-            self.nbClients = int(splited[0])
-        if ((len(splited) == 2) and (splited[0].isdigit()) and (splited[1].isdigit())):
-            self.posX = int(splited[0])
-            self.posY = int(splited[1])
+    def getPosnTeam(self):
+        servMsg = self.readBuff.split("\n")
+        for i in servMsg:
+            splited = i.split()
+            if ((len(splited) == 1) and (splited[0].isdigit())):
+                self.nbClients = int(splited[0])
+            if ((len(splited) == 2) and (splited[0].isdigit()) and (splited[1].isdigit())):
+                self.posX = int(splited[0])
+                self.posY = int(splited[1])
         if (self.nbClients >= 0 and self.posX >= 0 and self.posY >= 0):
             self.connected = 1
 
@@ -38,7 +40,7 @@ class clientInfo:
             self.readBuff = result.value.decode('utf-8')
             print(self.readBuff)
             if (not self.connected):
-                self.validateConnection()
+                self.getPosnTeam()
         return 0
 
     def mainLoop(self):
