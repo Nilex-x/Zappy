@@ -91,13 +91,14 @@ char *look_right(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look(map_t *map, trantorians_t *trant)
+char *look(trantorians_t *trant, char **arg, zappy_data_t *data)
 {
+    (void) arg;
     if (trant->direction == NORTH)
-        return look_up(map, trant);
+        return look_up(data->map, trant);
     if (trant->direction == EAST)
-        return look_right(map, trant);
+        return look_right(data->map, trant);
     if (trant->direction == SOUTH)
-        return look_down(map, trant);
-    return look_left(map, trant);
+        return look_down(data->map, trant);
+    return look_left(data->map, trant);
 }
