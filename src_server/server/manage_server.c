@@ -54,7 +54,6 @@ void find_socket(server_t *info)
 int handler_connection(server_t *info)
 {
     init_client(info);
-    add_client(info, 0);
     while (1) {
         clear_list(info);
         if (select(info->max_fd + 1, &info->rfds, &info->wfds, NULL, NULL) < 0)
