@@ -9,6 +9,38 @@
 #include <stdlib.h>
 #include <string.h>
 
+team_t *get_team_by_name(char *name, zappy_data_t *data)
+{
+    team_t *temp = data->teams;
+
+    while (temp) {
+        if (strcmp(temp->name, name) == 0)
+            return (temp);
+        temp = temp->next;
+    }
+    return (NULL);
+}
+
+team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team)
+{
+    trantorians_list_t *new = NULL;
+    trantorians_list_t *temp = team->list;
+
+    new = malloc(sizeof(trantorians_list_t));
+    if (!new)
+        return (NULL);
+    new->trant = trant;
+    new->next = NULL;
+    if (!team->list)
+        team->list = new;
+    else {
+        while (temp->next)
+            temp = temp->next;
+        temp->next = new;
+    }
+    return (team);
+}
+
 team_t *create_team(char *name, zappy_data_t *data)
 {
     team_t *new = malloc(sizeof(team_t));
@@ -20,6 +52,7 @@ team_t *create_team(char *name, zappy_data_t *data)
     new->nb_player = 0;
     new->player_max = data->max_teams_player;
     new->next = NULL;
+    new->list = NULL;
     if (!data->teams) {
         data->teams = new;
         return (new);

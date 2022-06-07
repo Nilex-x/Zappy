@@ -24,7 +24,6 @@ int read_client(server_t *info, client_t *client)
         free(read_buffer);
         return (-1);
     }
-    printf("READ: %s\n", read_buffer);
     if (read_value == 0) {
         remove_client(info, client->socket);
         free(read_buffer);
@@ -52,6 +51,7 @@ void write_client(server_t *info, int s_client)
         len -= value_write;
         start += w_value;
     }
+    free(data);
     client->status = (get_size_data_to_send(client->data_send)) ? WRITE : READ;
     if (w_value < 0 || client->isQuit) {
         remove_client(info, s_client);

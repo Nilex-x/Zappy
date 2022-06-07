@@ -30,6 +30,7 @@ typedef struct client_s {
     bool isQuit;
     data_send_t *data_send;
     buffer_t *buff_read;
+    trantorians_t *trant;
     struct client_s *next;
     struct client_s *prev;
 } client_t;
