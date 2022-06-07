@@ -5,9 +5,9 @@
 ** handle_move_cmd
 */
 
-#include "map_handler.h"
+#include "server.h"
 
-void move(map_t *map, trantorians_t *trant)
+void move_trantorian(map_t *map, trantorians_t *trant)
 {
     size_t x = trant->tile->x;
     size_t y = trant->tile->y;
@@ -29,4 +29,11 @@ void move(map_t *map, trantorians_t *trant)
     trant->tile = map->tiles[new_x][new_y];
     trant->next = map->tiles[new_x][new_y]->trantorians;
     trant->tile->trantorians = trant;
+}
+
+int move(trantorians_t *trant, char **arg, zappy_data_t *data)
+{
+    move_trantorian(data->map, trant);
+    (void) arg;
+    return 0;
 }
