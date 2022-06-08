@@ -24,7 +24,6 @@ int read_client(server_t *info, client_t *client)
         free(read_buffer);
         return (-1);
     }
-    printf("READ: %s\n", read_buffer);
     if (read_value == 0) {
         remove_client(info, client->socket);
         free(read_buffer);
@@ -52,11 +51,19 @@ void write_client(server_t *info, int s_client)
         len -= value_write;
         start += w_value;
     }
+    free(data);
     client->status = (get_size_data_to_send(client->data_send)) ? WRITE : READ;
     if (w_value < 0 || client->isQuit) {
         remove_client(info, s_client);
         (client->isQuit) ? close(s_client) : 0;
     }
+}
+
+void free_data(zappy_data_t *data)
+{
+    free_teams(data->teams);
+    free_trantorians(data->trants);
+    free_map(data->map);
 }
 
 void close_server(server_t *info)
@@ -69,9 +76,11 @@ void close_server(server_t *info)
     while (temp) {
         next = temp->next;
         free(temp->buff_read);
+        free_data_send(temp->data_send);
         free(temp);
         temp = next;
     }
+    free_data(&info->data);
     close(info->fd_server);
     exit(0);
 }

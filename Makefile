@@ -16,7 +16,9 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/server/manage_init.c \
 						src_server/server/manage_data_send.c \
 						src_server/server/manage_flags.c\
-						src_server/zappy/manage_team.c
+						src_server/zappy/manage_team.c \
+						src_server/zappy/manage_trantorians.c \
+						src_server/zappy/sort_command.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 
@@ -48,7 +50,7 @@ compil_client:
 	chmod +x $(CLIENT_NAME)
 
 debug: CFLAGS += -g3
-debug: compil_lib compil_server
+debug: fclean compil_lib compil_server compil_client
 
 clean:
 	@make clean -C $(CLIENT_LIB_PATH)

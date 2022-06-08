@@ -17,9 +17,9 @@ void clear_list(server_t *info)
     FD_ZERO(&info->wfds);
     FD_ZERO(&info->rfds);
     while (temp) {
-        if (temp->status == READ)
+        if (!temp->data_send)
             FD_SET(temp->socket, &info->rfds);
-        if (temp->status == WRITE)
+        if (temp->data_send)
             FD_SET(temp->socket, &info->wfds);
         temp = temp->next;
     }
