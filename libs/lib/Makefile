@@ -16,7 +16,8 @@ SRC			=		my_str_to_word_array.c \
 					free_array.c \
 					remove_part_of_array.c \
 					strcatdup.c \
-					manage_buffer.c
+					manage_buffer.c \
+					modulo.c
 
 OBJ 		=		$(SRC:.c=.o)
 

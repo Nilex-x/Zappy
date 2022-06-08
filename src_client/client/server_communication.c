@@ -24,6 +24,5 @@ char *read_server(int socket)
         return NULL;
     }
     buff[valread] = '\0';
-    printf("BUFF: %s\n", buff);
     return buff;
 }

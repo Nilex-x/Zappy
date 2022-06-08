@@ -52,3 +52,15 @@ size_t get_size_data_to_send(data_send_t *data_send)
     }
     return size;
 }
+
+void free_data_send(data_send_t *data_send)
+{
+    data_send_t *next = NULL;
+
+    while (data_send) {
+        next = data_send->next;
+        free(data_send->data);
+        free(data_send);
+        data_send = next;
+    }
+}
