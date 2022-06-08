@@ -7,7 +7,7 @@
 
 #include "server.h"
 
-char *look_up(map_t *map, trantorians_t *trant)
+static char *look_up(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
@@ -28,7 +28,7 @@ char *look_up(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look_down(map_t *map, trantorians_t *trant)
+static char *look_down(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
@@ -49,7 +49,7 @@ char *look_down(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look_left(map_t *map, trantorians_t *trant)
+static char *look_left(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
@@ -70,7 +70,7 @@ char *look_left(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look_right(map_t *map, trantorians_t *trant)
+static char *look_right(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
@@ -91,14 +91,18 @@ char *look_right(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look(trantorians_t *trant, char **arg, zappy_data_t *data)
+int look(trantorians_t *trant, char **arg, zappy_data_t *data)
 {
+    char *response = NULL;
+
     (void) arg;
     if (trant->direction == NORTH)
-        return look_up(data->map, trant);
+        response = look_up(data->map, trant);
     if (trant->direction == EAST)
-        return look_right(data->map, trant);
+        response = look_right(data->map, trant);
     if (trant->direction == SOUTH)
-        return look_down(data->map, trant);
-    return look_left(data->map, trant);
+        response = look_down(data->map, trant);
+    if (trant->direction == WEST)
+        response = look_left(data->map, trant);
+    return 0;
 }

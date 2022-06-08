@@ -117,5 +117,14 @@ int left(trantorians_t *trant, char **arg, zappy_data_t *data);
 */
 int right(trantorians_t *trant, char **arg, zappy_data_t *data);
 
+/*
+** @brief Gets information 
+** 
+** @param trant The trantorian who's moving.
+** @param arg NULL here.
+** @param data Zappy's data structure.
+** @return 0 if movement was done, 1 if cancelled.
+*/
+int look(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */
