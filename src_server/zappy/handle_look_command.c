@@ -93,16 +93,18 @@ static char *look_right(map_t *map, trantorians_t *trant)
 
 int look(trantorians_t *trant, char **arg, zappy_data_t *data)
 {
-    char *response = NULL;
+    char *res = NULL;
 
     (void) arg;
     if (trant->direction == NORTH)
-        response = look_up(data->map, trant);
+        res = look_up(data->map, trant);
     if (trant->direction == EAST)
-        response = look_right(data->map, trant);
+        res = look_right(data->map, trant);
     if (trant->direction == SOUTH)
-        response = look_down(data->map, trant);
+        res = look_down(data->map, trant);
     if (trant->direction == WEST)
-        response = look_left(data->map, trant);
+        res = look_left(data->map, trant);
+    trant->client->data_send = add_send(trant->client->data_send, res);
+    free(res);
     return 0;
 }
