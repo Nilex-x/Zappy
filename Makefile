@@ -34,7 +34,7 @@ CFLAGS			=		-W -Wall -Wextra -I$(HEADER_PATH)
 
 LDFLAGS			=		-Llibs -lzappy -lmap
 
-all: compil_lib compil_server
+all: compil_lib compil_server compil_client
 
 compil_lib:
 	@make -C $(LIB_PATH)
@@ -54,14 +54,12 @@ clean:
 	@make clean -C $(CLIENT_LIB_PATH)
 	@make clean -C $(LIB_PATH)
 	rm -f $(OBJ_SERV)
-	rm -f $(OBJ_CLIENT)
 
 fclean:
 	@make fclean -C $(LIB_PATH)
 	@make fclean -C $(CLIENT_LIB_PATH)
-	rm -f $(OBJ_SERV)
-	rm -f $(OBJ_CLIENT)
-	rm -f $(SERV_NAME)
+	rm -f $(OBJ_SERVER)
+	rm -f $(SERVER_NAME)
 	rm -f $(CLIENT_NAME)
 
 re: fclean all

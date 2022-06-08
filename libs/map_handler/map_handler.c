@@ -6,6 +6,7 @@
 */
 
 #include "map_handler.h"
+#include <stdlib.h>
 
 const float density[7] = {FOOD_DENSITY, LINEMATE_DENSITY, DERAUMERE_DENSITY, SIBUR_DENSITY, MENDIANE_DENSITY, PHIRAS_DENSITY, THYSTAME_DENSITY};
 const char *ressources[7] = {"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};

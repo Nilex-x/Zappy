@@ -6,6 +6,8 @@
 */
 
 #include "lib.h"
+#include <stdlib.h>
+#include <string.h>
 
 char *remove_to_last_char(char *str, char to_find)
 {

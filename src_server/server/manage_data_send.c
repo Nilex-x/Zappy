@@ -6,6 +6,8 @@
 */
 
 #include "server.h"
+#include <string.h>
+#include <stdlib.h>
 
 data_send_t *add_send(data_send_t *data_send, char *data)
 {
