@@ -78,7 +78,7 @@ char *look_right(map_t *map, trantorians_t *trant)
     int new_y = trant->tile->y;
 
     for (int s = 0; s <= trant->lvl; s++)
-        for (int x = s; x >= -s; x--) {
+        for (int x = -s; x <= s; x++) {
             new_x = modulo(trant->tile->x + x, map->height);
             new_y = modulo(trant->tile->y + s, map->width);
             res = get_items_on_tile(map, new_x, new_y);
