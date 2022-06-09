@@ -12,6 +12,7 @@
     #include <string.h>
     #include <stdlib.h>
     #include "zappy.h"
+    #include "server.h"
 
     extern const char *ressources[7];
     enum Inventory {
@@ -23,5 +24,5 @@
         PHIRAS,
         THYSTAME
     };
-    void display_inventory(trantorians_t *trant, char **args, zappy_data_t *data);
+    int display_inventory(client_t *client, zappy_data_t *data, char *args);
 #endif

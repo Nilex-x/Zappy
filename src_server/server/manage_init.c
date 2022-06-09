@@ -55,9 +55,6 @@ void handle_command(server_t *info, client_t *cli)
         free(value);
         return;
     }
-    if(strstr(value, "inventory")) {
-        display_inventory(cli->trant, NULL, info->data);
-    }
     printf("value client [%s]\n", value);
     if (!cli->trant)
         add_trantoriant(cli, info, value);
