@@ -9,37 +9,37 @@
 
 int get_obj(char *arg)
 {
-	int i = 0;
+    int i = 0;
 
-	while(strcmp(ressources[i], arg) != 0)
-		i++;
-	return i;
+    while (strcmp(ressources[i], arg) != 0)
+        i++;
+    return i;
 }
 
 int pick_item(trantorians_t *trant, char **args, zappy_data_t *data)
 {
-	int object = get_obj(args[0]);
+    int object = get_obj(args[0]);
 
-	if (trant->tile->ressources[object] > 0) {
-		trant->tile->ressources[object]--;
-		trant->inventory[object]++;
-		trant->client->data_send = add_send(trant->client->data_send, "ok\n");
-		return 1;
-	}
-	trant->client->data_send = add_send(trant->client->data_send, "ko\n");
-	return 0;
+    if (trant->tile->ressources[object] > 0) {
+        trant->tile->ressources[object]--;
+        trant->inventory[object]++;
+        trant->client->data_send = add_send(trant->client->data_send, "ok\n");
+        return 1;
+    }
+    trant->client->data_send = add_send(trant->client->data_send, "ko\n");
+    return 0;
 }
 
 int drop_item(trantorians_t *trant, char **args, zappy_data_t *data)
 {
-	int object = get_obj(args[0]);
+    int object = get_obj(args[0]);
 
-	if (trant->inventory[object] > 0) {
-		trant->inventory[object]--;
-		trant->tile->ressources[object]++;
-		trant->client->data_send = add_send(trant->client->data_send, "ok\n");
-		return 1;
-	}
-	trant->client->data_send = add_send(trant->client->data_send, "ko\n");
-	return 0;
+    if (trant->inventory[object] > 0) {
+        trant->inventory[object]--;
+        trant->tile->ressources[object]++;
+        trant->client->data_send = add_send(trant->client->data_send, "ok\n");
+        return 1;
+    }
+    trant->client->data_send = add_send(trant->client->data_send, "ko\n");
+    return 0;
 }

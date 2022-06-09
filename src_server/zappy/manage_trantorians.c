@@ -24,7 +24,7 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data)
     if (!data->trants)
         data->trants = new;
     else {
-        while(temp->next)
+        while (temp->next)
             temp = temp->next;
         temp->next = new;
     }
