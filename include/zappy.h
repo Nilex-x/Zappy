@@ -58,78 +58,78 @@ typedef struct zappy_data_s {
 
 typedef struct server_s server_t;
 
-/**
- * @brief Get the list of team's name
- *
- * @param info Server's data struct
- * @param argc Number of argument
- * @param name_list List of team's name
- * @param index index to start
- * @return int
- */
+/*
+** @brief Get the list of team's name
+**
+** @param info Server's data struct
+** @param argc Number of argument
+** @param name_list List of team's name
+** @param index index to start
+** @return int
+*/
 int get_name_team(server_t *info, char **name_list, int index);
 
-/**
- * @brief Manage flags of prog
- *
- * @param info Server data struct
- * @param argc Number of argument
- * @param argv List of argument
- * @return int
- */
+/*
+** @brief Manage flags of prog
+**
+** @param info Server data struct
+** @param argc Number of argument
+** @param argv List of argument
+** @return int
+*/
 int handle_flags(server_t *info, int argc, char **argv);
 
-/**
- * @brief sort commands
- *
- * @param client Client who do command
- * @param data Data struct
- * @param cmd Commands
- * @return int
- */
+/*
+** @brief sort commands
+**
+** @param client Client who do command
+** @param data Data struct
+** @param cmd Commands
+** @return int
+*/
 int sort_command(client_t *client, zappy_data_t *data, char *cmd);
 
-/**
- * @brief Create a add trantoriant struct
- *
- * @param cli Client who do command
- * @param data Data server struct
- * @return trantorians_t*
- */
+/*
+** @brief Create a add trantoriant struct
+**
+** @param cli Client who do command
+** @param data Data server struct
+** @return trantorians_t*
+*/
 trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data);
 
-/**
- * @brief Get the team by name string
- *
- * @param name name string
- * @param data Data server struct
- * @return team_t*
- */
+/*
+** @brief Get the team by name string
+**
+** @param name name string
+** @param data Data server struct
+** @return team_t*
+*/
 team_t *get_team_by_name(char *name, zappy_data_t *data);
 
-/**
- * @brief Add trantorians in team
- *
- * @param trant Trantorians to add
- * @param team Team added trantorians
- * @return team_t*
- */
+/*
+** @brief Add trantorians in team
+**
+** @param trant Trantorians to add
+** @param team Team added trantorians
+** @return team_t*
+*/
 team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team);
 
-/**
- * @brief Create a team struct
- *
- * @param name Name of new team
- * @param data Data server struct
- * @return team_t*
- */
+/*
+** @brief Create a team struct
+**
+** @param name Name of new team
+** @param data Data server struct
+** @return team_t*
+*/
 team_t *create_team(char *name, zappy_data_t *data);
 
-/**
- * @brief Free teams list
- *
- * @param teams Teams list to free
- */
+/*
+** @brief Free teams list
+**
+** @param teams Teams list to free
+*/
 void free_teams(team_t *teams);
 
 /*
