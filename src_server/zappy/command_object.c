@@ -11,7 +11,7 @@ int get_obj(char *arg)
 {
     int i = 0;
 
-    while (strcmp(ressources[i], arg) != 0)
+    while(strcmp(ressources[i], arg) != 0)
         i++;
     return i;
 }
