@@ -6,6 +6,8 @@
 */
 
 #include "lib.h"
+#include <stdlib.h>
+#include <string.h>
 
 char **remove_part_of_array(char **array, int last_index)
 {

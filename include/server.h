@@ -8,14 +8,10 @@
 #ifndef SERVER_H_
     #define SERVER_H_
     #include "lib.h"
+    #include "map_handler.h"
     #include "zappy.h"
-    #include <stdio.h>
-    #include <unistd.h>
-    #include <string.h>
-    #include <stdlib.h>
-    #include <stdbool.h>
-    #include <sys/socket.h>
-    #include <netinet/ip.h>
+
+    #include <sys/select.h>
 
     #define NB_LISTEN 32
     #define LENGTH_COMMAND 512
@@ -37,6 +33,7 @@ typedef struct client_s {
     bool isQuit;
     data_send_t *data_send;
     buffer_t *buff_read;
+    trantorians_t *trant;
     struct client_s *next;
     struct client_s *prev;
 } client_t;
@@ -72,5 +69,9 @@ void init_data(server_t *info);
 data_send_t *add_send(data_send_t *data_send, char *data);
 char *get_next_data_to_send(data_send_t **data_send);
 size_t get_size_data_to_send(data_send_t *data_send);
+void free_data_send(data_send_t *data_send);
+
+int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
+int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
 
 #endif /* !SERVER_H_ */

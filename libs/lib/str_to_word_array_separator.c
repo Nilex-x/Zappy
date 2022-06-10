@@ -6,6 +6,8 @@
 */
 
 #include "lib.h"
+#include <stdlib.h>
+#include <string.h>
 
 char *my_strncpy_n(char *dest, char *str, int index, int n);
 

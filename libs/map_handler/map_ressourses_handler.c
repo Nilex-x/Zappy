@@ -6,6 +6,22 @@
 */
 
 #include "map_handler.h"
+#include <stdlib.h>
+
+char *get_items_on_tile(map_t *map, size_t x, size_t y)
+{
+    tile_t *c = map->tiles[x][y];
+    char *line = NULL;
+
+    for (size_t i = 0; i < c->nb_player; i++)
+        (line) ? asprintf(&line, "%s player", line) : 
+        asprintf(&line, "player");
+    for (int i = 0; i < 7; i++)
+        for (int j = 0; j < c->ressources[i]; j++)
+            (line) ? asprintf(&line, "%s %s", ressources[i]) : 
+            asprintf(&line, "%s", ressources[i]);
+    return (line) ? (line) : (strdup(""));
+}
 
 void update_map_ressources(map_t *map)
 {

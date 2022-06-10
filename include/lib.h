@@ -7,10 +7,6 @@
 
 #ifndef LIB_H_
     #define LIB_H_
-    #include <stdlib.h>
-    #include <stdio.h>
-    #include <unistd.h>
-    #include <string.h>
 
 typedef struct buffer_s {
     char buffer[512];
@@ -37,5 +33,6 @@ void add_to_write(buffer_t *buff, char *value, int length_max);
 void init_buffer(buffer_t *buff, int length_command);
 int len_array(char **array);
 char *generate_uuid(void);
+int modulo(int a, int b);
 
 #endif /* !LIB_H_ */
