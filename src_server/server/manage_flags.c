@@ -7,6 +7,7 @@
 
 #include "server.h"
 #include <unistd.h>
+#include <stdio.h>
 
 int get_name_team(server_t *info, char **name_list, int index)
 {
@@ -14,6 +15,17 @@ int get_name_team(server_t *info, char **name_list, int index)
         printf("%d\n", info->data.max_teams_player);
         create_team(name_list[index], &info->data);
         index++;
+    }
+    return (0);
+}
+
+int verif_team_created(server_t *info)
+{
+    team_t *temp = info->data.teams;
+
+    while (temp) {
+        temp->player_max = info->data.max_teams_player;
+        temp = temp->next;
     }
     return (0);
 }
@@ -35,6 +47,7 @@ int sort_flags(server_t *info, char **argv, int index, int ret)
             return (1);
         case 'c':
             info->data.max_teams_player = atoi(argv[index]);
+            verif_team_created(info);
             return (1);
     }
     return (0);
@@ -63,7 +76,6 @@ int handle_flags(server_t *info, int argc, char **argv)
             sort_flags(info, argv, optind, ret);
         ret = getopt(argc, argv, "pxyncf");
     }
-
     if (data->height == 0 || data->width == 0 || data->max_teams_player == 0
     || !data->teams)
         exit(84);

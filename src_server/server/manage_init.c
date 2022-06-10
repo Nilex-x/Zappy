@@ -29,10 +29,9 @@ int add_trantoriant(client_t *cli, server_t *info, char *cmd)
     }
     if (team->nb_player == team->player_max) {
         printf("team->nb_player = %d\nplayer_max = %d\n",team->nb_player, team->player_max);
-        cli->data_send = add_send(cli->data_send, "teams is already full\n");
+        cli->data_send = add_send(cli->data_send, "team is already full\n");
         return (0);
     }
-    printf("now we are here\n");
     printf("get team: %s exist: %d\n", cmd, team ? 1 : 0);
     cli->trant = create_add_trantoriant(cli, &info->data);
     asprintf(&line, "%d\n", (team->player_max - team->nb_player));
@@ -54,9 +53,6 @@ void handle_command(server_t *info, client_t *cli)
     if (!value || value[0] == '\n') {
         free(value);
         return;
-    }
-    if(strstr(value, "inventory")) {
-        display_inventory(cli->trant, NULL, info->data);
     }
     printf("value client [%s]\n", value);
     if (!cli->trant)
