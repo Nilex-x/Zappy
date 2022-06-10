@@ -21,9 +21,15 @@ void spawn_egg(trantorians_t *trant)
     trant->tile->eggs = egg;
 }
 
+void remove_egg_from_tile(egg_t *egg)
+{
+    egg->tile->eggs = egg->next;
+    free(egg);
+}
+
 void free_eggs(egg_t *egg)
 {
-    if (egg == NULL)
+    if (!egg)
         return;
     free_eggs(egg->next);
     free(egg);
