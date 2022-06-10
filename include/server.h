@@ -37,7 +37,6 @@ typedef struct client_s {
     trantorians_t *trant;
     struct client_s *next;
     struct client_s *prev;
-    int inventory[7];
 } client_t;
 
 typedef struct server_s
