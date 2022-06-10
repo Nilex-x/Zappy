@@ -9,15 +9,16 @@ CC				=		gcc
 
 SERVER_NAME		=		zappy_server
 
-SRC_SERVER		=		src_server/server/server.c \
-						src_server/server/handle_client.c \
-						src_server/server/handle_communication.c \
-						src_server/server/manage_server.c \
-						src_server/server/manage_init.c \
-						src_server/server/manage_data_send.c \
-						src_server/server/manage_flags.c\
-						src_server/zappy/manage_team.c \
-						src_server/zappy/manage_trantorians.c \
+SRC_SERVER		=		src_server/server/server.c 					\
+						src_server/server/handle_client.c 			\
+						src_server/server/handle_communication.c 	\
+						src_server/server/check_incantation_cmd.c 	\
+						src_server/server/manage_server.c 			\
+						src_server/server/manage_init.c 			\
+						src_server/server/manage_data_send.c 		\
+						src_server/server/manage_flags.c			\
+						src_server/zappy/manage_team.c 				\
+						src_server/zappy/manage_trantorians.c 		\
 						src_server/zappy/sort_command.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
