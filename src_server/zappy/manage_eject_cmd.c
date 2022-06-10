@@ -20,6 +20,7 @@ int eject(trantorians_t *trant, char **arg, zappy_data_t *data)
             curr = c->action;
             (curr) ? (c->action = curr->next) : 0;
             (curr) ? free(curr) : 0;
+            curr = NULL;
             ejected = true;
         }
     if (ejected)
