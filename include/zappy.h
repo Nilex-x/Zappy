@@ -15,7 +15,13 @@
 typedef struct map_s map_t;
 typedef struct client_s client_t;
 
-typedef enum directions {
+typedef struct action_s {
+    int (*action)(trantorians_t trant, char **arg, zappy_data_t *data);
+    size_t time_left;
+    struct action_s *next;
+} action_t;
+
+typedef enum direction_s {
     NORTH,
     EAST,
     SOUTH,
@@ -29,6 +35,7 @@ typedef struct trantorians_s {
     direction_t direction;
     unsigned int life_left;
     client_t *client;
+    action_t *action;
     struct tile_s *tile;
     struct trantorians_s *next;
 } trantorians_t;
@@ -171,5 +178,15 @@ int right(trantorians_t *trant, char **arg, zappy_data_t *data);
 ** @return 0 if movement was done, 1 if cancelled.
 */
 int look(trantorians_t *trant, char **arg, zappy_data_t *data);
+
+/*
+** @brief Ejects all trantorians on his tile.
+** 
+** @param trant The trantorian ejecting.
+** @param arg NULL here.
+** @param data Zappy's data structure.
+** @return 0 if someone was ejected, 1 if no one.
+*/
+int eject(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */
