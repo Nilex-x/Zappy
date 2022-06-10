@@ -26,7 +26,7 @@ int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data)
     float c_dir;
     
     if (x_dest == 0)
-        return 0;
+        return (y_dest > 0) ? 5 : (y_dest == 0) ? 0 : 1;
     c_dir = y_dest / x_dest;
     if (c_dir < 0)
         c_dir *= -1;
