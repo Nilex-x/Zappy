@@ -7,7 +7,7 @@
 
 #include "server.h"
 
-void move_trantorian(map_t *map, trantorians_t *trant)
+static void move_trantorian(map_t *map, trantorians_t *trant)
 {
     size_t x = trant->tile->x;
     size_t y = trant->tile->y;
@@ -31,9 +31,28 @@ void move_trantorian(map_t *map, trantorians_t *trant)
     trant->tile->trantorians = trant;
 }
 
-int move(trantorians_t *trant, char **arg, zappy_data_t *data)
+int forward(trantorians_t *trant, char **arg, zappy_data_t *data)
 {
-    move_trantorian(data->map, trant);
     (void) arg;
+    move_trantorian(data->map, trant);
+    trant->client->data_send = add_send(trant->client->data_send, "ok");
+    return 0;
+}
+
+int left(trantorians_t *trant, char **arg, zappy_data_t *data)
+{
+    (void) arg;
+    (void) data;
+    trant->direction = (trant->direction - 1) % 4;
+    trant->client->data_send = add_send(trant->client->data_send, "ok");
+    return 0;
+}
+
+int right(trantorians_t *trant, char **arg, zappy_data_t *data)
+{
+    (void) arg;
+    (void) data;
+    trant->direction = (trant->direction + 1) % 4;
+    trant->client->data_send = add_send(trant->client->data_send, "ok");
     return 0;
 }

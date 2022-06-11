@@ -32,7 +32,7 @@ jobs:
         dst_path: /.
         dst_owner: EpitechPromo2025
         dst_repo_name: B-YEP-410-TLS-4-1-zappy-nicolas.moreau
-        commit-message: "Push to ID: ${{ github.run_id }} by github action from ${{ github.repository }}"
+        commit_message: "Push to ID: ${{ github.run_id }} by github action from ${{ github.repository }}"
 
     - if: ${{ failure() }}
       uses: dawidd6/action-send-mail@v3
