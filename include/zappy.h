@@ -172,4 +172,55 @@ int right(trantorians_t *trant, char **arg, zappy_data_t *data);
 */
 int look(trantorians_t *trant, char **arg, zappy_data_t *data);
 
+/*
+** @brief Sends to the GUI the position of the player args[1]
+** 
+** @param cli The client asking for the position.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_pos(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the level of the player args[1]
+** 
+** @param cli The client asking for the level.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the inventory of the player args[1]
+** 
+** @param cli The client asking for the inventory.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the time frequency of the game.
+** 
+** @param cli The client asking for the frequency.
+** @param args NULL here.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if not.
+*/
+int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Changing the time frequency of the game.
+** 
+** @param cli The client asking for the change.
+** @param args The arguments of the function, here the new frequency.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the frequency is not good.
+*/
+int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
+
+
 #endif /* !ZAPPY_H_ */
