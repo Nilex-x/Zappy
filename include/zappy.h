@@ -192,4 +192,14 @@ int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
 */
 int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
 
+/*
+** @brief sends a msg from a trantorian to all the trantorians with the direction it's comming from.
+** 
+** @param trant the trantorian sending the msg
+** @param args msg to send
+** @param data 
+** @return int 
+*/
+int broadcast(trantorians_t *trant, char **args, zappy_data_t *data);
+
 #endif /* !ZAPPY_H_ */
