@@ -33,6 +33,7 @@ team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team)
         return (NULL);
     new->trant = trant;
     new->next = NULL;
+    trant->team = team;
     if (!team->list)
         team->list = new;
     else {

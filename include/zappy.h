@@ -30,6 +30,7 @@ typedef struct trantorians_s {
     unsigned int life_left;
     client_t *client;
     struct tile_s *tile;
+    struct team_s *team;
     struct trantorians_s *next;
 } trantorians_t;
 
