@@ -54,7 +54,9 @@ typedef struct server_s
 
 typedef struct cmd_s {
     char *cmd;
-    int (*fct)(client_t *client, zappy_data_t *data, char *args);
+    int (*fct)(client_t *client, zappy_data_t *data, char **args);
+    char **args;
+    size_t time;
 } cmd_t;
 
 int create_socket(server_t *info);
