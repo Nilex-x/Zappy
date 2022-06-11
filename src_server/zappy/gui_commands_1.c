@@ -6,29 +6,30 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 int gui_map_size(client_t *client, char **args, zappy_data_t *data)
 {
-    char buff[512];
+    char *buff;
 
-    sprintf(buff, "msz %d %d\n", data->width, data->height);
+    asprintf(&buff, "msz %d %d\n", data->width, data->height);
     client->data_send = add_send(client->data_send, buff);
     return 0;
 }
 
 char *get_tile_content(int x, int y, zappy_data_t *data)
 {
-    char buff[512];
+    char *buff;
     int *r = data->map->tiles[x][y]->ressources;
 
-    sprintf(buff, "bct %d %d %d %d %d %d %d %d %d\n"
+    asprintf(&buff, "bct %d %d %d %d %d %d %d %d %d\n"
     , x, y, r[0], r[1], r[2], r[3], r[4], r[5], r[6]);
     return buff;
 }
 
 int gui_tile_content(client_t *client, char **args, zappy_data_t *data)
 {
-    char buff = get_tile_content(atoi(args[1]), atoi(args[2]), data);
+    char *buff = get_tile_content(atoi(args[1]), atoi(args[2]), data);
 
     client->data_send = add_send(client->data_send, buff);
     return 0;
@@ -49,12 +50,12 @@ int gui_map_content(client_t *client, char **args, zappy_data_t *data)
 
 int gui_teams_name(client_t *client, char **args, zappy_data_t *data)
 {
-    char buff[512];
+    char *buff;
     team_t *current = data->teams;
 
 
     while (current != NULL) {
-        sprintf(buff, "tna %s\n", current->name);
+        asprintf(&buff, "tna %s\n", current->name);
         client->data_send = add_send(client->data_send, buff);
         current = current->next;
     }
