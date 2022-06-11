@@ -11,25 +11,39 @@ import ctypes
 import pathlib
 from sys import *
 
+class clientIA:
+    def __inti__(self):
+        self.nbClients = -1
+        self.posX = 0
+        self.posY = 0
+        self.rsr = []
+        self.n = 0
+        self.O = 1
+        self.L = 0
+        self.e = 0
+        self.T = 0
+        self.N = ""
+        self.R = 0
+        self.M = ""
+        self.i = 0
+
 class clientInfo:
     def __init__(self, mySocket):
         self.socket = mySocket
         self.connected = 0
         self.readBuff = ""
         self.writeBuff = ""
-        self.nbClients = -1
-        self.posX = -1
-        self.posY = -1
+        self.ia = clientIA()
 
     def getPosnTeam(self):
         servMsg = self.readBuff.split("\n")
         for i in servMsg:
             splited = i.split()
             if ((len(splited) == 1) and (splited[0].isdigit())):
-                self.nbClients = int(splited[0])
+                self.ai.nbClients = int(splited[0])
             if ((len(splited) == 2) and (splited[0].isdigit()) and (splited[1].isdigit())):
-                self.posX = int(splited[0])
-                self.posY = int(splited[1])
+                self.ai.posX = int(splited[0])
+                self.ai.posY = int(splited[1])
         if (self.nbClients >= 0 and self.posX >= 0 and self.posY >= 0):
             self.connected = 1
 
