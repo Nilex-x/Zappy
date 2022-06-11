@@ -251,5 +251,34 @@ int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
 */
 int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
+/*
+** @brief Pick an item from the tile.
+**
+** @param trant The trantorian
+** @param args The picked item
+** @param data
+** @return int
+*/
+int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
+
+/*
+** @brief Puts an item on the ground.
+**
+** @param trant The trantorian
+** @param args The dropped item
+** @param data
+** @return int
+*/
+int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
+
+/*
+** @brief sends a msg from a trantorian to all the trantorians with the direction it's comming from.
+**
+** @param trant the trantorian sending the msg
+** @param args msg to send
+** @param data
+** @return int
+*/
+int broadcast(trantorians_t *trant, char **args, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */
