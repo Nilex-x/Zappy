@@ -12,6 +12,7 @@
 int get_name_team(server_t *info, char **name_list, int index)
 {
     while (name_list[index] && name_list[index][0] != '-') {
+        printf("%d\n", info->data.max_teams_player);
         create_team(name_list[index], &info->data);
         index++;
     }
@@ -75,7 +76,6 @@ int handle_flags(server_t *info, int argc, char **argv)
             sort_flags(info, argv, optind, ret);
         ret = getopt(argc, argv, "pxyncf");
     }
-    printf("teams: %d\n", data->teams->player_max);
     if (data->height == 0 || data->width == 0 || data->max_teams_player == 0
     || !data->teams)
         exit(84);

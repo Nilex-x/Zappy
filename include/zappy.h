@@ -25,9 +25,9 @@ typedef enum directions {
 typedef struct trantorians_s {
     int lvl;
     bool is_alive;
+    unsigned int life_left;
     int inventory[8];
     direction_t direction;
-    unsigned int life_left;
     client_t *client;
     struct tile_s *tile;
     struct trantorians_s *next;

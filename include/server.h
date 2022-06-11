@@ -53,7 +53,7 @@ typedef struct server_s
 
 typedef struct cmd_s {
     char *cmd;
-    void (*fct)(client_t *client);
+    int (*fct)(client_t *client, zappy_data_t *data, char *args);
 } cmd_t;
 
 int create_socket(server_t *info);
@@ -80,5 +80,5 @@ void free_data_send(data_send_t *data_send);
 
 int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
 int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
-
+int display_inventory(client_t *client, zappy_data_t *data, char *args);
 #endif /* !SERVER_H_ */

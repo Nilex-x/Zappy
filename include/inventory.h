@@ -24,6 +24,5 @@
         PHIRAS,
         THYSTAME
     };
-    int display_inventory(trantorians_t *trant, char **args
-    , zappy_data_t *data);
+    int display_inventory(client_t *client, zappy_data_t *data, char *args);
 #endif
