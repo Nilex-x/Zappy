@@ -172,4 +172,24 @@ int right(trantorians_t *trant, char **arg, zappy_data_t *data);
 */
 int look(trantorians_t *trant, char **arg, zappy_data_t *data);
 
+/*
+** @brief Pick an item from the tile.
+** 
+** @param trant The trantorian
+** @param args The picked item
+** @param data 
+** @return int 
+*/
+int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
+
+/*
+** @brief Puts an item on the ground.
+** 
+** @param trant The trantorian
+** @param args The dropped item
+** @param data 
+** @return int 
+*/
+int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
+
 #endif /* !ZAPPY_H_ */

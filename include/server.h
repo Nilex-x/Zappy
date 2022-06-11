@@ -78,7 +78,4 @@ char *get_next_data_to_send(data_send_t **data_send);
 size_t get_size_data_to_send(data_send_t *data_send);
 void free_data_send(data_send_t *data_send);
 
-int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
-int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
-
 #endif /* !SERVER_H_ */
