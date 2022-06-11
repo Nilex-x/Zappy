@@ -19,10 +19,12 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data)
     new->lvl = 1;
     new->is_alive = true;
     new->client = cli;
+    for (int i = 0; i < 7; i++)
+        new->inventory[i] = 0;
     if (!data->trants)
         data->trants = new;
     else {
-        while(temp->next)
+        while (temp->next)
             temp = temp->next;
         temp->next = new;
     }

@@ -12,6 +12,7 @@
     #include "map_handler.h"
     #include "zappy.h"
 
+    #include <string.h>
     #include <sys/select.h>
 
     #define NB_LISTEN 32
@@ -37,6 +38,7 @@ typedef struct client_s {
     trantorians_t *trant;
     struct client_s *next;
     struct client_s *prev;
+    int inventory[7];
 } client_t;
 
 typedef struct server_s
@@ -49,6 +51,11 @@ typedef struct server_s
     client_t *list_client;
     zappy_data_t data;
 }server_t;
+
+typedef struct cmd_s {
+    char *cmd;
+    void (*fct)(client_t *client);
+} cmd_t;
 
 int create_socket(server_t *info);
 int read_client(server_t *info, client_t *client);

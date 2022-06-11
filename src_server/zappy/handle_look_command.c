@@ -7,7 +7,7 @@
 
 #include "server.h"
 
-char *look_up(map_t *map, trantorians_t *trant)
+static char *look_up(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
@@ -28,7 +28,7 @@ char *look_up(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look_down(map_t *map, trantorians_t *trant)
+static char *look_down(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
@@ -49,7 +49,7 @@ char *look_down(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look_left(map_t *map, trantorians_t *trant)
+static char *look_left(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
@@ -70,7 +70,7 @@ char *look_left(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look_right(map_t *map, trantorians_t *trant)
+static char *look_right(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
@@ -78,7 +78,7 @@ char *look_right(map_t *map, trantorians_t *trant)
     int new_y = trant->tile->y;
 
     for (int s = 0; s <= trant->lvl; s++)
-        for (int x = s; x >= -s; x--) {
+        for (int x = -s; x <= s; x++) {
             new_x = modulo(trant->tile->x + x, map->height);
             new_y = modulo(trant->tile->y + s, map->width);
             res = get_items_on_tile(map, new_x, new_y);
@@ -91,14 +91,20 @@ char *look_right(map_t *map, trantorians_t *trant)
     return line;
 }
 
-char *look(trantorians_t *trant, char **arg, zappy_data_t *data)
+int look(trantorians_t *trant, char **arg, zappy_data_t *data)
 {
+    char *res = NULL;
+
     (void) arg;
     if (trant->direction == NORTH)
-        return look_up(data->map, trant);
+        res = look_up(data->map, trant);
     if (trant->direction == EAST)
-        return look_right(data->map, trant);
+        res = look_right(data->map, trant);
     if (trant->direction == SOUTH)
-        return look_down(data->map, trant);
-    return look_left(data->map, trant);
+        res = look_down(data->map, trant);
+    if (trant->direction == WEST)
+        res = look_left(data->map, trant);
+    trant->client->data_send = add_send(trant->client->data_send, res);
+    free(res);
+    return 0;
 }
