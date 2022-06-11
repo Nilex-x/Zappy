@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 int test(client_t *client, zappy_data_t *data, char *args)
 {

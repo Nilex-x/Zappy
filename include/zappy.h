@@ -8,18 +8,14 @@
 #ifndef ZAPPY_H_
     #define ZAPPY_H_
 
+    #include <unistd.h>
+
     #define bool unsigned int
     #define true 1
     #define false 0
 
 typedef struct map_s map_t;
 typedef struct client_s client_t;
-
-typedef struct action_s {
-    int (*action)(trantorians_t trant, char **arg, zappy_data_t *data);
-    size_t time_left;
-    struct action_s *next;
-} action_t;
 
 typedef enum direction_s {
     NORTH,
@@ -35,7 +31,7 @@ typedef struct trantorians_s {
     int inventory[8];
     direction_t direction;
     client_t *client;
-    action_t *action;
+    struct action_s *action;
     struct tile_s *tile;
     struct trantorians_s *next;
 } trantorians_t;
@@ -62,6 +58,12 @@ typedef struct zappy_data_s {
     trantorians_t *trants;
     map_t *map;
 } zappy_data_t;
+
+typedef struct action_s {
+    int (*action)(trantorians_t trant, char **arg, zappy_data_t *data);
+    size_t time_left;
+    struct action_s *next;
+} action_t;
 
 typedef struct server_s server_t;
 
@@ -141,7 +143,7 @@ void free_teams(team_t *teams);
 
 /*
 ** @brief Moves the trantorian in the direction he is looking.
-** 
+**
 ** @param trant The trantorian who's moving.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
@@ -151,7 +153,7 @@ int forward(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Turns the trantorian left.
-** 
+**
 ** @param trant The trantorian who's moving.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
@@ -161,7 +163,7 @@ int left(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Turns the trantorian right.
-** 
+**
 ** @param trant The trantorian who's moving.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
@@ -170,8 +172,8 @@ int left(trantorians_t *trant, char **arg, zappy_data_t *data);
 int right(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 /*
-** @brief Gets information 
-** 
+** @brief Gets information
+**
 ** @param trant The trantorian who's moving.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
@@ -181,12 +183,63 @@ int look(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Ejects all trantorians on his tile.
-** 
+**
 ** @param trant The trantorian ejecting.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
 ** @return 0 if someone was ejected, 1 if no one.
 */
 int eject(trantorians_t *trant, char **arg, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the position of the player args[1]
+**
+** @param cli The client asking for the position.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_pos(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the level of the player args[1]
+**
+** @param cli The client asking for the level.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the inventory of the player args[1]
+**
+** @param cli The client asking for the inventory.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the time frequency of the game.
+**
+** @param cli The client asking for the frequency.
+** @param args NULL here.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if not.
+*/
+int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Changing the time frequency of the game.
+**
+** @param cli The client asking for the change.
+** @param args The arguments of the function, here the new frequency.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the frequency is not good.
+*/
+int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
+
 
 #endif /* !ZAPPY_H_ */
