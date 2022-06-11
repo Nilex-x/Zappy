@@ -70,8 +70,9 @@ typedef struct zappy_data_s {
 } zappy_data_t;
 
 typedef struct action_s {
-    int (*action)(trantorians_t trant, char **arg, zappy_data_t *data);
+    int (*action)(trantorians_t *trant, char **arg, zappy_data_t *data);
     size_t time_left;
+    char **args;
     struct action_s *next;
 } action_t;
 

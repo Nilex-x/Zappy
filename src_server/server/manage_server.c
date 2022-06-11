@@ -39,14 +39,23 @@ void find_socket(server_t *info)
 {
     client_t *temp = info->list_client;
     client_t *next = NULL;
+    action_t *curr = NULL;
 
-    while (temp) {
+    for (client_t *temp = info->list_client; temp; temp = next) {
         next = temp->next;
         if (FD_ISSET(temp->socket, &info->rfds))
             sort_client(temp, info);
         else if (FD_ISSET(temp->socket, &info->wfds))
             write_client(info, temp->socket);
-        temp = next;
+        curr = (temp->trant) ? (temp->trant->action) : NULL;
+        if (curr && curr->time_left > 0)
+            curr->time_left --;
+        else if (curr && curr->time_left == 0) {
+            curr->action(temp->trant, curr->args, info->data);
+            temp->trant->action = curr->next;
+            free_array(curr->args);
+            free(curr);
+        }
     }
     return;
 }
