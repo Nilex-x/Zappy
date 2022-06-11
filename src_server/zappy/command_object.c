@@ -18,7 +18,7 @@ int get_obj(char *arg)
 
 int pick_item(trantorians_t *trant, char **args, zappy_data_t *data)
 {
-	int object = get_obj(args[0]);
+	int object = get_obj(args[1]);
 
 	if (trant->tile->ressources[object] > 0) {
 		trant->tile->ressources[object]--;
@@ -32,7 +32,7 @@ int pick_item(trantorians_t *trant, char **args, zappy_data_t *data)
 
 int drop_item(trantorians_t *trant, char **args, zappy_data_t *data)
 {
-	int object = get_obj(args[0]);
+	int object = get_obj(args[1]);
 
 	if (trant->inventory[object] > 0) {
 		trant->inventory[object]--;
