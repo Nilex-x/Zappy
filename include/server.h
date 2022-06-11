@@ -7,6 +7,7 @@
 
 #ifndef SERVER_H_
     #define SERVER_H_
+    #define  _GNU_SOURCE
     #include "lib.h"
     #include "map_handler.h"
     #include "zappy.h"
