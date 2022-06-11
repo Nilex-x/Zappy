@@ -23,7 +23,8 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/zappy/sort_command.c \
 						src_server/zappy/command_team.c \
 						src_server/zappy/command_broadcast.c \
-						src_server/zappy/gui_commands_1.c
+						src_server/zappy/gui_commands_1.c \
+						src_server/server/check_incantation_cmd.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 
