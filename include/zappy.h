@@ -41,6 +41,7 @@ typedef struct trantorians_s {
     client_t *client;
     struct action_s *action;
     struct tile_s *tile;
+    struct team_s *team;
     struct trantorians_s *next;
 } trantorians_t;
 

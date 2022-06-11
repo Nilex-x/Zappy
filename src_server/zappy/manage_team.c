@@ -35,6 +35,7 @@ team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team)
     printf("%d\n", team->nb_player);
     new->trant = trant;
     new->next = NULL;
+    trant->team = team;
     if (!team->list)
         team->list = new;
     else {
