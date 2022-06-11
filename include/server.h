@@ -35,9 +35,9 @@ typedef struct client_s {
     data_send_t *data_send;
     buffer_t *buff_read;
     trantorians_t *trant;
+    char *team_name;
     struct client_s *next;
     struct client_s *prev;
-    int inventory[7];
 } client_t;
 
 typedef struct server_s

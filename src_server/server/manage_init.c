@@ -27,14 +27,15 @@ int add_trantoriant(client_t *cli, server_t *info, char *cmd)
         cli->data_send = add_send(cli->data_send, "unkown team\n");
         return (0);
     }
+    cli->team_name = strdup(team->name);
     if (team->nb_player == team->player_max) {
         printf("team->nb_player = %d\nplayer_max = %d\n",team->nb_player, team->player_max);
-        cli->data_send = add_send(cli->data_send, "teams is already full\n");
+        cli->data_send = add_send(cli->data_send, "team is already full\n\
+        please wait until a client disconnect or fork\n");
         return (0);
     }
-    printf("now we are here\n");
     printf("get team: %s exist: %d\n", cmd, team ? 1 : 0);
-    cli->trant = create_add_trantoriant(cli, &info->data);
+    cli->trant = create_add_trantoriant(cli, &info->data, team->name);
     asprintf(&line, "%d\n", (team->player_max - team->nb_player));
     cli->data_send = add_send(cli->data_send, line);
     free(line);

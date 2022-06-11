@@ -24,11 +24,19 @@ typedef enum direction_s {
     WEST
 } direction_t;
 
+typedef struct egg_s {
+    char *team_name;
+    int time_until_hatch;
+    struct tile_s *tile;
+    struct egg_s *next;
+} egg_t;
+
 typedef struct trantorians_s {
     int lvl;
     bool is_alive;
     unsigned int life_left;
     int inventory[8];
+    char *team_name;
     direction_t direction;
     client_t *client;
     struct action_s *action;
@@ -56,6 +64,7 @@ typedef struct zappy_data_s {
     int max_teams_player;
     team_t *teams;
     trantorians_t *trants;
+    egg_t *eggs;
     map_t *map;
 } zappy_data_t;
 
@@ -105,7 +114,7 @@ int sort_command(client_t *client, zappy_data_t *data, char *cmd);
 ** @param data Data server struct
 ** @return trantorians_t*
 */
-trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data);
+trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *team_name);
 
 /*
 ** @brief Get the team by name string

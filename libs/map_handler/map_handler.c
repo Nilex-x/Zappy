@@ -24,6 +24,7 @@ tile_t *init_tile(size_t x, size_t y)
     tile->ressources = calloc(7, sizeof(int));
     tile->nb_player = 0;
     tile->trantorians = NULL;
+    tile->eggs = NULL;
     return (tile);
 }
 
