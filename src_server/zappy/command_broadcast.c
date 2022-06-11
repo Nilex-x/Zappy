@@ -81,6 +81,6 @@ int broadcast(trantorians_t *trant, char **args, zappy_data_t *data)
 
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++)
-            send_broadcast(trant, data->map->tiles[i][j], data, args[0]);
+            send_broadcast(trant, data->map->tiles[i][j], data, args[1]);
     return 0;
 }
