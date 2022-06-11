@@ -28,7 +28,7 @@ int destroy_egg(server_t *info, team_t *team, egg_t *egg)
         if (!strcmp(info->list_client->team_name, team->name)
         && !info->list_client->trant) {
             info->list_client->trant = create_add_trantoriant(
-                info->list_client, &info->data, team->name);
+                info->list_client, info->data, team->name);
             trantorian_spawn_from_tile(info->list_client->trant, egg->tile);
             break;
         }
