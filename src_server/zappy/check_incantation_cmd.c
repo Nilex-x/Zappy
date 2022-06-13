@@ -58,6 +58,7 @@ static int check_incant_ressources(map_t *map, trantorians_t *trant)
     size_t x = trant->tile->x;
     size_t y = trant->tile->y;
 
+    (void) x;
     for (int x = 0; x < 7; x++)
         if (map->tiles[x][y]->ressources[x + 1] <
             DATA_INCANT[trant->lvl - 1].ressources_required[x])
