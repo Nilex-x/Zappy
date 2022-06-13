@@ -123,11 +123,10 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     int cmd_size = sizeof(MY_CMDS) / sizeof(*MY_CMDS);
     char **args = my_str_to_word_array(arg);
 
-    (void) data;
     for (int pos = 0; pos != cmd_size; pos++) {
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd))) {
             (client->trant) ? append_action(&client->trant->action, args
-            , pos) : MY_CMDS[pos].fct(client, data, args);
+            , pos) : MY_CMDS[pos].fct(client, args, data);
             return (0);
         }
     }
