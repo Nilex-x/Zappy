@@ -49,8 +49,8 @@ typedef struct server_s
     fd_set wfds;
     fd_set rfds;
     fd_set efds;
-    struct timeval time_ref;
-    struct timeval time_left;
+    struct timespec time_ref;
+    struct timespec time_left;
     client_t *list_client;
     zappy_data_t *data;
 }server_t;
