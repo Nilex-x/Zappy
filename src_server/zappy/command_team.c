@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 int team_unused_slot(trantorians_t *trant, char **args, zappy_data_t *data)
 {
