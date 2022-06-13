@@ -9,6 +9,7 @@
     #define ZAPPY_H_
 
     #include <unistd.h>
+    #include <sys/time.h>
 
     #define bool unsigned int
     #define true 1
