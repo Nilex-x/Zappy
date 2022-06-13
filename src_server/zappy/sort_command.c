@@ -10,14 +10,6 @@
 
 static const cmd_t MY_CMDS[] = {
     {
-<<<<<<< HEAD
-        .cmd = "inventory",
-        .fct = NULL
-    },
-    {
-        .cmd = "test",
-        .fct = NULL
-=======
         .cmd = "Inventory",
         .fct = &display_inventory,
         .time = 1
@@ -106,7 +98,6 @@ static const cmd_t MY_CMDS[] = {
     {
         .cmd = "sst",
         .fct = &gui_time_unit_modif
->>>>>>> 82699807ac1cffb3700f9f5ef7cabc1a316e6388
     }
 };
 
