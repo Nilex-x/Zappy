@@ -8,9 +8,9 @@
 #include "server.h"
 #include "zappy.h"
 
-int fork_command(client_t *client, zappy_data_t *data, char *arg)
+int fork_command(client_t *client, char **args, zappy_data_t *data)
 {
-    (void) arg;
+    (void) args;
     team_t *team = get_team_by_name(client->trant->team_name, data);
     team->player_max++;
     spawn_egg(client->trant);

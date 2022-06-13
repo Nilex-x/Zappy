@@ -192,7 +192,7 @@ int right(client_t *client, char **arg, zappy_data_t *data);
 ** @param data Zappy's data structure.
 ** @return 0 if movement was done, 1 if cancelled.
 */
-int look(trantorians_t *trant, char **arg, zappy_data_t *data);
+int look(client_t *client, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Ejects all trantorians on his tile.
@@ -262,7 +262,7 @@ int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 ** @param data
 ** @return int
 */
-int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
+int pick_item(client_t *client, char **args, zappy_data_t *data);
 
 /*
 ** @brief Puts an item on the ground.
@@ -272,7 +272,7 @@ int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
 ** @param data
 ** @return int
 */
-int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
+int drop_item(client_t *client, char **args, zappy_data_t *data);
 
 /*
 ** @brief sends a msg from a trantorian to all the trantorians with the direction it's comming from.
@@ -282,8 +282,30 @@ int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
 ** @param data
 ** @return int
 */
-int broadcast(trantorians_t *trant, char **args, zappy_data_t *data);
+int broadcast(client_t *client, char **args, zappy_data_t *data);
 
 int display_inventory(client_t *client, char **args, zappy_data_t *data);
+
+int fork_command(client_t *client, char **args, zappy_data_t *data);
+
+int team_unused_slot(client_t *client, char **args, zappy_data_t *data);
+
+int gui_map_size(client_t *client, char **args, zappy_data_t *data);
+
+int gui_tile_content(client_t *client, char **args, zappy_data_t *data);
+
+int gui_map_content(client_t *client, char **args, zappy_data_t *data);
+
+int gui_teams_name(client_t *client, char **args, zappy_data_t *data);
+
+int gui_player_pos(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */
