@@ -43,8 +43,8 @@ void get_shortest_time(server_t *info)
     struct timespec smallest = set_timespec(900, 1);
 
     for (trantorians_t *t = info->data->trants; t; t = t->next) {
-        if (t->action && t->action->time_left.tv_sec < smallest.tv_sec 
-        || (t->action->time_left.tv_sec == smallest.tv_sec 
+        if (t->action && t->action->time_left.tv_sec < smallest.tv_sec
+        || (t->action->time_left.tv_sec == smallest.tv_sec
         && t->action->time_left.tv_nsec < smallest.tv_nsec)) {
             smallest.tv_sec = t->action->time_left.tv_sec;
             smallest.tv_nsec = t->action->time_left.tv_nsec;

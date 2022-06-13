@@ -40,7 +40,6 @@ void sort_client(client_t *client, server_t *info)
 void find_socket(server_t *info)
 {
     client_t *next = NULL;
-    action_t *curr = NULL;
 
     for (client_t *temp = info->list_client; temp; temp = next) {
         next = temp->next;
@@ -50,22 +49,12 @@ void find_socket(server_t *info)
             sort_client(temp, info);
         if (FD_ISSET(temp->socket, &info->wfds))
             write_client(info, temp->socket);
-        // curr = (temp->trant) ? (temp->trant->action) : NULL;
-        // if (curr && curr->time_left > 0)
-        //     curr->time_left --;
-        // else if (curr && curr->time_left == 0) {
-        //     curr->action(temp->trant, curr->args, info->data);
-        //     temp->trant->action = curr->next;
-        //     free_array(curr->args);
-        //     free(curr);
-        // }
     }
     return;
 }
 
 int handler_connection(server_t *info)
 {
-    // int time = get_the_shortest_cmd(info);
     int retsel = 0;
 
     init_client(info);
@@ -75,7 +64,7 @@ int handler_connection(server_t *info)
         if (retsel < 0)
             perror("select()");
         if (retsel == 0)
-            continue;
+            do_action(info);
         if (retsel > 0)
             find_socket(info);
     }
