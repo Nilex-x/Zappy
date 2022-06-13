@@ -74,13 +74,13 @@ int send_broadcast(trantorians_t *trant, tile_t *tile, zappy_data_t *data, char 
     return 0;
 }
 
-int broadcast(trantorians_t *trant, char **args, zappy_data_t *data)
+int broadcast(client_t *client, char **args, zappy_data_t *data)
 {
     int width = data->map->width;
     int height = data->map->height;
 
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++)
-            send_broadcast(trant, data->map->tiles[i][j], data, args[1]);
+            send_broadcast(client->trant, data->map->tiles[i][j], data, args[1]);
     return 0;
 }
