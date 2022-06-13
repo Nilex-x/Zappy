@@ -47,5 +47,6 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
             return (0);
         }
     }
+    free_array(args);
     return (1);
 }

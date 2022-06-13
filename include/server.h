@@ -48,6 +48,7 @@ typedef struct server_s
     int max_fd;
     fd_set wfds;
     fd_set rfds;
+    fd_set efds;
     client_t *list_client;
     zappy_data_t *data;
 }server_t;

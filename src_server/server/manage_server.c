@@ -16,7 +16,9 @@ void clear_list(server_t *info)
 
     FD_ZERO(&info->wfds);
     FD_ZERO(&info->rfds);
+    FD_ZERO(&info->efds);
     while (temp) {
+        FD_SET(temp->socket, &info->efds);
         if (!temp->data_send)
             FD_SET(temp->socket, &info->rfds);
         if (temp->data_send)
@@ -43,6 +45,8 @@ void find_socket(server_t *info)
 
     for (client_t *temp = info->list_client; temp; temp = next) {
         next = temp->next;
+        if (FD_ISSET(temp->socket, &info->efds))
+            remove_client(info, temp->socket);
         if (FD_ISSET(temp->socket, &info->rfds))
             sort_client(temp, info);
         else if (FD_ISSET(temp->socket, &info->wfds))
