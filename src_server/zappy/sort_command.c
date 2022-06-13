@@ -101,13 +101,13 @@ static const cmd_t MY_CMDS[] = {
     }
 };
 
-void append_action(action_t **act, char **args, int pos)
+static void append_action(action_t **act, char **args, int pos, int freq)
 {
     action_t *curr = *act;
     action_t *new = malloc(sizeof(action_t));
 
     new->action = MY_CMDS[pos].fct;
-    new->time_left = MY_CMDS[pos].time;
+    new->time_left = set_timespec(MY_CMDS[pos].time, freq);
     new->args = args;
     new->next = NULL;
     while (curr && curr->next)
@@ -126,7 +126,7 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     for (int pos = 0; pos != cmd_size; pos++) {
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd))) {
             (client->trant) ? append_action(&client->trant->action, args
-            , pos) : MY_CMDS[pos].fct(client, args, data);
+            , pos, data->freq) : MY_CMDS[pos].fct(client, args, data);
             return (0);
         }
     }
