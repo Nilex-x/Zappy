@@ -14,6 +14,7 @@
 
     #include <string.h>
     #include <sys/select.h>
+    #include <sys/time.h>
 
     #define NB_LISTEN 32
     #define LENGTH_COMMAND 512
@@ -48,6 +49,8 @@ typedef struct server_s
     fd_set wfds;
     fd_set rfds;
     fd_set efds;
+    struct timeval time_ref;
+    struct timeval time_left;
     client_t *list_client;
     zappy_data_t *data;
 }server_t;
@@ -82,5 +85,7 @@ size_t get_size_data_to_send(data_send_t *data_send);
 void free_data_send(data_send_t *data_send);
 
 void init_data_struct(server_t *info);
+
+int get_the_shortest_cmd(server_t *info);
 
 #endif /* !SERVER_H_ */

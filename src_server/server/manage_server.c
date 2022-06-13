@@ -50,27 +50,33 @@ void find_socket(server_t *info)
             sort_client(temp, info);
         if (FD_ISSET(temp->socket, &info->wfds))
             write_client(info, temp->socket);
-        curr = (temp->trant) ? (temp->trant->action) : NULL;
-        if (curr && curr->time_left > 0)
-            curr->time_left --;
-        else if (curr && curr->time_left == 0) {
-            curr->action(temp->trant, curr->args, info->data);
-            temp->trant->action = curr->next;
-            free_array(curr->args);
-            free(curr);
-        }
+        // curr = (temp->trant) ? (temp->trant->action) : NULL;
+        // if (curr && curr->time_left > 0)
+        //     curr->time_left --;
+        // else if (curr && curr->time_left == 0) {
+        //     curr->action(temp->trant, curr->args, info->data);
+        //     temp->trant->action = curr->next;
+        //     free_array(curr->args);
+        //     free(curr);
+        // }
     }
     return;
 }
 
 int handler_connection(server_t *info)
 {
+    // int time = get_the_shortest_cmd(info);
+    int retsel = 0;
+
     init_client(info);
     while (1) {
         clear_list(info);
-        if (select(info->max_fd + 1, &info->rfds, &info->wfds, &info->efds, NULL) < 0)
-            perror("Select()");
-        else
+        retsel = select(info->max_fd + 1, &info->rfds, &info->wfds, &info->efds, NULL);
+        if (retsel < 0)
+            perror("select()");
+        if (retsel == 0)
+            continue;
+        if (retsel > 0)
             find_socket(info);
     }
 }

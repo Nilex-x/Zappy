@@ -24,6 +24,5 @@ int display_inventory(client_t *client, char **args, zappy_data_t *data)
         client->data_send = add_send(client->data_send, line);
     }
     client->data_send = add_send(client->data_send, "]\n");
-    printf("%s\n", client->data_send->data);
     return 0;
 }

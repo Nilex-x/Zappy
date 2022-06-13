@@ -16,6 +16,7 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/server/manage_init.c \
 						src_server/server/manage_data_send.c \
 						src_server/server/manage_flags.c\
+						src_server/server/manage_time.c \
 						src_server/zappy/inventory.c \
 						src_server/zappy/fork.c \
 						src_server/zappy/manage_team.c \
@@ -29,7 +30,7 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/zappy/handle_move_cmd.c \
 						src_server/zappy/manage_eject_cmd.c \
 						src_server/zappy/handle_look_command.c \
-						src_server/zappy/command_object.c \
+						src_server/zappy/command_object.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 
