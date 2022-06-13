@@ -47,7 +47,7 @@ class Map {
     public int width;
     public int height;
     public Tiles[,] tiles;
-    public List<Player> players;
+    public Player[] players;
 }
 
 public class Main : MonoBehaviour
@@ -79,6 +79,7 @@ public class Main : MonoBehaviour
             map.width = 5;//int.Parse(response[1]);
             map.height = 5;//int.Parse(response[2]);
             map.tiles = new Tiles[map.width, map.height];
+            Debug.Log(map.tiles.Length);
             while (true) {
                 for (int i = 0; i < map.height; i++) {
                     Debug.Log("i = " + i);
@@ -87,6 +88,7 @@ public class Main : MonoBehaviour
                         // map.tiles[i][j].content.update(buffer);
                         // map.tiles[i].Add(new Tiles());
                         Debug.Log("j = " + j);
+                        map.tiles[i, j].content = new Ressources();
                         map.tiles[i, j].content.linemate = j;
                         Debug.Log(map.tiles[i, j].content.linemate);
                     }
