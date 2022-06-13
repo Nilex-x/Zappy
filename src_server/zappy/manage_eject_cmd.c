@@ -7,13 +7,13 @@
 
 #include "server.h"
 
-int eject(trantorians_t *trant, char **arg, zappy_data_t *data)
+int eject(client_t *client, char **arg, zappy_data_t *data)
 {
     action_t *curr = NULL;
     bool ejected = false;
 
-    for (trantorians_t *c = trant->tile->trantorians; c; c = c->next)
-        if (trant != c) {
+    for (trantorians_t *c = client->trant->tile->trantorians; c; c = c->next)
+        if (client->trant != c) {
             c->direction = (c->direction + 2) % 4;
             move_trantorian(data->map, c);
             c->direction = (c->direction + 2) % 4;
@@ -24,8 +24,8 @@ int eject(trantorians_t *trant, char **arg, zappy_data_t *data)
             ejected = true;
         }
     if (ejected)
-        trant->client->data_send = add_send(trant->client->data_send, "ok\n");
+        client->data_send = add_send(client->data_send, "ok\n");
     else
-        trant->client->data_send = add_send(trant->client->data_send, "ko\n");
+        client->data_send = add_send(client->data_send, "ko\n");
     return (1 - ejected);
 }

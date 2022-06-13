@@ -8,7 +8,7 @@
 #define _GNU_SOURCE
 #include "inventory.h"
 
-int display_inventory(client_t *client, zappy_data_t *data, char *args)
+int display_inventory(client_t *client, char **args, zappy_data_t *data)
 {
     (void) data;
     (void) args;
