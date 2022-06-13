@@ -8,20 +8,21 @@
 #define _GNU_SOURCE
 #include "inventory.h"
 
-int display_inventory(trantorians_t *trant, char **args, zappy_data_t *data)
+int display_inventory(client_t *client, char **args, zappy_data_t *data)
 {
     (void) data;
     (void) args;
 
-    trant->client->data_send = add_send(trant->client->data_send, "[");
-    for (int i = 0; i < 7; i++) { 
+    client->data_send = add_send(client->data_send, "[");
+    for (int i = 0; i < 7; i++) {
         char *line = NULL;
-        asprintf(&line, "%s %d", ressources[i], trant->inventory[i]);
-        trant->client->data_send = add_send(trant->client->data_send, line);
+        asprintf(&line, "%s %d", ressources[i], client->trant->inventory[i]);
+        client->data_send = add_send(client->data_send, line);
         if(i+1 != 7)
-        trant->client->data_send = add_send(trant->client->data_send, ", ");
-            //trant->client->data_send = add_send(trant->client->data_send, ", ");
+            client->data_send = add_send(client->data_send, ", ");
+        free(line);
     }
-    trant->client->data_send = add_send(trant->client->data_send, "]\n");
+    client->data_send = add_send(client->data_send, "]\n");
+    printf("inventory = %s\n", client->data_send->data);
     return 0;
 }

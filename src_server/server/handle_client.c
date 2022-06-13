@@ -24,8 +24,6 @@ void init_client(server_t *info)
     list_client->socket = info->fd_server;
     list_client->isQuit = false;
     list_client->data_send = NULL;
-    for (int i = 0; i < 8; i++)
-        list_client->inventory[i] = 0;
     init_buff_client(list_client);
     info->list_client = list_client;
 }

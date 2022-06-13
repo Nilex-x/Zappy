@@ -19,3 +19,13 @@ void trantorian_spawn(map_t *map, trantorians_t *trant)
     trant->tile = rand_tile;
     trant->direction = rand() % 4;
 }
+
+void trantorian_spawn_from_tile(trantorians_t *trant, tile_t *tile)
+{
+    trantorians_t *list = tile->trantorians;
+
+    tile->trantorians = trant;
+    trant->next = list;
+    trant->tile = tile;
+    trant->direction = rand() % 4;
+}

@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT * nb_tiles, 2022
+** EPITECH PROJECT, 2022
 ** Zappy
 ** File description:
-** init_map_ressourses
+** map_ressourses_handler
 */
 
 #define _GNU_SOURCE
