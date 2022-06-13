@@ -32,8 +32,11 @@ int main(int argc, char **argv)
         print_help();
         return (84);
     }
+    info.data = malloc(sizeof(zappy_data_t));
+    if (!info.data)
+        return (84);
     handle_flags(&info, argc, argv);
-    info.data.map = map_create(info.data.width, info.data.height);
+    info.data->map = map_create(info.data->width, info.data->height);
     if (create_socket(&info) == -1)
         return (84);
     handler_connection(&info);
