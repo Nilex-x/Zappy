@@ -25,7 +25,7 @@ int destroy_egg(server_t *info, team_t *team, egg_t *egg)
     }
     client_t *head = info->list_client;
     for (;info->list_client; info->list_client = info->list_client->next) {
-        if (!strcmp(info->list_client->team_name, team->name)
+        if (!strcmp(info->list_client->trant->team_name, team->name)
         && !info->list_client->trant) {
             info->list_client->trant = create_add_trantoriant(
                 info->list_client, info->data, team->name);

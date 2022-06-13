@@ -36,7 +36,6 @@ typedef struct client_s {
     data_send_t *data_send;
     buffer_t *buff_read;
     trantorians_t *trant;
-    char *team_name;
     struct client_s *next;
     struct client_s *prev;
 } client_t;
@@ -55,7 +54,7 @@ typedef struct server_s
 
 typedef struct cmd_s {
     char *cmd;
-    int (*fct)(client_t *client, zappy_data_t *data, char **args);
+    int (*fct)(client_t *client, char **args, zappy_data_t *data);
     char **args;
     size_t time;
 } cmd_t;
@@ -81,5 +80,7 @@ data_send_t *add_send(data_send_t *data_send, char *data);
 char *get_next_data_to_send(data_send_t **data_send);
 size_t get_size_data_to_send(data_send_t *data_send);
 void free_data_send(data_send_t *data_send);
+
+void init_data_struct(server_t *info);
 
 #endif /* !SERVER_H_ */

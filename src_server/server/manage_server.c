@@ -39,7 +39,6 @@ void sort_client(client_t *client, server_t *info)
 
 void find_socket(server_t *info)
 {
-    client_t *temp = info->list_client;
     client_t *next = NULL;
     action_t *curr = NULL;
 
@@ -49,7 +48,7 @@ void find_socket(server_t *info)
             remove_client(info, temp->socket);
         if (FD_ISSET(temp->socket, &info->rfds))
             sort_client(temp, info);
-        else if (FD_ISSET(temp->socket, &info->wfds))
+        if (FD_ISSET(temp->socket, &info->wfds))
             write_client(info, temp->socket);
         curr = (temp->trant) ? (temp->trant->action) : NULL;
         if (curr && curr->time_left > 0)
@@ -69,7 +68,7 @@ int handler_connection(server_t *info)
     init_client(info);
     while (1) {
         clear_list(info);
-        if (select(info->max_fd + 1, &info->rfds, &info->wfds, NULL, NULL) < 0)
+        if (select(info->max_fd + 1, &info->rfds, &info->wfds, &info->efds, NULL) < 0)
             perror("Select()");
         else
             find_socket(info);
@@ -96,6 +95,7 @@ int create_socket(server_t *info)
     info->max_fd = info->fd_server;
     FD_ZERO(&info->rfds);
     FD_ZERO(&info->wfds);
+    FD_ZERO(&info->efds);
     FD_SET(info->fd_server, &info->rfds);
     return (0);
 }
