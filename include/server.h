@@ -86,6 +86,9 @@ void free_data_send(data_send_t *data_send);
 
 void init_data_struct(server_t *info);
 
-int get_the_shortest_cmd(server_t *info);
+struct timespec set_timespec(int time, int freq);
+struct timespec sub_timespec(struct timespec ts1, struct timespec ts2);
+void select_interupt(server_t *info);
+void get_shortest_time(server_t *info);
 
 #endif /* !SERVER_H_ */
