@@ -15,13 +15,13 @@ void move_trantorian(map_t *map, trantorians_t *trant)
     size_t new_y = y;
 
     if (trant->direction == NORTH)
-        new_y = (y != 0) ? y - 1 : map->height - 1;
+        new_y = (y != 0) ? y - 1 : map->width - 1;
     if (trant->direction == SOUTH)
-        new_y = (y != map->height - 1) ? y + 1 : 0;
+        new_y = (y != map->width - 1) ? y + 1 : 0;
     if (trant->direction == EAST)
-        new_x = (x != map->width - 1) ? x + 1 : 0;
+        new_x = (x != map->height - 1) ? x + 1 : 0;
     if (trant->direction == WEST)
-        new_x = (x != 0) ? x - 1 : map->width - 1;
+        new_x = (x != 0) ? x - 1 : map->height - 1;
     for (trantorians_t *c = map->tiles[x][y]->trantorians; c; c = c->next) {
         (c->next == trant) ? (c->next = trant->next) : 0;
         (c == trant) ? (map->tiles[x][y]->trantorians = trant->next) : 0;
