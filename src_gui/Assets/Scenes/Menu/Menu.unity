@@ -1883,15 +1883,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff7679da59917c97b6a6ef5ba76ecee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
   errorMessage_ip: {fileID: 688727858}
   errorMessage_port: {fileID: 1005563199}
   errorMessage: {fileID: 1993410705}
-=======
-  errorMessage_ip: {fileID: 1557190116}
-  errorMessage_port: {fileID: 1822297228}
-  errorMessage: {fileID: 512267300}
->>>>>>> ZAP-78
 --- !u!1 &997240674
 GameObject:
   m_ObjectHideFlags: 0
@@ -4149,13 +4143,7 @@ RectTransform:
   - {fileID: 254595977}
   - {fileID: 612145347}
   - {fileID: 1532493000}
-<<<<<<< HEAD
   - {fileID: 998599258}
-=======
-  - {fileID: 1822297229}
-  - {fileID: 1557190117}
-  - {fileID: 512267301}
->>>>>>> ZAP-78
   m_Father: {fileID: 480494819}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
