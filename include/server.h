@@ -54,8 +54,7 @@ typedef struct server_s
 
 typedef struct cmd_s {
     char *cmd;
-    int (*fct)(client_t *client, zappy_data_t *data, char **args);
-    char **args;
+    int (*fct)(client_t *client, char** args, zappy_data_t *data);
     size_t time;
 } cmd_t;
 

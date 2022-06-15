@@ -151,6 +151,9 @@ team_t *create_team(char *name, zappy_data_t *data);
 */
 void free_teams(team_t *teams);
 
+
+void move_trantorian(map_t *map, trantorians_t *trant);
+
 /*
 ** @brief Moves the trantorian in the direction he is looking.
 **
@@ -159,7 +162,7 @@ void free_teams(team_t *teams);
 ** @param data Zappy's data structure.
 ** @return 0 if movement was done, 1 if cancelled.
 */
-int forward(trantorians_t *trant, char **arg, zappy_data_t *data);
+int forward(client_t *client, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Turns the trantorian left.
@@ -169,7 +172,7 @@ int forward(trantorians_t *trant, char **arg, zappy_data_t *data);
 ** @param data Zappy's data structure.
 ** @return 0 if movement was done, 1 if cancelled.
 */
-int left(trantorians_t *trant, char **arg, zappy_data_t *data);
+int left(client_t *client, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Turns the trantorian right.
@@ -179,7 +182,7 @@ int left(trantorians_t *trant, char **arg, zappy_data_t *data);
 ** @param data Zappy's data structure.
 ** @return 0 if movement was done, 1 if cancelled.
 */
-int right(trantorians_t *trant, char **arg, zappy_data_t *data);
+int right(client_t *client, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Gets information
@@ -189,7 +192,7 @@ int right(trantorians_t *trant, char **arg, zappy_data_t *data);
 ** @param data Zappy's data structure.
 ** @return 0 if movement was done, 1 if cancelled.
 */
-int look(trantorians_t *trant, char **arg, zappy_data_t *data);
+int look(client_t *client, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Ejects all trantorians on his tile.
@@ -199,7 +202,7 @@ int look(trantorians_t *trant, char **arg, zappy_data_t *data);
 ** @param data Zappy's data structure.
 ** @return 0 if someone was ejected, 1 if no one.
 */
-int eject(trantorians_t *trant, char **arg, zappy_data_t *data);
+int eject(client_t *client, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Sends to the GUI the position of the player args[1]
@@ -259,7 +262,7 @@ int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 ** @param data
 ** @return int
 */
-int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
+int pick_item(client_t *client, char **args, zappy_data_t *data);
 
 /*
 ** @brief Puts an item on the ground.
@@ -269,7 +272,7 @@ int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
 ** @param data
 ** @return int
 */
-int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
+int drop_item(client_t *client, char **args, zappy_data_t *data);
 
 /*
 ** @brief sends a msg from a trantorian to all the trantorians with the direction it's comming from.
@@ -279,6 +282,30 @@ int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
 ** @param data
 ** @return int
 */
-int broadcast(trantorians_t *trant, char **args, zappy_data_t *data);
+int broadcast(client_t *client, char **args, zappy_data_t *data);
+
+int display_inventory(client_t *client, char **args, zappy_data_t *data);
+
+int fork_command(client_t *client, char **args, zappy_data_t *data);
+
+int team_unused_slot(client_t *client, char **args, zappy_data_t *data);
+
+int gui_map_size(client_t *client, char **args, zappy_data_t *data);
+
+int gui_tile_content(client_t *client, char **args, zappy_data_t *data);
+
+int gui_map_content(client_t *client, char **args, zappy_data_t *data);
+
+int gui_teams_name(client_t *client, char **args, zappy_data_t *data);
+
+int gui_player_pos(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */

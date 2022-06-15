@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 static char *look_up(map_t *map, trantorians_t *trant)
 {
@@ -91,20 +92,20 @@ static char *look_right(map_t *map, trantorians_t *trant)
     return line;
 }
 
-int look(trantorians_t *trant, char **arg, zappy_data_t *data)
+int look(client_t *client, char **arg, zappy_data_t *data)
 {
     char *res = NULL;
 
     (void) arg;
-    if (trant->direction == NORTH)
-        res = look_up(data->map, trant);
-    if (trant->direction == EAST)
-        res = look_right(data->map, trant);
-    if (trant->direction == SOUTH)
-        res = look_down(data->map, trant);
-    if (trant->direction == WEST)
-        res = look_left(data->map, trant);
-    trant->client->data_send = add_send(trant->client->data_send, res);
+    if (client->trant->direction == NORTH)
+        res = look_up(data->map, client->trant);
+    if (client->trant->direction == EAST)
+        res = look_right(data->map, client->trant);
+    if (client->trant->direction == SOUTH)
+        res = look_down(data->map, client->trant);
+    if (client->trant->direction == WEST)
+        res = look_left(data->map, client->trant);
+    client->data_send = add_send(client->data_send, res);
     free(res);
     return 0;
 }
