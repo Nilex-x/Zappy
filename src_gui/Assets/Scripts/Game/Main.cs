@@ -46,8 +46,8 @@ class Tiles {
 class Map {
     public int width;
     public int height;
-    public Tiles[,] tiles;
-    public Player[] players;
+    public List<List<Tiles>> tiles;
+    public List<Player> players;
 }
 
 public class Main : MonoBehaviour
@@ -74,26 +74,20 @@ public class Main : MonoBehaviour
             sendToClient("msz\n");
             string []response = buffer.Split(" ");
             Debug.Log(buffer);
-            // Debug.Log(response[1]);
-            // Debug.Log(response[2]);
             map.width = 5;//int.Parse(response[1]);
             map.height = 5;//int.Parse(response[2]);
-            map.tiles = new Tiles[map.width, map.height];
-            Debug.Log(map.tiles.Length);
-            while (true) {
-                for (int i = 0; i < map.height; i++) {
-                    Debug.Log("i = " + i);
-                    for (int j = 0; i < map.width; j++) {
-                        // sendToClient("bct " + j + " " + i + "\n");
-                        // map.tiles[i][j].content.update(buffer);
-                        // map.tiles[i].Add(new Tiles());
-                        Debug.Log("j = " + j);
-                        map.tiles[i, j].content = new Ressources();
-                        map.tiles[i, j].content.linemate = j;
-                        Debug.Log(map.tiles[i, j].content.linemate);
-                    }
+            map.tiles = new List<List<Tiles>>();
+            for (int i = 0; i < map.height; i++)
+            {
+                map.tiles.Add(new List<Tiles>());
+                for (int j = 0; j < map.width; j++)
+                {
+                    map.tiles[i].Add(new Tiles());
+                    map.tiles[i][j].content = new Ressources();
+                    map.tiles[i][j].content.food = i;
                 }
             }
+            Debug.Log(map.tiles[4][0].content.food);
         } catch (System.Exception e) {
             Debug.Log(e);
         }
