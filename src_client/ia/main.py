@@ -13,7 +13,7 @@ import getopt
 from sys import *
 
 class clientIA:
-    def __inti__(self):
+    def __init__(self):
         self.nbClients = -1
         self.posX = 0
         self.posY = 0
@@ -23,9 +23,9 @@ class clientIA:
         self.L = 0
         self.e = 0
         self.T = 0
-        self.N = ""
+        self.N = None
         self.R = 0
-        self.M = ""
+        self.M = None
         self.i = 0
 
 class clientInfo:
@@ -34,7 +34,7 @@ class clientInfo:
         self.connected = 0
         self.readBuff = ""
         self.writeBuff = ""
-        self.ia = clientIA()
+        self.ai = clientIA()
 
     def getPosnTeam(self):
         servMsg = self.readBuff.split("\n")
@@ -45,7 +45,7 @@ class clientInfo:
             if ((len(splited) == 2) and (splited[0].isdigit()) and (splited[1].isdigit())):
                 self.ai.posX = int(splited[0])
                 self.ai.posY = int(splited[1])
-        if (self.nbClients >= 0 and self.posX >= 0 and self.posY >= 0):
+        if (self.ai.nbClients >= 0 and self.ai.posX >= 0 and self.ai.posY >= 0):
             self.connected = 1
 
     def serverCommunication(self, selectRes):
@@ -54,8 +54,6 @@ class clientInfo:
             result = ctypes.cast(res, ctypes.c_char_p)
             self.readBuff = result.value.decode('utf-8')
             print(self.readBuff)
-            if (not self.connected):
-                self.getPosnTeam()
         return 0
 
     def mainLoop(self):
@@ -64,67 +62,64 @@ class clientInfo:
             run = clientLib.client_select()
             self.serverCommunication(run)
             self.writeBuff = input("INPUT: ")
-            if (self.writeBuff != "wait" and self.connected):
+            if (self.writeBuff != "wait"):
                 self.writeBuff += '\n'
                 clientLib.test(self.writeBuff.encode('utf-8'))
         return 0
 
+    def connection(self, team):
+        clientLib.test(team.encode('utf-8'))
+        while (not self.connected):
+            res = clientLib.client_select()
+            self.serverCommunication(res)
+            self.getPosnTeam()
 
-def manageFlags(av):
-    if (len(av) == 1 and av[0] == "-help"):
-        print("USAGE: ./zappy_ai -p port -n name -h machine")
-        print("\tport is the port number")
-        print("\tname is the name of the team")
-        print("\tmachine is the name of the machine; localhost by default")
-        return 1
-    if (len(av) != 6):
-        print("wrong number of args")
-        return -1
-    if (av[0] != "-p" or av[2] != "-n" or av[4] != "-h"):
+
+def manageFlags(port, teamName, myIp):
+    if (not port.isdigit()):
+        print("wrong port")
+        exit(84)
+    if (port == None or teamName == None):
         print("wrong flags")
-        return -1
-    if (not av[1].isdigit()):
-        print("NAN port")
-        return -1
-    return 0
+        exit(84)
+    if (myIp == None):
+        myIp = "127.0.0.1"
+    teamName += '\n'
+
+def displayHelp():
+    print("USAGE: ./zappy_ai -p port -n name -h machine")
+    print("\tport is the port number")
+    print("\tname is the name of the team")
+    print("\tmachine is the name of the machine; localhost by default")
 
 def main():
     port = None
     myIp = None
     teamName = None
-    av = argv[1:]
-    # flags = manageFlags(av)
-    # if (flags < 0):
-    #     return 84
-    # if (flags == 1):
-    #     return 0
-    # port = int(av[1])
-    # teamName = av[3]
-    # teamName += '\n'
 
     try:
-        opts, args = getopt.getopt(av, "-p:-n:-h:")
+        opts, args = getopt.getopt(argv[1:], '-p:-n:-h:', "help")
     except:
         print("Wrong flag")
         return 84
-    
     for opt, arg in opts:
-        if opt in ['-p']:
-            port = int(arg)
-        elif opt in ['-n']:
+        if opt in ["-help"]:
+            displayHelp()
+            exit(84)
+        elif opt in ["-p"]:
+            port = arg
+        elif opt in ["-n"]:
             teamName = arg
-            teamName += '\n'
-        elif opt in ['-h']:
-            myIp = opt.encode('utf-8')
+        elif opt in ["-h"]:
+            myIp = arg.encode('utf-8')
 
-    print("hjkljhjkjhjk")
-    # myIp = av[5].encode('utf-8')
-    mySocket = clientLib.create_client(ctypes.c_char_p(myIp), ctypes.c_int(port))
+    manageFlags(port, teamName, myIp)
+    mySocket = clientLib.create_client(ctypes.c_char_p(myIp), ctypes.c_int(int(port)))
     if (mySocket < 0 or clientLib.init_info(ctypes.c_int(mySocket)) < 0):
         print("failed connection")
         return 84
     myClient = clientInfo(mySocket)
-    clientLib.test(teamName.encode('utf-8'))
+    myClient.connection(teamName)
     myClient.mainLoop()
     return 0
 
