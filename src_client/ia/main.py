@@ -9,6 +9,7 @@
 
 import ctypes
 import pathlib
+import getopt
 from sys import *
 
 class clientIA:
@@ -88,16 +89,36 @@ def manageFlags(av):
     return 0
 
 def main():
+    port = None
+    myIp = None
+    teamName = None
     av = argv[1:]
-    flags = manageFlags(av)
-    if (flags < 0):
+    # flags = manageFlags(av)
+    # if (flags < 0):
+    #     return 84
+    # if (flags == 1):
+    #     return 0
+    # port = int(av[1])
+    # teamName = av[3]
+    # teamName += '\n'
+
+    try:
+        opts, args = getopt.getopt(av, "-p:-n:-h:")
+    except:
+        print("Wrong flag")
         return 84
-    if (flags == 1):
-        return 0
-    port = int(av[1])
-    teamName = av[3]
-    teamName += '\n'
-    myIp = av[5].encode('utf-8')
+    
+    for opt, arg in opts:
+        if opt in ['-p']:
+            port = int(arg)
+        elif opt in ['-n']:
+            teamName = arg
+            teamName += '\n'
+        elif opt in ['-h']:
+            myIp = opt.encode('utf-8')
+
+    print("hjkljhjkjhjk")
+    # myIp = av[5].encode('utf-8')
     mySocket = clientLib.create_client(ctypes.c_char_p(myIp), ctypes.c_int(port))
     if (mySocket < 0 or clientLib.init_info(ctypes.c_int(mySocket)) < 0):
         print("failed connection")
