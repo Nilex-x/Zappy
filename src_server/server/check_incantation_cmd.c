@@ -96,10 +96,10 @@ static int check_trant_required_nb(map_t *map, trantorians_t *trant)
 int check_incantation(map_t *map, trantorians_t *trant)
 {
     if (check_trant_required_nb(map, trant) == -1)
-        return (-1); // KO -> Peut pas incanter
+        return (-1);
     if (check_incant_ressources(map, trant) == -1)
-        return (-1); // KO -> Peut pas incanter
+        return (-1);
     if (check_trant_required_level(map, trant) == -1)
-        return (-1); // KO -> Peut pas incanter
+        return (-1);
     return (0);
 }
