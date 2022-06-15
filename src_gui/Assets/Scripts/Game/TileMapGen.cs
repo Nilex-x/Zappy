@@ -18,8 +18,8 @@ public class TileMapGen : MonoBehaviour
 
     void CreateTileMap()
     {
-        for (int x = 0; x <= mapWidth; x++) {
-            for (int z = 0; z <= mapHeight; z++) {
+        for (int x = 0; x < mapWidth; x++) {
+            for (int z = 0; z < mapHeight; z++) {
                 GameObject Temp = Instantiate(tilePrefab);
                 Temp.transform.position = new Vector3(x * tileOffset, 0, z * tileOffset);
                 SetTileInfo(Temp, x, z);
