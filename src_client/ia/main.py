@@ -12,12 +12,14 @@ import pathlib
 import getopt
 from sys import *
 
+
+# ---------------------- CLIENT AI ----------------------
+
 class clientIA:
     def __init__(self):
         self.nbClients = -1
-        self.posX = 0
-        self.posY = 0
-        self.rsr = []
+        self.posX = -1
+        self.posY = -1
         self.n = 0
         self.O = 1
         self.L = 0
@@ -27,26 +29,33 @@ class clientIA:
         self.R = 0
         self.M = None
         self.i = 0
+        self.ressources = {
+            "food": 0,
+            "linemate": 0,
+            "deraumere": 0,
+            "sibur": 0,
+            "mendiane": 0,
+            "phiras": 0,
+            "thystame": 0
+        }
+        self.queueCmd = 0
+
+    def serverMsg(self, srvMsg):
+        res = input("INPUT: ")
+        return res
+
+
+
+# ---------------------- CLIENT NETWORK ----------------------
 
 class clientInfo:
     def __init__(self, mySocket):
         self.socket = mySocket
         self.connected = 0
-        self.readBuff = ""
-        self.writeBuff = ""
+        self.readBuff = None
+        self.writeBuff = None
         self.ai = clientIA()
 
-    def getPosnTeam(self):
-        servMsg = self.readBuff.split("\n")
-        for i in servMsg:
-            splited = i.split()
-            if ((len(splited) == 1) and (splited[0].isdigit())):
-                self.ai.nbClients = int(splited[0])
-            if ((len(splited) == 2) and (splited[0].isdigit()) and (splited[1].isdigit())):
-                self.ai.posX = int(splited[0])
-                self.ai.posY = int(splited[1])
-        if (self.ai.nbClients >= 0 and self.ai.posX >= 0 and self.ai.posY >= 0):
-            self.connected = 1
 
     def serverCommunication(self, selectRes):
         if (selectRes == 1):
@@ -61,61 +70,77 @@ class clientInfo:
         while (run > -1):
             run = clientLib.client_select()
             self.serverCommunication(run)
-            self.writeBuff = input("INPUT: ")
+            self.writeBuff = self.ai.serverMsg(self.readBuff)
+            self.readBuff = None
             if (self.writeBuff != "wait"):
                 self.writeBuff += '\n'
                 clientLib.test(self.writeBuff.encode('utf-8'))
         return 0
+
+
+    def getPosnTeam(self):
+        servMsg = self.readBuff.split("\n")
+        for i in servMsg:
+            splited = i.split()
+            if ((len(splited) == 1) and (splited[0].isdigit())):
+                self.ai.nbClients = int(splited[0])
+            if ((len(splited) == 2) and (splited[0].isdigit()) and (splited[1].isdigit())):
+                self.ai.posX = int(splited[0])
+                self.ai.posY = int(splited[1])
+        if (self.ai.nbClients >= 0 and self.ai.posX >= 0 and self.ai.posY >= 0):
+            self.connected = 1
 
     def connection(self, team):
         clientLib.test(team.encode('utf-8'))
         while (not self.connected):
             res = clientLib.client_select()
             self.serverCommunication(res)
-            self.getPosnTeam()
+            if (self.readBuff != None):
+                self.getPosnTeam()
 
+
+# ---------------------- BEGIN PROGRAM ----------------------
 
 def manageFlags(port, teamName, myIp):
-    if (not port.isdigit()):
-        print("wrong port")
-        exit(84)
     if (port == None or teamName == None):
         print("wrong flags")
         exit(84)
-    if (myIp == None):
-        myIp = "127.0.0.1"
-    teamName += '\n'
+    if (not port.isdigit()):
+        print("wrong port")
+        exit(84)
 
 def displayHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
     print("\tport is the port number")
     print("\tname is the name of the team")
     print("\tmachine is the name of the machine; localhost by default")
+    exit(0)
 
 def main():
     port = None
     myIp = None
     teamName = None
+    av = argv[1:]
 
+    if (len(av) == 1 and av[0] == "-help"):
+        displayHelp()
     try:
-        opts, args = getopt.getopt(argv[1:], '-p:-n:-h:', "help")
+        opts, args = getopt.getopt(av, '-p:-n:-h:')
     except:
         print("Wrong flag")
         return 84
     for opt, arg in opts:
-        if opt in ["-help"]:
-            displayHelp()
-            exit(84)
-        elif opt in ["-p"]:
+        if opt in ("-p"):
             port = arg
-        elif opt in ["-n"]:
-            teamName = arg
-        elif opt in ["-h"]:
-            myIp = arg.encode('utf-8')
-
+        elif opt in ("-n"):
+            teamName = arg + '\n'
+        elif opt in ("-h"):
+            myIp = arg
     manageFlags(port, teamName, myIp)
-    mySocket = clientLib.create_client(ctypes.c_char_p(myIp), ctypes.c_int(int(port)))
-    if (mySocket < 0 or clientLib.init_info(ctypes.c_int(mySocket)) < 0):
+    if (myIp == None):
+        myIp = "127.0.0.1"
+    mySocket = clientLib.create_client(ctypes.c_char_p(myIp.encode('utf-8')), ctypes.c_int(int(port)))
+    if ((mySocket < 0) or (clientLib.init_info(ctypes.c_int(mySocket)) < 0)):
         print("failed connection")
         return 84
     myClient = clientInfo(mySocket)
