@@ -5,8 +5,7 @@
 ** handle incantation
 */
 
-#include "commands.h"
-#include "map_handler.h"
+#include "server.h"
 
 static const struct data_incant DATA_INCANT[] = {
     {
@@ -94,13 +93,24 @@ static int check_trant_required_nb(map_t *map, trantorians_t *trant)
     return (0);
 }
 
-int check_incantation(map_t *map, trantorians_t *trant)
+int incantation(client_t *cli, char **arg, zappy_data_t *data)
 {
-    if (check_trant_required_nb(map, trant) == -1)
-        return (-1); // KO -> Peut pas incanter
-    if (check_incant_ressources(map, trant) == -1)
-        return (-1); // KO -> Peut pas incanter
-    if (check_trant_required_level(map, trant) == -1)
-        return (-1); // KO -> Peut pas incanter
-    return (0);
+    char *line = NULL;
+
+    if (check_trant_required_nb(data->map, cli->trant) == -1
+    || check_incant_ressources(data->map, cli->trant) == -1
+    || check_trant_required_level(data->map, cli->trant) == -1) {
+        cli->data_send = add_send(cli->data_send, "ko\n");
+        return (-1);
+    }
+    if (cli->trant->action->time_left.tv_sec <= 0
+    && cli->trant->action->time_left.tv_nsec <= 0) {
+        cli->trant->lvl ++;
+        asprintf(&line, "Current level: %d\n", cli->trant->lvl);
+        cli->data_send = add_send(cli->data_send, line);
+        free(line);
+        return (1);
+    }
+    cli->data_send = add_send(cli->data_send, "Elevation underway\n");
+    
 }

@@ -78,18 +78,18 @@ void do_action(server_t *info)
         act = temp->action;
         if (act)
             time = sub_timespec(info->time_ref, act->time_left);
-        if (act != NULL && time.tv_nsec <= 0 && time.tv_sec <= 0) {
+        if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
             act->action(temp, act->args, info->data);
             temp->action = act->next;
             free_array(act->args);
             free(act);
-        } else if (act != NULL) {
+        } else if (act != NULL)
             act->time_left = time;
-        }
+        if (temp->action && temp->action->action == &incantation)
+            incantation(temp->client, temp->action->args, info->data);
         temp = temp->next;
     }
     get_shortest_time(info);
-    return;
 }
 
 void close_server(server_t *info)

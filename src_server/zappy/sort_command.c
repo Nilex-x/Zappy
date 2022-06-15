@@ -64,6 +64,11 @@ static const cmd_t MY_CMDS[] = {
         .time = 7
     },
     {
+        .cmd = "Incantation",
+        .fct = &incantation,
+        .time = 300
+    },
+    {
         .cmd = "msz",
         .fct = &gui_map_size
     },
@@ -112,11 +117,12 @@ static void append_action(trantorians_t *trant, char **args, int pos, zappy_data
     new->next = NULL;
     while (curr && curr->next)
         curr = curr->next;
-    if (curr && curr->action == &incatation && !check_incantation(data->map, trant)) {
-        
+    if (curr)
         curr->next = new;
-    }
-    else
+    else if (new->action == &incantation) {
+        incantation(trant->client, args, data);
+        trant->action = new;
+    } else
         trant->action = new;
 }
 

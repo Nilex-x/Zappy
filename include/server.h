@@ -55,6 +55,13 @@ typedef struct server_s
     zappy_data_t *data;
 }server_t;
 
+struct data_incant {
+    int ressources_required[6];
+    int trant_nb_required;
+    int trant_min_lvl_required;
+    int trant_max_lvl_required;
+};
+
 typedef struct cmd_s {
     char *cmd;
     int (*fct)(client_t *client, char **args, zappy_data_t *data);
