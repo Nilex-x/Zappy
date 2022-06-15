@@ -10,6 +10,43 @@
 import ctypes
 import pathlib
 from sys import *
+from turtle import left
+
+def findPathToTile(clientInfo, tile_needed):
+        left_tile = 1
+        middle_tile = 2
+        right_tile = 3
+        action = "Forward"
+        temp = clientInfo.writeBuff
+        for levels in range(1, clientInfo.level + 1):
+            print(tile_needed, left_tile, middle_tile, right_tile)
+            if(tile_needed < middle_tile and tile_needed >= left_tile):
+                clientInfo.writeBuff = clientInfo.writeBuff + "Forward\nLeft\n"
+                print("Forward")
+                print("Left")
+                for t in range(0, middle_tile-tile_needed):
+                    print("Forward")
+                    clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
+                return (1)
+            elif(tile_needed > middle_tile and tile_needed <= right_tile):
+                clientInfo.writeBuff = clientInfo.writeBuff + "Forward\nRight\n"
+                print("Forward")
+                print("Right")
+                for t in range(0, tile_needed-middle_tile):
+                    print("Forward")
+                    clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
+                return (1)
+            else:
+                print(action)
+                clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
+            if (tile_needed == middle_tile):
+                return (1)
+            left_tile += 2*levels+1
+            middle_tile += 2*levels+2
+            right_tile += 2*levels+3
+        clientInfo.writeBuff = temp
+        return (0)
+        
 
 class clientInfo:
     def __init__(self, mySocket):
@@ -20,6 +57,7 @@ class clientInfo:
         self.nbClients = -1
         self.posX = -1
         self.posY = -1
+        self.level = 4
 
     def getPosnTeam(self):
         servMsg = self.readBuff.split("\n")
@@ -49,6 +87,11 @@ class clientInfo:
             run = clientLib.client_select()
             self.serverCommunication(run)
             self.writeBuff = input("INPUT: ")
+            if (self.writeBuff == "Look"):
+                print(self.readBuff)
+                if not findPathToTile(self, 4):
+                    print("Not found...")
+            print(self.writeBuff)
             if (self.writeBuff != "wait" and self.connected):
                 self.writeBuff += '\n'
                 clientLib.test(self.writeBuff.encode('utf-8'))
