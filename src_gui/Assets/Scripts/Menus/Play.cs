@@ -2,6 +2,9 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using TMPro;
 using System.Net.Sockets;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class Play : MonoBehaviour
 {
@@ -69,8 +72,7 @@ public void ReadStringInput_port(string s) {
                 int bytes = stream.Read(data, 0, data.Length);                  //read answer from stream (equivalent to read(fd, buffer, sizeof(buffer)))
                 response = System.Text.Encoding.ASCII.GetString(data, 0, bytes);//convert answer to string
                 Debug.Log("Received:" + response);
-                stream.Close();                                                 //close stream
-                client.Close();                                                 //close client
+                SceneManager.LoadScene("Game");                                 //load game scene
             } catch (System.ArgumentNullException e) {                          //if an argument is null
                 Debug.Log("ArgumentNullException: " + e);
                 errorMessage.GetComponent<TextMeshProUGUI>().text = "Error, ArgumentNullException";
