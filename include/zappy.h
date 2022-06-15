@@ -8,6 +8,8 @@
 #ifndef ZAPPY_H_
     #define ZAPPY_H_
 
+    #include <unistd.h>
+
     #define bool unsigned int
     #define true 1
     #define false 0
@@ -15,21 +17,31 @@
 typedef struct map_s map_t;
 typedef struct client_s client_t;
 
-typedef enum directions {
+typedef enum direction_s {
     NORTH,
     EAST,
     SOUTH,
     WEST
 } direction_t;
 
+typedef struct egg_s {
+    char *team_name;
+    int time_until_hatch;
+    struct tile_s *tile;
+    struct egg_s *next;
+} egg_t;
+
 typedef struct trantorians_s {
     int lvl;
     bool is_alive;
-    int inventory[8];
-    direction_t direction;
     unsigned int life_left;
+    int inventory[8];
+    char *team_name;
+    direction_t direction;
     client_t *client;
+    struct action_s *action;
     struct tile_s *tile;
+    struct team_s *team;
     struct trantorians_s *next;
 } trantorians_t;
 
@@ -53,8 +65,15 @@ typedef struct zappy_data_s {
     int max_teams_player;
     team_t *teams;
     trantorians_t *trants;
+    egg_t *eggs;
     map_t *map;
 } zappy_data_t;
+
+typedef struct action_s {
+    int (*action)(trantorians_t trant, char **arg, zappy_data_t *data);
+    size_t time_left;
+    struct action_s *next;
+} action_t;
 
 typedef struct server_s server_t;
 
@@ -96,7 +115,7 @@ int sort_command(client_t *client, zappy_data_t *data, char *cmd);
 ** @param data Data server struct
 ** @return trantorians_t*
 */
-trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data);
+trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *team_name);
 
 /*
 ** @brief Get the team by name string
@@ -134,7 +153,7 @@ void free_teams(team_t *teams);
 
 /*
 ** @brief Moves the trantorian in the direction he is looking.
-** 
+**
 ** @param trant The trantorian who's moving.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
@@ -144,7 +163,7 @@ int forward(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Turns the trantorian left.
-** 
+**
 ** @param trant The trantorian who's moving.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
@@ -154,7 +173,7 @@ int left(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 /*
 ** @brief Turns the trantorian right.
-** 
+**
 ** @param trant The trantorian who's moving.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
@@ -163,13 +182,103 @@ int left(trantorians_t *trant, char **arg, zappy_data_t *data);
 int right(trantorians_t *trant, char **arg, zappy_data_t *data);
 
 /*
-** @brief Gets information 
-** 
+** @brief Gets information
+**
 ** @param trant The trantorian who's moving.
 ** @param arg NULL here.
 ** @param data Zappy's data structure.
 ** @return 0 if movement was done, 1 if cancelled.
 */
 int look(trantorians_t *trant, char **arg, zappy_data_t *data);
+
+/*
+** @brief Ejects all trantorians on his tile.
+**
+** @param trant The trantorian ejecting.
+** @param arg NULL here.
+** @param data Zappy's data structure.
+** @return 0 if someone was ejected, 1 if no one.
+*/
+int eject(trantorians_t *trant, char **arg, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the position of the player args[1]
+**
+** @param cli The client asking for the position.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_pos(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the level of the player args[1]
+**
+** @param cli The client asking for the level.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the inventory of the player args[1]
+**
+** @param cli The client asking for the inventory.
+** @param args The arguments of the function, here the player number.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the player number is wrong.
+*/
+int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Sends to the GUI the time frequency of the game.
+**
+** @param cli The client asking for the frequency.
+** @param args NULL here.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if not.
+*/
+int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Changing the time frequency of the game.
+**
+** @param cli The client asking for the change.
+** @param args The arguments of the function, here the new frequency.
+** @param data Zappy's data structure.
+** @return 0 if everything is okay, 1 if the frequency is not good.
+*/
+int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
+
+/*
+** @brief Pick an item from the tile.
+**
+** @param trant The trantorian
+** @param args The picked item
+** @param data
+** @return int
+*/
+int pick_item(trantorians_t *trant, char **args, zappy_data_t *data);
+
+/*
+** @brief Puts an item on the ground.
+**
+** @param trant The trantorian
+** @param args The dropped item
+** @param data
+** @return int
+*/
+int drop_item(trantorians_t *trant, char **args, zappy_data_t *data);
+
+/*
+** @brief sends a msg from a trantorian to all the trantorians with the direction it's comming from.
+**
+** @param trant the trantorian sending the msg
+** @param args msg to send
+** @param data
+** @return int
+*/
+int broadcast(trantorians_t *trant, char **args, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */

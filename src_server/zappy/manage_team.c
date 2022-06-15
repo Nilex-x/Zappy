@@ -31,8 +31,11 @@ team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team)
     new = malloc(sizeof(trantorians_list_t));
     if (!new)
         return (NULL);
+    team->nb_player++;
+    printf("%d\n", team->nb_player);
     new->trant = trant;
     new->next = NULL;
+    trant->team = team;
     if (!team->list)
         team->list = new;
     else {
@@ -52,6 +55,7 @@ team_t *create_team(char *name, zappy_data_t *data)
         return (NULL);
     new->name = strdup(name);
     new->nb_player = 0;
+    printf("create %d\n", data->max_teams_player);
     new->player_max = data->max_teams_player;
     new->next = NULL;
     new->list = NULL;

@@ -17,9 +17,14 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/server/manage_data_send.c \
 						src_server/server/manage_flags.c\
 						src_server/zappy/inventory.c \
+						src_server/zappy/fork.c \
 						src_server/zappy/manage_team.c \
 						src_server/zappy/manage_trantorians.c \
-						src_server/zappy/sort_command.c
+						src_server/zappy/sort_command.c \
+						src_server/zappy/command_team.c \
+						src_server/zappy/command_broadcast.c \
+						src_server/zappy/gui_commands_1.c \
+						src_server/server/check_incantation_cmd.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 

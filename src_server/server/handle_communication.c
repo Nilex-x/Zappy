@@ -63,7 +63,9 @@ void free_data(zappy_data_t *data)
 {
     free_teams(data->teams);
     free_trantorians(data->trants);
+    free_eggs(data->eggs);
     free_map(data->map);
+    free(data);
 }
 
 void close_server(server_t *info)
@@ -80,7 +82,7 @@ void close_server(server_t *info)
         free(temp);
         temp = next;
     }
-    free_data(&info->data);
+    free_data(info->data);
     close(info->fd_server);
     exit(0);
 }
