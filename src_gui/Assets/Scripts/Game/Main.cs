@@ -9,7 +9,7 @@ class Client
     public NetworkStream stream;
 }
 
-class Ressources {
+public class Ressources {
     public int food = 0;
     public int linemate = 0;
     public int deraumere = 0;
@@ -35,15 +35,15 @@ class Ressources {
     }
 }
 
-class Player {
+public class Player {
     public int level;
 }
 
-class Tiles {
+public class Tiles {
     public Ressources content;
 }
 
-class Map {
+public class Map {
     public int width;
     public int height;
     public List<List<Tiles>> tiles;
@@ -53,7 +53,7 @@ class Map {
 public class Main : MonoBehaviour
 {
     private Client client = new Client();
-    private Map map = new Map();
+    public static Map map = new Map();
     private string buffer;
     private string response;
 

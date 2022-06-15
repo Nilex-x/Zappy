@@ -6,8 +6,8 @@ public class TileMapGen : MonoBehaviour
 {
     public GameObject tilePrefab;
 
-    [SerializeField]int mapWidth = 5;
-    [SerializeField]int mapHeight = 5;
+    [SerializeField]int mapWidth = Main.map.width;
+    [SerializeField]int mapHeight = Main.map.height;
 
     [SerializeField]float tileOffset = 1.45f;
 
