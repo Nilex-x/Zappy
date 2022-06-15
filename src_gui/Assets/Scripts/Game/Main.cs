@@ -56,6 +56,29 @@ public class Main : MonoBehaviour
     public static Map map = new Map();
     private string buffer;
     private string response;
+    private TileMapGen tileMapGen;
+
+
+    public GameObject tilePrefab;
+
+    float tileOffset = 1.45f;
+
+    void CreateTileMap()
+    {
+        for (int x = 0; x < map.width; x++) {
+            for (int z = 0; z < map.height; z++) {
+                GameObject Temp = Instantiate(tilePrefab);
+                Temp.transform.position = new Vector3(x * tileOffset, 0, z * tileOffset);
+                SetTileInfo(Temp, x, z);
+            }
+        }
+    }
+
+    void SetTileInfo(GameObject Temp, int x, int z)
+    {
+        Temp.transform.parent = transform;
+        Temp.name = x.ToString() + ", " + z.ToString();
+    }
 
     private void sendToClient(string message)
     {
@@ -74,8 +97,9 @@ public class Main : MonoBehaviour
             sendToClient("msz\n");
             string []response = buffer.Split(" ");
             Debug.Log(buffer);
-            map.width = 5;//int.Parse(response[1]);
-            map.height = 5;//int.Parse(response[2]);
+            map.width = 10;//int.Parse(response[1]);
+            map.height = 4;//int.Parse(response[2]);
+            Debug.Log("Generated map");
             map.tiles = new List<List<Tiles>>();
             for (int i = 0; i < map.height; i++)
             {
@@ -91,6 +115,7 @@ public class Main : MonoBehaviour
         } catch (System.Exception e) {
             Debug.Log(e);
         }
+        CreateTileMap();
     }
 
     void Start()
