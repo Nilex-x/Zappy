@@ -220,6 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c2de9ea7e55dbb892e477954fb8400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parent: {fileID: 1257246384}
   tilePrefab: {fileID: 8499674414131275041, guid: 8cf8444a9799b7643a0d245dabe7668c, type: 3}
 --- !u!1 &1128178145
 GameObject:

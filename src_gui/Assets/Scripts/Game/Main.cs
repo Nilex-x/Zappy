@@ -54,10 +54,9 @@ public class Main : MonoBehaviour
 {
     private Client client = new Client();
     public static Map map = new Map();
+    public GameObject parent;
     private string buffer;
     private string response;
-    private TileMapGen tileMapGen;
-
 
     public GameObject tilePrefab;
 
@@ -76,7 +75,7 @@ public class Main : MonoBehaviour
 
     void SetTileInfo(GameObject Temp, int x, int z)
     {
-        Temp.transform.parent = transform;
+        Temp.transform.SetParent(parent.transform);
         Temp.name = x.ToString() + ", " + z.ToString();
     }
 
