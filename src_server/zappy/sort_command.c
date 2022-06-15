@@ -101,21 +101,23 @@ static const cmd_t MY_CMDS[] = {
     }
 };
 
-static void append_action(action_t **act, char **args, int pos, int freq)
+static void append_action(trantorians_t *trant, char **args, int pos, zappy_data_t *data)
 {
-    action_t *curr = *act;
+    action_t *curr = trant->action;
     action_t *new = malloc(sizeof(action_t));
 
     new->action = MY_CMDS[pos].fct;
-    new->time_left = set_timespec(MY_CMDS[pos].time, freq);
+    new->time_left = set_timespec(MY_CMDS[pos].time, data->freq);
     new->args = args;
     new->next = NULL;
     while (curr && curr->next)
         curr = curr->next;
-    if (curr)
+    if (curr && curr->action == &incatation && !check_incantation(data->map, trant)) {
+        
         curr->next = new;
+    }
     else
-        *act = new;
+        trant->action = new;
 }
 
 int sort_command(client_t *client, zappy_data_t *data, char *arg)
@@ -125,8 +127,8 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
 
     for (int pos = 0; pos != cmd_size; pos++) {
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd))) {
-            (client->trant) ? append_action(&client->trant->action, args
-            , pos, data->freq) : MY_CMDS[pos].fct(client, args, data);
+            (client->trant) ? append_action(client->trant, args
+            , pos, data) : MY_CMDS[pos].fct(client, args, data);
             return (0);
         }
     }

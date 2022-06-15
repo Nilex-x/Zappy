@@ -43,6 +43,7 @@ void find_socket(server_t *info)
 
     for (client_t *temp = info->list_client; temp; temp = next) {
         next = temp->next;
+
         if (FD_ISSET(temp->socket, &info->efds))
             remove_client(info, temp->socket);
         if (FD_ISSET(temp->socket, &info->rfds))
@@ -60,13 +61,16 @@ int handler_connection(server_t *info)
     init_client(info);
     while (1) {
         clear_list(info);
-        retsel = select(info->max_fd + 1, &info->rfds, &info->wfds, &info->efds, NULL);
+        retsel = select(info->max_fd + 1, &info->rfds, &info->wfds, &info->efds, &info->time_left);
         if (retsel < 0)
             perror("select()");
         if (retsel == 0)
             do_action(info);
-        if (retsel > 0)
+        if (retsel > 0) {
+            select_interupt(info);
             find_socket(info);
+        }
+        get_shortest_time(info);
     }
 }
 

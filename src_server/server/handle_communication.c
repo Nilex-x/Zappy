@@ -76,13 +76,14 @@ void do_action(server_t *info)
 
     while (temp) {
         act = temp->action;
-        time = sub_timespec(act->time_left, info->time_ref);
-        if (time.tv_nsec <= 0 && time.tv_sec <= 0) {
+        if (act)
+            time = sub_timespec(info->time_ref, act->time_left);
+        if (act != NULL && time.tv_nsec <= 0 && time.tv_sec <= 0) {
             act->action(temp, act->args, info->data);
             temp->action = act->next;
             free_array(act->args);
             free(act);
-        } else {
+        } else if (act != NULL) {
             act->time_left = time;
         }
         temp = temp->next;
