@@ -41,8 +41,10 @@ void update_map_ressources(map_t *map)
         }
     }
     for (size_t i = 0; i < 7; i++)
-        for (size_t j = 0; j < missing[i]; j++)
+        for (size_t j = 0; j < missing[i]; j++) {
+            srand(time(NULL));
             map->tiles[rand() % h][rand() % w]->ressources[i]++;
+        }
 }
 
 void init_map_ressources(map_t *map)
@@ -51,6 +53,8 @@ void init_map_ressources(map_t *map)
     size_t w = map->width;
 
     for (size_t i = 0; i < 7; i++)
-        for (size_t j = 0; j < density[i] * h * w; j++)
+        for (size_t j = 0; j < density[i] * h * w; j++) {
+            srand(time(NULL));
             map->tiles[rand() % h][rand() % w]->ressources[i]++;
+        }
 }
