@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 int get_obj(char *arg)
 {
@@ -18,7 +19,10 @@ int get_obj(char *arg)
 
 int pick_item(client_t *client, char **args, zappy_data_t *data)
 {
-    int object = get_obj(args[0]);
+    for (int i = 0; args[i]; i++)
+        printf("%d: [%s]\n", i, args[i]);
+
+    int object = get_obj(args[1]);
 
     (void) data;
     if (client->trant->tile->ressources[object] > 0) {

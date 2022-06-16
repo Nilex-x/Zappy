@@ -65,8 +65,10 @@ int handler_connection(server_t *info)
         retsel = select(info->max_fd + 1, &info->rfds, &info->wfds,
                         &info->efds, &time);
         TIMEVAL_TO_TIMESPEC(&time, &info->time_left);
-        if (retsel < 0)
+        if (retsel < 0) {
             perror("select()");
+            exit(84);
+        }
         if (retsel == 0) {
             do_action(info);
             find_socket(info);

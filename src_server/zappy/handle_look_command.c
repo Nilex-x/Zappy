@@ -8,14 +8,14 @@
 #include "server.h"
 #include <stdio.h>
 
-static char *look_up(map_t *map, trantorians_t *trant)
+static int look_up(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
     int new_x = trant->tile->x;
     int new_y = trant->tile->y;
 
-    for (int s = 0; s <= trant->lvl; s++)
+    for (int s = 0; s <= trant->lvl; s++) {
         for (int x = -s; x <= s; x++) {
             new_x = modulo(trant->tile->x + s, map->height);
             new_y = modulo(trant->tile->y + x, map->width);
@@ -25,18 +25,21 @@ static char *look_up(map_t *map, trantorians_t *trant)
             , "%s%s", line, res));
             free(res);
         }
+    }
     asprintf(&line, "%s]", line);
-    return line;
+    trant->client->data_send = add_send(trant->client->data_send, line);
+    free(line);
+    return (0);
 }
 
-static char *look_down(map_t *map, trantorians_t *trant)
+static int look_down(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
     int new_x = trant->tile->x;
     int new_y = trant->tile->y;
 
-    for (int s = 0; s <= trant->lvl; s++)
+    for (int s = 0; s <= trant->lvl; s++) {
         for (int x = s; x >= -s; x--) {
             new_x = modulo(trant->tile->x - s, map->height);
             new_y = modulo(trant->tile->y + x, map->width);
@@ -46,18 +49,22 @@ static char *look_down(map_t *map, trantorians_t *trant)
             , "%s%s", line, res));
             free(res);
         }
+        free(res);
+    }
     asprintf(&line, "%s]", line);
-    return line;
+    trant->client->data_send = add_send(trant->client->data_send, line);
+    free(line);
+    return (0);
 }
 
-static char *look_left(map_t *map, trantorians_t *trant)
+static int look_left(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
     int new_x = trant->tile->x;
     int new_y = trant->tile->y;
 
-    for (int s = 0; s <= trant->lvl; s++)
+    for (int s = 0; s <= trant->lvl; s++) {
         for (int x = s; x >= -s; x--) {
             new_x = modulo(trant->tile->x + x, map->height);
             new_y = modulo(trant->tile->y - s, map->width);
@@ -67,18 +74,21 @@ static char *look_left(map_t *map, trantorians_t *trant)
             , "%s%s", line, res));
             free(res);
         }
+    }
     asprintf(&line, "%s]", line);
-    return line;
+    trant->client->data_send = add_send(trant->client->data_send, line);
+    free(line);
+    return (0);
 }
 
-static char *look_right(map_t *map, trantorians_t *trant)
+static int look_right(map_t *map, trantorians_t *trant)
 {
     char *line = strdup("[");
     char *res = NULL;
     int new_x = trant->tile->x;
     int new_y = trant->tile->y;
 
-    for (int s = 0; s <= trant->lvl; s++)
+    for (int s = 0; s <= trant->lvl; s++) {
         for (int x = -s; x <= s; x++) {
             new_x = modulo(trant->tile->x + x, map->height);
             new_y = modulo(trant->tile->y + s, map->width);
@@ -88,24 +98,23 @@ static char *look_right(map_t *map, trantorians_t *trant)
             , "%s%s", line, res));
             free(res);
         }
+    }
     asprintf(&line, "%s]", line);
-    return line;
+    trant->client->data_send = add_send(trant->client->data_send, line);
+    free(line);
+    return (0);
 }
 
 int look(client_t *client, char **arg, zappy_data_t *data)
 {
-    char *res = NULL;
-
     (void) arg;
     if (client->trant->direction == NORTH)
-        res = look_up(data->map, client->trant);
+        look_up(data->map, client->trant);
     if (client->trant->direction == EAST)
-        res = look_right(data->map, client->trant);
+       look_right(data->map, client->trant);
     if (client->trant->direction == SOUTH)
-        res = look_down(data->map, client->trant);
+       look_down(data->map, client->trant);
     if (client->trant->direction == WEST)
-        res = look_left(data->map, client->trant);
-    client->data_send = add_send(client->data_send, res);
-    free(res);
+       look_left(data->map, client->trant);
     return 0;
 }
