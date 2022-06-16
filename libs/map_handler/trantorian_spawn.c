@@ -33,5 +33,6 @@ void trantorian_spawn_from_tile(trantorians_t *trant, tile_t *tile)
     tile->trantorians = trant;
     trant->next = list;
     trant->tile = tile;
+    srand(time(NULL));
     trant->direction = rand() % 4;
 }
