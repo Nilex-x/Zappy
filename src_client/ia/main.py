@@ -12,42 +12,72 @@ import pathlib
 from sys import *
 from turtle import left
 
-def findPathToTile(clientInfo, tile_needed):
-        if tile_needed == 0:
-            return (1)
-        left_tile = 1
-        middle_tile = 2
-        right_tile = 3
-        action = "Forward"
-        temp = clientInfo.writeBuff
-        for levels in range(1, clientInfo.level + 1):
-            print(tile_needed, left_tile, middle_tile, right_tile)
-            if(tile_needed < middle_tile and tile_needed >= left_tile):
-                clientInfo.writeBuff = clientInfo.writeBuff + "Forward\nLeft\n"
-                print("Forward")
-                print("Left")
-                for t in range(0, middle_tile-tile_needed):
-                    print("Forward")
-                    clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
-                return (1)
-            elif(tile_needed > middle_tile and tile_needed <= right_tile):
-                clientInfo.writeBuff = clientInfo.writeBuff + "Forward\nRight\n"
-                print("Forward")
-                print("Right")
-                for t in range(0, tile_needed-middle_tile):
-                    print("Forward")
-                    clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
-                return (1)
-            else:
-                print(action)
-                clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
-            if (tile_needed == middle_tile):
-                return (1)
-            left_tile += 2*levels+1
-            middle_tile += 2*levels+2
-            right_tile += 2*levels+3
-        clientInfo.writeBuff = temp
+def findPathToTileFromXY(clientInfo, x, y):
+    if (clientInfo.posX == x and clientInfo.posY == y):
         return (0)
+    temp = clientInfo.writeBuff
+    need_x = abs(clientInfo.posX - x)
+    need_y = abs(clientInfo.posY - y)
+    action = "Forward"
+    if (clientInfo.posX < x):
+        clientInfo.writeBuff = clientInfo.writeBuff + "Right\n"
+        action = "Right"
+    if (clientInfo.posX > x):
+        clientInfo.writeBuff = clientInfo.writeBuff + "Left\n"    
+        action = "Left"  
+    for i in range(0, need_x):
+        clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
+    if (clientInfo.posY < y):
+        if (action == "Left"):
+            clientInfo.writeBuff = clientInfo.writeBuff + "Left\n"
+        if (action == "Right"):
+            clientInfo.writeBuff = clientInfo.writeBuff + "Right\n"
+    if (clientInfo.posY > y):
+        if (action == "Left"):
+            clientInfo.writeBuff = clientInfo.writeBuff + "Right\n"
+        if (action == "Right"):
+            clientInfo.writeBuff = clientInfo.writeBuff + "Left\n"
+    for i in range(0, need_y):
+        clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
+    return (0)
+        
+
+def findPathToTile(clientInfo, tile_needed):
+    if tile_needed == 0:
+        return (1)
+    left_tile = 1
+    middle_tile = 2
+    right_tile = 3
+    action = "Forward"
+    temp = clientInfo.writeBuff
+    for levels in range(1, clientInfo.level + 1):
+        print(tile_needed, left_tile, middle_tile, right_tile)
+        if (tile_needed < middle_tile and tile_needed >= left_tile):
+            clientInfo.writeBuff = clientInfo.writeBuff + "Forward\nLeft\n"
+            print("Forward")
+            print("Left")
+            for t in range(0, middle_tile-tile_needed):
+                print("Forward")
+                clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
+            return (1)
+        elif (tile_needed > middle_tile and tile_needed <= right_tile):
+            clientInfo.writeBuff = clientInfo.writeBuff + "Forward\nRight\n"
+            print("Forward")
+            print("Right")
+            for t in range(0, tile_needed-middle_tile):
+                print("Forward")
+                clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
+            return (1)
+        else:
+            print(action)
+            clientInfo.writeBuff = clientInfo.writeBuff + "Forward\n"
+        if (tile_needed == middle_tile):
+            return (1)
+        left_tile += 2*levels+1
+        middle_tile += 2*levels+2
+        right_tile += 2*levels+3
+    clientInfo.writeBuff = temp
+    return (0)
         
 
 class clientInfo:
