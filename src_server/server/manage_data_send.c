@@ -6,15 +6,22 @@
 */
 
 #include "server.h"
+#include <string.h>
+#include <stdlib.h>
 
 data_send_t *add_send(data_send_t *data_send, char *data)
 {
-    data_send_t *new = malloc(sizeof(data_send_t));
+    data_send_t *new = NULL;
     data_send_t *curr = data_send;
 
+    if (!data)
+        return curr;
+    new = malloc(sizeof(data_send_t));
+    if (!new)
+        return curr;
     new->data = strdup(data);
     new->next = NULL;
-    if (data_send == NULL)
+    if (!data_send)
         return new;
     while (curr->next)
         curr = curr->next;
@@ -44,4 +51,16 @@ size_t get_size_data_to_send(data_send_t *data_send)
         data_send = data_send->next;
     }
     return size;
+}
+
+void free_data_send(data_send_t *data_send)
+{
+    data_send_t *next = NULL;
+
+    while (data_send) {
+        next = data_send->next;
+        free(data_send->data);
+        free(data_send);
+        data_send = next;
+    }
 }

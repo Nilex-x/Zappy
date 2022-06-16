@@ -7,19 +7,22 @@
 
 #ifndef SERVER_H_
     #define SERVER_H_
+    #define  _GNU_SOURCE
     #include "lib.h"
-    #include <stdio.h>
-    #include <unistd.h>
+    #include "map_handler.h"
+    #include "zappy.h"
+
     #include <string.h>
-    #include <stdlib.h>
-    #include <stdbool.h>
-    #include <sys/socket.h>
-    #include <netinet/ip.h>
+    #include <sys/select.h>
 
     #define NB_LISTEN 32
-    #define WRITE 0
-    #define READ 1
     #define LENGTH_COMMAND 512
+
+typedef enum client_status {
+    WRITE,
+    READ,
+    EXECPT
+} status_e;
 
 typedef struct data_send_s {
     char *data;
@@ -32,6 +35,8 @@ typedef struct client_s {
     bool isQuit;
     data_send_t *data_send;
     buffer_t *buff_read;
+    trantorians_t *trant;
+    char *team_name;
     struct client_s *next;
     struct client_s *prev;
 } client_t;
@@ -44,8 +49,14 @@ typedef struct server_s
     fd_set wfds;
     fd_set rfds;
     client_t *list_client;
-    struct data_server_s *data;
+    zappy_data_t *data;
 }server_t;
+
+typedef struct cmd_s {
+    char *cmd;
+    int (*fct)(client_t *client, char** args, zappy_data_t *data);
+    size_t time;
+} cmd_t;
 
 int create_socket(server_t *info);
 int read_client(server_t *info, client_t *client);
@@ -67,5 +78,6 @@ void init_data(server_t *info);
 data_send_t *add_send(data_send_t *data_send, char *data);
 char *get_next_data_to_send(data_send_t **data_send);
 size_t get_size_data_to_send(data_send_t *data_send);
+void free_data_send(data_send_t *data_send);
 
 #endif /* !SERVER_H_ */

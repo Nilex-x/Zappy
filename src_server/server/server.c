@@ -6,6 +6,18 @@
 */
 
 #include "server.h"
+#include <signal.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+server_t info;
+
+void interrupt_sig(int sigint)
+{
+    if (sigint == SIGINT)
+        close_server(&info);
+}
 
 void print_help(void)
 {
@@ -15,17 +27,16 @@ void print_help(void)
 
 int main(int argc, char **argv)
 {
-    server_t info;
-
-    if ((argc == 2 && strcmp(argv[1], "-help") == 0) || argc != 2) {
+    signal(SIGINT, interrupt_sig);
+    if ((argc == 2 && strcmp(argv[1], "-help") == 0)) {
         print_help();
         return (84);
     }
-    info.port = atoi(argv[1]);
-    if (info.port < 1024) {
-        printf("0 to 1024 port number is not allowed to be used\n");
+    info.data = malloc(sizeof(zappy_data_t));
+    if (!info.data)
         return (84);
-    }
+    handle_flags(&info, argc, argv);
+    info.data->map = map_create(info.data->width, info.data->height);
     if (create_socket(&info) == -1)
         return (84);
     handler_connection(&info);
