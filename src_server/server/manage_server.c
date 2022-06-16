@@ -64,6 +64,7 @@ int handler_connection(server_t *info)
         TIMESPEC_TO_TIMEVAL(&time, &info->time_left);
         retsel = select(info->max_fd + 1, &info->rfds, &info->wfds,
                         &info->efds, &time);
+        TIMEVAL_TO_TIMESPEC(&time, &info->time_left);
         if (retsel < 0)
             perror("select()");
         if (retsel == 0) {
