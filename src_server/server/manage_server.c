@@ -16,7 +16,9 @@ void clear_list(server_t *info)
 
     FD_ZERO(&info->wfds);
     FD_ZERO(&info->rfds);
+    FD_ZERO(&info->efds);
     while (temp) {
+        FD_SET(temp->socket, &info->efds);
         if (!temp->data_send)
             FD_SET(temp->socket, &info->rfds);
         if (temp->data_send)
@@ -37,29 +39,38 @@ void sort_client(client_t *client, server_t *info)
 
 void find_socket(server_t *info)
 {
-    client_t *temp = info->list_client;
     client_t *next = NULL;
 
-    while (temp) {
+    for (client_t *temp = info->list_client; temp; temp = next) {
         next = temp->next;
+
+        if (FD_ISSET(temp->socket, &info->efds))
+            remove_client(info, temp->socket);
         if (FD_ISSET(temp->socket, &info->rfds))
             sort_client(temp, info);
-        else if (FD_ISSET(temp->socket, &info->wfds))
+        if (FD_ISSET(temp->socket, &info->wfds))
             write_client(info, temp->socket);
-        temp = next;
     }
     return;
 }
 
 int handler_connection(server_t *info)
 {
+    int retsel = 0;
+
     init_client(info);
     while (1) {
         clear_list(info);
-        if (select(info->max_fd + 1, &info->rfds, &info->wfds, NULL, NULL) < 0)
-            perror("Select()");
-        else
+        retsel = select(info->max_fd + 1, &info->rfds, &info->wfds, &info->efds, &info->time_left);
+        if (retsel < 0)
+            perror("select()");
+        if (retsel == 0)
+            do_action(info);
+        if (retsel > 0) {
+            select_interupt(info);
             find_socket(info);
+        }
+        get_shortest_time(info);
     }
 }
 
@@ -83,6 +94,7 @@ int create_socket(server_t *info)
     info->max_fd = info->fd_server;
     FD_ZERO(&info->rfds);
     FD_ZERO(&info->wfds);
+    FD_ZERO(&info->efds);
     FD_SET(info->fd_server, &info->rfds);
     return (0);
 }

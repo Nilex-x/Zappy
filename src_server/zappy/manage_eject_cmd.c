@@ -12,6 +12,7 @@ int eject(client_t *client, char **arg, zappy_data_t *data)
     action_t *curr = NULL;
     bool ejected = false;
 
+    (void) arg;
     for (trantorians_t *c = client->trant->tile->trantorians; c; c = c->next)
         if (client->trant != c) {
             c->direction = (c->direction + 2) % 4;

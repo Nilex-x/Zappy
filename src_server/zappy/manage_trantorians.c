@@ -20,8 +20,7 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
     new->is_alive = true;
     new->client = cli;
     new->team_name = strdup(team_name);
-    new->inventory[0] = 10;
-    for (int i = 1; i < 7; i++)
+    for (int i = 0; i < 7; i++)
         new->inventory[i] = 0;
     if (!data->trants)
         data->trants = new;
@@ -39,6 +38,7 @@ void free_trant(trantorians_t *trant)
 
     while (trant) {
         next = trant->next;
+        free(trant->team_name);
         free(trant);
         trant = next;
     }

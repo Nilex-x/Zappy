@@ -17,24 +17,28 @@ void init_buff_client(client_t *node)
     init_buffer(node->buff_read, LENGTH_COMMAND);
 }
 
+void init_data_struct(server_t *info)
+{
+    info->data = malloc(sizeof(zappy_data_t));
+    if (!info->data)
+        return;
+    info->data->eggs = NULL;
+    info->data->teams = NULL;
+    info->data->trants = NULL;
+    return;
+}
+
 int add_trantoriant(client_t *cli, server_t *info, char *cmd)
 {
     team_t *team = get_team_by_name(clear_str(cmd), info->data);
     char *line = NULL;
 
-    printf("enter\n");
-    if (!team) {
-        cli->data_send = add_send(cli->data_send, "unkown team\n");
+    if (!team || team->nb_player == team->player_max) {
+        cli->data_send = add_send(cli->data_send, (!team) ? "unkown team\n" :
+        "team is already full please wait until a client disconnect " \
+        "or fork\n");
         return (0);
     }
-    cli->team_name = strdup(team->name);
-    if (team->nb_player == team->player_max) {
-        printf("team->nb_player = %d\nplayer_max = %d\n",team->nb_player, team->player_max);
-        cli->data_send = add_send(cli->data_send, "team is already full\n\
-        please wait until a client disconnect or fork\n");
-        return (0);
-    }
-    printf("get team: %s exist: %d\n", cmd, team ? 1 : 0);
     cli->trant = create_add_trantoriant(cli, info->data, team->name);
     asprintf(&line, "%d\n", (team->player_max - team->nb_player));
     cli->data_send = add_send(cli->data_send, line);
@@ -44,7 +48,6 @@ int add_trantoriant(client_t *cli, server_t *info, char *cmd)
     asprintf(&line, "%ld %ld\n", cli->trant->tile->x,  cli->trant->tile->y);
     cli->data_send = add_send(cli->data_send, line);
     free(line);
-    printf("new trant team name: %s x: %ld y: %ld\n", team->name, cli->trant->tile->x, cli->trant->tile->y);
     return (0);
 }
 

@@ -9,6 +9,7 @@
     #define ZAPPY_H_
 
     #include <unistd.h>
+    #include <sys/time.h>
 
     #define bool unsigned int
     #define true 1
@@ -70,8 +71,9 @@ typedef struct zappy_data_s {
 } zappy_data_t;
 
 typedef struct action_s {
-    int (*action)(trantorians_t trant, char **arg, zappy_data_t *data);
-    size_t time_left;
+    int (*action)(client_t *cli, char **arg, zappy_data_t *data);
+    struct timespec time_left;
+    char **args;
     struct action_s *next;
 } action_t;
 
@@ -307,5 +309,7 @@ int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
 int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
 
 int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
+
+int incantation(client_t *cli, char **arg, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */

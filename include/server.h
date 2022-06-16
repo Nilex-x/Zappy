@@ -14,6 +14,7 @@
 
     #include <string.h>
     #include <sys/select.h>
+    #include <sys/time.h>
 
     #define NB_LISTEN 32
     #define LENGTH_COMMAND 512
@@ -36,7 +37,6 @@ typedef struct client_s {
     data_send_t *data_send;
     buffer_t *buff_read;
     trantorians_t *trant;
-    char *team_name;
     struct client_s *next;
     struct client_s *prev;
 } client_t;
@@ -48,13 +48,24 @@ typedef struct server_s
     int max_fd;
     fd_set wfds;
     fd_set rfds;
+    fd_set efds;
+    struct timespec time_ref;
+    struct timespec time_left;
     client_t *list_client;
     zappy_data_t *data;
 }server_t;
 
+struct data_incant {
+    int ressources_required[6];
+    int trant_nb_required;
+    int trant_min_lvl_required;
+    int trant_max_lvl_required;
+};
+
 typedef struct cmd_s {
     char *cmd;
-    int (*fct)(client_t *client, char** args, zappy_data_t *data);
+    int (*fct)(client_t *client, char **args, zappy_data_t *data);
+    char **args;
     size_t time;
 } cmd_t;
 
@@ -79,5 +90,13 @@ data_send_t *add_send(data_send_t *data_send, char *data);
 char *get_next_data_to_send(data_send_t **data_send);
 size_t get_size_data_to_send(data_send_t *data_send);
 void free_data_send(data_send_t *data_send);
+
+void init_data_struct(server_t *info);
+
+struct timespec set_timespec(int time, int freq);
+struct timespec sub_timespec(struct timespec ts1, struct timespec ts2);
+void select_interupt(server_t *info);
+void get_shortest_time(server_t *info);
+void do_action(server_t *info);
 
 #endif /* !SERVER_H_ */

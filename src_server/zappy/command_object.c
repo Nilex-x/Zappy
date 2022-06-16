@@ -20,6 +20,7 @@ int pick_item(client_t *client, char **args, zappy_data_t *data)
 {
     int object = get_obj(args[1]);
 
+    (void) data;
     if (client->trant->tile->ressources[object] > 0) {
         client->trant->tile->ressources[object]--;
         client->trant->inventory[object]++;
@@ -34,6 +35,7 @@ int drop_item(client_t *client, char **args, zappy_data_t *data)
 {
     int object = get_obj(args[1]);
 
+    (void) data;
     if (client->trant->inventory[object] > 0) {
         client->trant->inventory[object]--;
         client->trant->tile->ressources[object]++;
