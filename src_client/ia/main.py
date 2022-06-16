@@ -20,15 +20,10 @@ class clientIA:
         self.nbClients = -1
         self.posX = -1
         self.posY = -1
-        self.n = 0
-        self.O = 1
-        self.L = 0
-        self.e = 0
-        self.T = 0
+        self.nbPlayers = 1
+        self.lvl = 1
         self.N = None
-        self.R = 0
         self.M = None
-        self.i = 0
         self.ressources = {
             "food": 0,
             "linemate": 0,
