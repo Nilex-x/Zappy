@@ -13,6 +13,8 @@ from sys import *
 from turtle import left
 
 def findPathToTile(clientInfo, tile_needed):
+        if tile_needed == 0:
+            return (1)
         left_tile = 1
         middle_tile = 2
         right_tile = 3
@@ -89,7 +91,18 @@ class clientInfo:
             self.writeBuff = input("INPUT: ")
             if (self.writeBuff == "Look"):
                 print(self.readBuff)
-                if not findPathToTile(self, 4):
+                look_list = self.readBuff.split(",")
+                look_list[0] = look_list[0][1:]
+                look_list[-1] = look_list[-1][:-1]
+                print(look_list)
+                ressource = "linemate"
+                tile_needed = -1
+                i = 0
+                for l in look_list:
+                    if l.find(ressource) != -1:
+                        tile_needed = i
+                    i += 1
+                if not findPathToTile(self, tile_needed):
                     print("Not found...")
             print(self.writeBuff)
             if (self.writeBuff != "wait" and self.connected):
