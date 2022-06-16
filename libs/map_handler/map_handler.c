@@ -36,14 +36,14 @@ map_t *map_create(size_t width, size_t height)
         return (NULL);
     map->width = width;
     map->height = height;
-    map->tiles = malloc(sizeof(tile_t *) * height);
+    map->tiles = malloc(sizeof(tile_t *) * width);
     if (map->tiles == NULL)
         return (NULL);
-    for (size_t i = 0; i < height; i++) {
-        map->tiles[i] = malloc(sizeof(tile_t) * width);
+    for (size_t i = 0; i < width; i++) {
+        map->tiles[i] = malloc(sizeof(tile_t) * height);
         if (map->tiles[i] == NULL)
             return (NULL);
-        for (size_t j = 0; j < width; j++) {
+        for (size_t j = 0; j < height; j++) {
             map->tiles[i][j] = init_tile(i, j);
         }
     }
@@ -69,8 +69,8 @@ void free_tile(tile_t *tile)
 
 void free_map(map_t *map)
 {
-    for (size_t i = 0; i < map->height; i++) {
-        for (size_t j = 0; j < map->width; j++) {
+    for (size_t i = 0; i < map->width; i++) {
+        for (size_t j = 0; j < map->height; j++) {
             free_tile(map->tiles[i][j]);
         }
         free(map->tiles[i]);

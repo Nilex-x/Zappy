@@ -37,13 +37,13 @@ void update_map_ressources(map_t *map)
 
     for (size_t i = 0; i < h * w; i++) {
         for (int k = 0; k < 7; k++) {
-            missing[k] -= map->tiles[i / h][i % w]->ressources[k];
+            missing[k] -= map->tiles[i / w][i % h]->ressources[k];
         }
     }
     for (size_t i = 0; i < 7; i++)
         for (size_t j = 0; j < missing[i]; j++) {
             srand(time(NULL));
-            map->tiles[rand() % h][rand() % w]->ressources[i]++;
+            map->tiles[rand() % w][rand() % h]->ressources[i]++;
         }
 }
 
@@ -55,6 +55,6 @@ void init_map_ressources(map_t *map)
     for (size_t i = 0; i < 7; i++)
         for (size_t j = 0; j < density[i] * h * w; j++) {
             srand(time(NULL));
-            map->tiles[rand() % h][rand() % w]->ressources[i]++;
+            map->tiles[rand() % w][rand() % h]->ressources[i]++;
         }
 }
