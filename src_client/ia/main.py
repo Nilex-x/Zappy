@@ -10,6 +10,7 @@
 import ctypes
 import pathlib
 import getopt
+from queue import Queue
 from sys import *
 
 
@@ -75,7 +76,7 @@ class clientIA:
         self.N = None
         self.M = None
         self.ressources = {
-            "food": 0,
+            "food": 10,
             "linemate": 0,
             "deraumere": 0,
             "sibur": 0,
@@ -83,11 +84,23 @@ class clientIA:
             "phiras": 0,
             "thystame": 0
         }
-        self.queueCmd = 0
+        self.cmds = Queue(maxsize = 10)
+
+    def inventory(self, srvMsg):
+        srvMsg = srvMsg[1:-1]
+        inv = srvMsg.split(",")
+        for rsc in inv:
+            a = rsc.split()
+            self.ressources[a[0]] = int(a[1])
+
+    def look(self, srvMsg):
+        srvMsg = srvMsg[1:-1]
 
     def serverMsg(self, srvMsg):
         res = input("INPUT: ")
         return res
+
+
 
 
 
