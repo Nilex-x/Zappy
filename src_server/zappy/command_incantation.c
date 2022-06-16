@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 static const struct data_incant DATA_INCANT[] = {
     {
@@ -97,6 +98,7 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data)
 {
     char *line = NULL;
 
+    (void) arg;
     if (check_trant_required_nb(data->map, cli->trant) == -1
     || check_incant_ressources(data->map, cli->trant) == -1
     || check_trant_required_level(data->map, cli->trant) == -1) {
@@ -112,5 +114,5 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data)
         return (1);
     }
     cli->data_send = add_send(cli->data_send, "Elevation underway\n");
-    
+    return (0);
 }

@@ -16,12 +16,6 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
     if (!new)
         return (NULL);
     new->next = NULL;
-    new->lvl = 1;
-    new->is_alive = true;
-    new->client = cli;
-    new->team_name = strdup(team_name);
-    for (int i = 0; i < 7; i++)
-        new->inventory[i] = 0;
     if (!data->trants)
         data->trants = new;
     else {
@@ -30,6 +24,40 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
         temp->next = new;
     }
     return (new);
+}
+
+void free_trantoriant(trantorians_t *trant)
+{
+
+    free(trant->team_name);
+    while (trant->action) {
+        free_array(trant->action->args);
+        free(trant->action);
+        trant->action = trant->action->next;
+    }
+    free(trant);
+}
+
+void remove_trantoriant(zappy_data_t *data, trantorians_t *torm)
+{
+    trantorians_t *temp = data->trants;
+    trantorians_t *prev = NULL;
+
+     if (temp == torm) {
+        data->trants = temp->next;
+        free_trantoriant(torm);
+        return;
+    }
+    while (temp) {
+        if (temp == torm) {
+            prev->next = temp->next;
+            free_trantoriant(torm);
+            return;
+        } else {
+            prev = temp;
+            temp = temp->next;
+        }
+    }
 }
 
 void free_trant(trantorians_t *trant)

@@ -98,5 +98,6 @@ struct timespec sub_timespec(struct timespec ts1, struct timespec ts2);
 void select_interupt(server_t *info);
 void get_shortest_time(server_t *info);
 void do_action(server_t *info);
+void verif_life(server_t *info);
 
 #endif /* !SERVER_H_ */

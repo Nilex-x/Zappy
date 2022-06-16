@@ -35,11 +35,11 @@ typedef struct egg_s {
 typedef struct trantorians_s {
     int lvl;
     bool is_alive;
-    unsigned int life_left;
     int inventory[8];
     char *team_name;
     direction_t direction;
     client_t *client;
+    struct timespec timeleft;
     struct action_s *action;
     struct tile_s *tile;
     struct team_s *team;
@@ -153,6 +153,7 @@ team_t *create_team(char *name, zappy_data_t *data);
 */
 void free_teams(team_t *teams);
 
+void remove_trantoriant(zappy_data_t *data, trantorians_t *torm);
 
 void move_trantorian(map_t *map, trantorians_t *trant);
 

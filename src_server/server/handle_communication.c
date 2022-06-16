@@ -70,16 +70,16 @@ void free_data(zappy_data_t *data)
 
 void do_action(server_t *info)
 {
-    trantorians_t *temp = info->data->trants;
     action_t *act = NULL;
     struct timespec time;
 
-    while (temp) {
+    for (trantorians_t *temp = info->data->trants; temp; temp = temp->next) {
         act = temp->action;
-        if (act)
+        temp->timeleft = sub_timespec(temp->timeleft, info->time_ref);
+;        if (act)
             time = sub_timespec(info->time_ref, act->time_left);
         if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
-            act->action(temp, act->args, info->data);
+            act->action(temp->client, act->args, info->data);
             temp->action = act->next;
             free_array(act->args);
             free(act);
@@ -87,9 +87,7 @@ void do_action(server_t *info)
             act->time_left = time;
         if (temp->action && temp->action->action == &incantation)
             incantation(temp->client, temp->action->args, info->data);
-        temp = temp->next;
     }
-    get_shortest_time(info);
 }
 
 void close_server(server_t *info)
