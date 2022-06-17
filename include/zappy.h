@@ -308,4 +308,44 @@ int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
 
 int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
+/*
+** @brief send map size to the gui
+** 
+** @param client the gui
+** @param args
+** @param data 
+** @return int 
+*/
+int gui_map_size(client_t *client, char **args, zappy_data_t *data);
+
+/*
+** @brief send tile content to the gui
+** 
+** @param client the gui
+** @param args wanted tile
+** @param data 
+** @return int 
+*/
+int gui_tile_content(client_t *client, char **args, zappy_data_t *data);
+
+/*
+** @brief send information of each tile of the map to the gui
+** 
+** @param client the gui
+** @param args 
+** @param data 
+** @return int 
+*/
+int gui_map_content(client_t *client, char **args, zappy_data_t *data);
+
+/*
+** @brief send the different teams names to the gui
+** 
+** @param client the gui
+** @param args 
+** @param data 
+** @return int 
+*/
+int gui_teams_name(client_t *client, char **args, zappy_data_t *data);
+
 #endif /* !ZAPPY_H_ */
