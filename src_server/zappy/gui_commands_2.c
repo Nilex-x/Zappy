@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 int gui_player_pos(client_t *cli, char **args, zappy_data_t *data)
 {
