@@ -12,6 +12,7 @@ int gui_map_size(client_t *client, char **args, zappy_data_t *data)
 {
     char *buff;
 
+    (void) args;
     asprintf(&buff, "msz %d %d\n", data->width, data->height);
     client->data_send = add_send(client->data_send, buff);
     return 0;
@@ -40,10 +41,11 @@ int gui_map_content(client_t *client, char **args, zappy_data_t *data)
     int width = data->map->width;
     int height = data->map->height;
 
+    (void) args;
     for (int i = 0; i < width; i++)
         for (int j = 0; j < height; j++)
             client->data_send = add_send(client->data_send,
-             get_tile_content(i, j, data));
+            get_tile_content(i, j, data));
 
     return 0;
 }
@@ -53,7 +55,7 @@ int gui_teams_name(client_t *client, char **args, zappy_data_t *data)
     char *buff;
     team_t *current = data->teams;
 
-
+    (void) args;
     while (current != NULL) {
         asprintf(&buff, "tna %s\n", current->name);
         client->data_send = add_send(client->data_send, buff);

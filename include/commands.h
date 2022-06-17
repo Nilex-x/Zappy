@@ -14,4 +14,6 @@ struct data_incant {
     int trant_min_lvl_required;
     int trant_max_lvl_required;
 };
+
+int check_incantation(map_t *map, trantorians_t *trant);
 #endif /* !COMMANDS_H */

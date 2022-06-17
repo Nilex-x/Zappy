@@ -9,6 +9,7 @@
     #define ZAPPY_H_
 
     #include <unistd.h>
+    #include <sys/time.h>
 
     #define bool unsigned int
     #define true 1
@@ -34,11 +35,11 @@ typedef struct egg_s {
 typedef struct trantorians_s {
     int lvl;
     bool is_alive;
-    unsigned int life_left;
     int inventory[8];
     char *team_name;
     direction_t direction;
     client_t *client;
+    struct timespec timeleft;
     struct action_s *action;
     struct tile_s *tile;
     struct team_s *team;
@@ -70,8 +71,9 @@ typedef struct zappy_data_s {
 } zappy_data_t;
 
 typedef struct action_s {
-    int (*action)(trantorians_t trant, char **arg, zappy_data_t *data);
-    size_t time_left;
+    int (*action)(client_t *cli, char **arg, zappy_data_t *data);
+    struct timespec time_left;
+    char **args;
     struct action_s *next;
 } action_t;
 
@@ -151,6 +153,7 @@ team_t *create_team(char *name, zappy_data_t *data);
 */
 void free_teams(team_t *teams);
 
+void remove_trantoriant(zappy_data_t *data, trantorians_t *torm);
 
 void move_trantorian(map_t *map, trantorians_t *trant);
 
@@ -329,5 +332,17 @@ int gui_map_content(client_t *client, char **args, zappy_data_t *data);
 ** @return int 
 */
 int gui_teams_name(client_t *client, char **args, zappy_data_t *data);
+
+int gui_player_pos(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
+
+int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
+
+int incantation(client_t *cli, char **arg, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */
