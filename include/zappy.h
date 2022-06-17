@@ -290,24 +290,6 @@ int fork_command(client_t *client, char **args, zappy_data_t *data);
 
 int team_unused_slot(client_t *client, char **args, zappy_data_t *data);
 
-int gui_map_size(client_t *client, char **args, zappy_data_t *data);
-
-int gui_tile_content(client_t *client, char **args, zappy_data_t *data);
-
-int gui_map_content(client_t *client, char **args, zappy_data_t *data);
-
-int gui_teams_name(client_t *client, char **args, zappy_data_t *data);
-
-int gui_player_pos(client_t *cli, char **args, zappy_data_t *data);
-
-int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data);
-
-int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
-
-int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
-
-int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
-
 /*
 ** @brief send map size to the gui
 ** 
