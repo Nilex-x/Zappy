@@ -192,9 +192,9 @@ class clientInfo:
             if ((len(splited) == 1) and (splited[0].isdigit())):
                 self.ai.nbClients = int(splited[0])
             if ((len(splited) == 2) and (splited[0].isdigit()) and (splited[1].isdigit())):
-                self.ai.posX = int(splited[0])
-                self.ai.posY = int(splited[1])
-        if (self.ai.nbClients >= 0 and self.ai.posX >= 0 and self.ai.posY >= 0):
+                self.ai.width = int(splited[0])
+                self.ai.height = int(splited[1])
+        if (self.ai.nbClients >= 0 and self.ai.width >= 0 and self.ai.height >= 0):
             self.connected = 1
 
     def connection(self, team):
