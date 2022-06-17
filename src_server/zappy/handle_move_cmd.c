@@ -13,15 +13,12 @@ void move_trantorian(map_t *map, trantorians_t *trant)
     size_t y = trant->tile->y;
     size_t new_x = x;
     size_t new_y = y;
+    int dir = trant->direction;
 
-    if (trant->direction == NORTH)
-        new_y = (y != 0) ? y - 1 : map->height - 1;
-    if (trant->direction == SOUTH)
-        new_y = (y != map->height - 1) ? y + 1 : 0;
-    if (trant->direction == EAST)
-        new_x = (x != map->width - 1) ? x + 1 : 0;
-    if (trant->direction == WEST)
-        new_x = (x != 0) ? x - 1 : map->width - 1;
+    (dir == NORTH) ? (new_y = (y != 0) ? y - 1 : map->height - 1) : 0;
+    (dir == SOUTH) ? (new_y = (y != map->height - 1) ? y + 1 : 0) : 0;
+    (dir == EAST) ? (new_x = (x != map->width - 1) ? x + 1 : 0) : 0;
+    (dir == WEST) ? (new_x = (x != 0) ? x - 1 : map->width - 1) : 0;
     for (trantorians_t *c = map->tiles[x][y]->trantorians; c; c = c->next) {
         (c->next == trant) ? (c->next = trant->next) : 0;
         (c == trant) ? (map->tiles[x][y]->trantorians = trant->next) : 0;
@@ -29,6 +26,8 @@ void move_trantorian(map_t *map, trantorians_t *trant)
     trant->tile = map->tiles[new_x][new_y];
     trant->next = map->tiles[new_x][new_y]->trantorians;
     trant->tile->trantorians = trant;
+    trant->tile->nb_player ++;
+    map->tiles[x][y]->nb_player --;
 }
 
 int forward(client_t *client, char **arg, zappy_data_t *data)
