@@ -69,10 +69,9 @@ int handler_connection(server_t *info)
             perror("select()");
             exit(84);
         }
-        if (retsel == 0) {
+        if (retsel == 0)
             do_action(info);
-            find_socket(info);
-        } else if (retsel > 0) {
+        if (retsel > 0) {
             select_interupt(info);
             find_socket(info);
         }

@@ -16,7 +16,6 @@ void trantorian_spawn(map_t *map, trantorians_t *trant)
 
     srand(time(NULL));
     rand_tile_line = map->tiles[rand() % map->width];
-    srand(time(NULL));
     rand_tile = rand_tile_line[rand() % map->height];
     list = rand_tile->trantorians;
     rand_tile->trantorians = trant;
