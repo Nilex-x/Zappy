@@ -74,7 +74,7 @@ void verif_life(server_t *info)
     while (temp) {
         if (temp->inventory[0] <= 0) {
             printf("kill trantoriant client: %d\n", temp->client->socket);
-            temp->client->isQuit = true;
+            temp->client->is_quit = true;
             temp->client->data_send = add_send(temp->client->data_send,
             "dead\n");
         } else if (temp->timeleft.tv_sec == 0 && temp->timeleft.tv_nsec == 0) {

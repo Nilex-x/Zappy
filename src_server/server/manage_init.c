@@ -73,7 +73,11 @@ void handle_command(server_t *info, client_t *cli)
         return;
     }
     printf("value client [%s]\n", value);
-    if (!cli->trant)
+    if (strcmp(value, "GUI\n") == 0) {
+        cli->is_gui = true;
+        return;
+    }
+    if (!cli->trant && !cli->is_gui)
         add_trantoriant(cli, info, value);
     else
         sort_command(cli, info->data, value);

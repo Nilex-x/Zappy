@@ -33,7 +33,8 @@ typedef struct data_send_s {
 typedef struct client_s {
     int socket;
     int status;
-    bool isQuit;
+    bool is_quit;
+    bool is_gui;
     data_send_t *data_send;
     buffer_t *buff_read;
     trantorians_t *trant;

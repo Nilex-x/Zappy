@@ -22,7 +22,7 @@ void init_client(server_t *info)
     list_client->prev = NULL;
     list_client->status = READ;
     list_client->socket = info->fd_server;
-    list_client->isQuit = false;
+    list_client->is_quit = false;
     list_client->data_send = NULL;
     init_buff_client(list_client);
     info->list_client = list_client;
@@ -44,7 +44,7 @@ client_t *add_client(server_t *info, int client)
     node->next = NULL;
     node->status = READ;
     node->data_send = NULL;
-    node->isQuit = false;
+    node->is_quit = false;
     init_buff_client(node);
     return (node);
 }
