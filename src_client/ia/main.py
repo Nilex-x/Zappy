@@ -65,37 +65,22 @@ up8 = {
     "thystame": 1
 }
 
-class Commands(enum.Enum):
-    Nothing = 0
-    Forward = 1
-    Right = 2
-    Left = 3
-    Look = 4
-    Inventory = 5
-    Broadcast = 6
-    Connect_nbr = 7
-    Fork = 8
-    Eject = 9
-    Take = 10
-    Set = 11
-    Incantation = 12
-
 
 # ---------------------- AI ----------------------
 
 class clientIA:
     def __init__(self):
         self.nbClients = -1
-        self.posX = -1
-        self.posY = -1
+        self.height = -1
+        self.width = -1
         self.alive = True
         self.nbPlayers = 1
         self.lvl = 1
         self.N = None
         self.M = None
         self.dir = 0
-        self.cmds = Queue(maxsize = 9)
-        self.currentCmd = 0
+        self.cmds = Queue(maxsize = 0)
+        self.currentCmd = "Nothing"
         self.ressources = {
             "food": 10,
             "linemate": 0,
@@ -136,21 +121,21 @@ class clientIA:
             return self.ejected()
         if srvMsg.find("message"):
             return self.handleMessage(srvMsg)
-
-        if self.currentCmd == 4:
+        curr = self.currentCmd.split()[0]
+        if self.curr == "Look":
             self.look(srvMsg)
-        elif self.currentCmd == 5:
+        elif self.curr == "Inventory":
             self.inventory(srvMsg)
-        elif self.currentCmd == 7:
+        elif self.curr == "Connect_nbr":
             self.nbPlayers = int(srvMsg)
-        elif self.currentCmd == 12:
+        elif self.curr == "Incantation":
             if srvMsg == "Elevation underway":
                 return 1
             else:
                 self.lvl = int(srvMsg[14])
 
         if self.cmds.empty():
-            self.currentCmd = Commands.Nothing.value
+            self.currentCmd = "Nothing"
         else:
             self.currentCmd = self.cmds.get()
         return 1
