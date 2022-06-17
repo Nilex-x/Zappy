@@ -13,7 +13,7 @@ static int get_inventory_length(client_t *client)
     int length = 0;
     for (int i = 0; i < 7; i++) {
         char *line = NULL;
-        asprintf(&line, "%s %d\0", ressources[i], client->trant->inventory[i]);
+        asprintf(&line, "%s %d", ressources[i], client->trant->inventory[i]);
         length += strlen(line);
         if (i + 1 != 7)
             length += 2;
