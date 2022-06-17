@@ -14,32 +14,18 @@ from queue import Queue
 from sys import *
 from turtle import left
 
-def findPathToTileFromXY(clientInfo, x, y):
-    if (clientInfo.posX == x and clientInfo.posY == y):
-        return (0)
-    temp = clientInfo.action
-    need_x = abs(clientInfo.posX - x)
-    need_y = abs(clientInfo.posY - y)
-    action = "Forward"
-    if (clientInfo.posX < x):
-        clientInfo.action.append("Right\n")
-        action = "Right"
-    if (clientInfo.posX > x):
-        clientInfo.action.append("Left\n")
-        action = "Left"  
-    for i in range(0, need_x):
+def findPathToTileFromBroadcast(clientInfo, direction):
+    if (direction == 1):
         clientInfo.action.append("Forward\n")
-    if (clientInfo.posY < y):
-        if (action == "Left"):
-            clientInfo.action.append("Left\n")
-        if (action == "Right"):
-            clientInfo.action.append("Right\n")
-    if (clientInfo.posY > y):
-        if (action == "Left"):
-            clientInfo.action.append("Right\n")
-        if (action == "Right"):
-            clientInfo.action.append("Left\n")
-    for i in range(0, need_y):
+    if (direction == 3):
+        clientInfo.action.append("Left\n")
+        clientInfo.action.append("Forward\n")
+    if (direction == 5):
+        clientInfo.action.append("Left\n")
+        clientInfo.action.append("Left\n")
+        clientInfo.action.append("Forward\n")
+    if (direction == 7):
+        clientInfo.action.append("Right\n")
         clientInfo.action.append("Forward\n")
     return (0)
         
@@ -55,7 +41,8 @@ def findPathToTile(clientInfo, tile_needed):
     for levels in range(1, clientInfo.lvl + 1):
         print(tile_needed, left_tile, middle_tile, right_tile)
         if (tile_needed < middle_tile and tile_needed >= left_tile):
-            clientInfo.action.append("Forward\nLeft\n")
+            clientInfo.action.append("Forward\n")
+            clientInfo.action.append("Left\n")
             print("Forward")
             print("Left")
             for t in range(0, middle_tile-tile_needed):
@@ -63,7 +50,8 @@ def findPathToTile(clientInfo, tile_needed):
                 clientInfo.action.append("Forward\n")
             return (1)
         elif (tile_needed > middle_tile and tile_needed <= right_tile):
-            clientInfo.action.append("Forward\nRight\n")
+            clientInfo.action.append("Forward\n")
+            clientInfo.action.append("Right\n")
             print("Forward")
             print("Right")
             for t in range(0, tile_needed-middle_tile):
