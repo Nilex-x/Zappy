@@ -58,7 +58,7 @@ void add_trantoriant(client_t *cli, server_t *info, char *cmd)
         cli->data_send = add_send(cli->data_send, line);
         free(line);
         init_trantoriant(cli, info, team);
-        asprintf(&line, "%ld %ld\n", cli->trant->tile->x,  cli->trant->tile->y);
+        asprintf(&line, "%ld %ld\n", info->width, info->height);
         cli->data_send = add_send(cli->data_send, line);
         free(line);
     }
