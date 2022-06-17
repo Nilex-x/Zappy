@@ -78,7 +78,7 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
         cdir = current->direction;
         printf("DIR: %d\n", dir);
         if (dir)
-            dir = (dir + cdir * 2) % (8 + (dir + cdir * 2== 8));
+            dir = (dir + cdir * 2) % (8 + (dir + cdir * 2 == 8));
         asprintf(&buff, "Received [%s] from [%d].\n", args[1], dir);
         current->client->data_send = add_send(current->client->data_send, buff);
         current = current->next;
