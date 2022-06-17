@@ -54,8 +54,8 @@ void write_client(server_t *info, int s_client)
     free(data);
     client->status = (get_size_data_to_send(client->data_send)) ? WRITE : READ;
     if (w_value < 0 || client->is_quit) {
-        remove_client(info, s_client);
         (client->is_quit) ? close(s_client) : 0;
+        remove_client(info, s_client);
     }
 }
 

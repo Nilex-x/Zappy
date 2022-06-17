@@ -56,6 +56,7 @@ void free_trantorians(trantorians_t *trantorians)
     if (trantorians == NULL)
         return;
     free_trantorians(trantorians->next);
+    free(trantorians->team_name);
     free(trantorians);
 }
 
