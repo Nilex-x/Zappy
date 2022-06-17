@@ -36,7 +36,15 @@ public class Ressources {
 }
 
 public class Player {
+    public int player_nb;
+    public int orientation;
     public int level;
+    public Ressources content;
+}
+
+public class Team {
+    public string[] name;
+    public List<Player> players;
 }
 
 public class Tiles {
@@ -47,7 +55,7 @@ public class Map {
     public int width;
     public int height;
     public List<List<Tiles>> tiles;
-    public List<Player> players;
+    public List<Team> teams;
 }
 
 public class Main : MonoBehaviour
@@ -62,7 +70,7 @@ public class Main : MonoBehaviour
 
     float tileOffset = 1.45f;
 
-    void CreateTileMap()
+    private void CreateTileMap()
     {
         for (int x = 0; x < map.width; x++) {
             for (int z = 0; z < map.height; z++) {
@@ -73,7 +81,7 @@ public class Main : MonoBehaviour
         }
     }
 
-    void SetTileInfo(GameObject Temp, int x, int z)
+    private void SetTileInfo(GameObject Temp, int x, int z)
     {
         Temp.transform.SetParent(parent.transform);
         Temp.name = x.ToString() + ", " + z.ToString();
@@ -90,31 +98,37 @@ public class Main : MonoBehaviour
         buffer = System.Text.Encoding.ASCII.GetString(response).ToString();
     }
 
+    private void GenerateTileMap()
+    {
+        sendToClient("msz\n");
+        string []response = buffer.Split(" ");
+        Debug.Log(buffer);
+        map.width = 5;//int.Parse(response[1]);
+        map.height = 5;//int.Parse(response[2]);
+        Debug.Log("Generated map");
+        map.tiles = new List<List<Tiles>>();
+        for (int i = 0; i < map.height; i++)
+        {
+            map.tiles.Add(new List<Tiles>());
+            for (int j = 0; j < map.width; j++)
+            {
+                map.tiles[i].Add(new Tiles());
+                map.tiles[i][j].content = new Ressources();
+                map.tiles[i][j].content.food = i;
+            }
+        }
+    }
+
     private void doMainLoop()
     {
         try {
-            sendToClient("msz\n");
-            string []response = buffer.Split(" ");
-            Debug.Log(buffer);
-            map.width = 10;//int.Parse(response[1]);
-            map.height = 4;//int.Parse(response[2]);
-            Debug.Log("Generated map");
-            map.tiles = new List<List<Tiles>>();
-            for (int i = 0; i < map.height; i++)
-            {
-                map.tiles.Add(new List<Tiles>());
-                for (int j = 0; j < map.width; j++)
-                {
-                    map.tiles[i].Add(new Tiles());
-                    map.tiles[i][j].content = new Ressources();
-                    map.tiles[i][j].content.food = i;
-                }
-            }
-            Debug.Log(map.tiles[4][0].content.food);
+            GenerateTileMap();
+            sendToClient("tna\n");
+            Debug.Log("Generated Team");
+            CreateTileMap();
         } catch (System.Exception e) {
             Debug.Log(e);
         }
-        CreateTileMap();
     }
 
     void Start()
