@@ -10,7 +10,9 @@
 import ctypes
 import pathlib
 import getopt
+import enum
 from queue import Queue
+from re import A
 from sys import *
 
 
@@ -63,18 +65,37 @@ up8 = {
     "thystame": 1
 }
 
+class Commands(enum.Enum):
+    Nothing = 0
+    Forward = 1
+    Right = 2
+    Left = 3
+    Look = 4
+    Inventory = 5
+    Broadcast = 6
+    Connect_nbr = 7
+    Fork = 8
+    Eject = 9
+    Take = 10
+    Set = 11
+    Incantation = 12
 
-# ---------------------- CLIENT AI ----------------------
+
+# ---------------------- AI ----------------------
 
 class clientIA:
     def __init__(self):
         self.nbClients = -1
         self.posX = -1
         self.posY = -1
+        self.alive = True
         self.nbPlayers = 1
         self.lvl = 1
         self.N = None
         self.M = None
+        self.dir = 0
+        self.cmds = Queue(maxsize = 9)
+        self.currentCmd = 0
         self.ressources = {
             "food": 10,
             "linemate": 0,
@@ -84,7 +105,7 @@ class clientIA:
             "phiras": 0,
             "thystame": 0
         }
-        self.cmds = Queue(maxsize = 10)
+
 
     def inventory(self, srvMsg):
         srvMsg = srvMsg[1:-1]
@@ -96,15 +117,53 @@ class clientIA:
     def look(self, srvMsg):
         srvMsg = srvMsg[1:-1]
 
-    def serverMsg(self, srvMsg):
-        res = input("INPUT: ")
-        return res
+    def ejected(self):
+        while (not self.cmds.empty()):
+            self.cmds.get()
+        return 1
+
+    def handleMessage(self, message):
+        self.dir = int(message[8])
+        self.M = message[11:]
+
+    def serverResponse(self, srvMsg):
+        if srvMsg == None:
+            return 1
+        srvMsg = srvMsg[:-1]
+        if srvMsg == "dead":
+            return 0
+        if srvMsg.find("eject"):
+            return self.ejected()
+        if srvMsg.find("message"):
+            return self.handleMessage(srvMsg)
+
+        if self.currentCmd == 4:
+            self.look(srvMsg)
+        elif self.currentCmd == 5:
+            self.inventory(srvMsg)
+        elif self.currentCmd == 7:
+            self.nbPlayers = int(srvMsg)
+        elif self.currentCmd == 12:
+            if srvMsg == "Elevation underway":
+                return 1
+            else:
+                self.lvl = int(srvMsg[14])
+
+        if self.cmds.empty():
+            self.currentCmd = Commands.Nothing.value
+        else:
+            self.currentCmd = self.cmds.get()
+        return 1
+
+    def actionAi(self):
+        action = input("INPUT: ")
+        return action
 
 
 
 
 
-# ---------------------- CLIENT NETWORK ----------------------
+# ---------------------- NETWORK ----------------------
 
 class clientInfo:
     def __init__(self, mySocket):
@@ -120,6 +179,8 @@ class clientInfo:
             res = clientLib.read_server(self.socket)
             result = ctypes.cast(res, ctypes.c_char_p)
             self.readBuff = result.value.decode('utf-8')
+            if self.readBuff == "end":
+                return -1
             print(self.readBuff)
         return 0
 
@@ -127,8 +188,11 @@ class clientInfo:
         run = 1
         while (run > -1):
             run = clientLib.client_select()
-            self.serverCommunication(run)
-            self.writeBuff = self.ai.serverMsg(self.readBuff)
+            if self.serverCommunication(run) < 0:
+                print("server error")
+                return -1
+            run = self.ai.serverResponse(self.readBuff)
+            self.writeBuff = self.ai.actionAi()
             self.readBuff = None
             if (self.writeBuff != "wait"):
                 self.writeBuff += '\n'
