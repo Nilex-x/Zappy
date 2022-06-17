@@ -43,7 +43,7 @@ int left(client_t *client, char **arg, zappy_data_t *data)
 {
     (void) arg;
     (void) data;
-    client->trant->direction = (client->trant->direction - 1) % 4;
+    client->trant->direction = (client->trant->direction + 3) % 4;
     client->data_send = add_send(client->data_send, "ok");
     return 0;
 }

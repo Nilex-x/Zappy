@@ -12,16 +12,13 @@ int get_obj(char *arg)
 {
     int i = 0;
 
-    while(strcmp(ressources[i], arg) != 0)
+    while (i < 7 && (strncmp(ressources[i], arg, strlen(ressources[i])) != 0))
         i++;
     return i;
 }
 
 int pick_item(client_t *client, char **args, zappy_data_t *data)
 {
-    for (int i = 0; args[i]; i++)
-        printf("%d: [%s]\n", i, args[i]);
-
     int object = get_obj(args[1]);
 
     (void) data;
@@ -37,7 +34,7 @@ int pick_item(client_t *client, char **args, zappy_data_t *data)
 
 int drop_item(client_t *client, char **args, zappy_data_t *data)
 {
-    int object = get_obj(args[0]);
+    int object = get_obj(args[1]);
 
     (void) data;
     if (client->trant->inventory[object] > 0) {

@@ -68,7 +68,7 @@ void handle_command(server_t *info, client_t *cli)
 {
     char *value = NULL;
     value = read_to_buffer(cli->buff_read, '\n', LENGTH_COMMAND);
-    if (!value || value[0] == '\n') {
+    if (!value || value[0] == '\n' || value[0] == '\0') {
         free(value);
         return;
     }

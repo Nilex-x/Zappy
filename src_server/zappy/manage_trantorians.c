@@ -15,6 +15,8 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
     new = malloc(sizeof(trantorians_t));
     if (!new)
         return (NULL);
+    new->client = cli;
+    new->team_name = strdup(team_name);
     new->next = NULL;
     if (!data->trants)
         data->trants = new;
