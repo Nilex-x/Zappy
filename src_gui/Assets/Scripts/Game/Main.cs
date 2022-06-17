@@ -87,24 +87,34 @@ public class Main : MonoBehaviour
         Temp.name = x.ToString() + ", " + z.ToString();
     }
 
-    private void sendToClient(string message)
+    private void sendToServer(string message)
     {
         byte[] response = new byte[256];
+        string resp = "";
         byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
         buffer = string.Empty;
         client.stream.Write(data, 0, data.Length);
         client.stream.Read(response, 0, response.Length);
         buffer = System.Text.Encoding.ASCII.GetString(response).ToString();
+        while (client.stream.DataAvailable) {
+            Debug.Log("Niglo: " + (int)buffer[buffer.Length - 1]);
+            client.stream.Read(response, 0, response.Length);
+            resp = System.Text.Encoding.ASCII.GetString(response).ToString();
+            buffer = buffer.Replace("\0", string.Empty);
+            for (int i = 0; i < resp.Length; i++) {
+                buffer += (char)resp[i];
+            }
+        }
     }
 
     private void GenerateTileMap()
     {
-        sendToClient("msz\n");
+        sendToServer("msz\n");
         string []response = buffer.Split(" ");
         Debug.Log(buffer);
-        map.width = 5;//int.Parse(response[1]);
-        map.height = 5;//int.Parse(response[2]);
+        map.width = int.Parse(response[1]) + 1;
+        map.height = int.Parse(response[2]) + 1;
         Debug.Log("Generated map");
         map.tiles = new List<List<Tiles>>();
         for (int i = 0; i < map.height; i++)
@@ -123,7 +133,8 @@ public class Main : MonoBehaviour
     {
         try {
             GenerateTileMap();
-            sendToClient("tna\n");
+            sendToServer("tna\n");
+            Debug.Log("Nigger" + buffer);
             Debug.Log("Generated Team");
             CreateTileMap();
         } catch (System.Exception e) {

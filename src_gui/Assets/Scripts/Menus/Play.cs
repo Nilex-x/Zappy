@@ -58,7 +58,7 @@ public void ReadStringInput_port(string s) {
     }
 
     public void PlayGame(string s) {
-        string message = "/login \"" + s +"\"";
+        string message = "team1\n";
         if (ip_valid && port_valid) {                                           //check if everything is valid before trying to connect
             try {
                 errorMessage.GetComponent<TextMeshProUGUI>().text = "";
