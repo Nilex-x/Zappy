@@ -98,7 +98,6 @@ public class Main : MonoBehaviour
         client.stream.Read(response, 0, response.Length);
         buffer = System.Text.Encoding.ASCII.GetString(response).ToString();
         while (client.stream.DataAvailable) {
-            Debug.Log("Niglo: " + (int)buffer[buffer.Length - 1]);
             client.stream.Read(response, 0, response.Length);
             resp = System.Text.Encoding.ASCII.GetString(response).ToString();
             buffer = buffer.Replace("\0", string.Empty);
@@ -134,7 +133,9 @@ public class Main : MonoBehaviour
         try {
             GenerateTileMap();
             sendToServer("tna\n");
-            Debug.Log("Nigger" + buffer);
+            foreach (string team in buffer.Split("\n")) {
+                Debug.Log("Team: " + team);
+            }
             Debug.Log("Generated Team");
             CreateTileMap();
         } catch (System.Exception e) {
