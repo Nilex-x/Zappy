@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - food
+  - linemate
+  - deraumere
+  - sibur
+  - mendiane
+  - phiras
+  - thystame
   layers:
   - Default
   - TransparentFX
