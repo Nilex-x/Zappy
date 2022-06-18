@@ -36,44 +36,6 @@ def findPathToTileFromBroadcast(clientInfo, direction):
     return (0)
         
 
-def findPathToTile(clientInfo, tile_needed):
-    if tile_needed == 0:
-        return (1)
-    left_tile = 1
-    middle_tile = 2
-    right_tile = 3
-    action = "Forward"
-    temp = clientInfo.toSend
-    for levels in range(1, clientInfo.lvl + 1):
-        print(tile_needed, left_tile, middle_tile, right_tile)
-        if (tile_needed < middle_tile and tile_needed >= left_tile):
-            clientInfo.toSend.put("Forward")
-            clientInfo.toSend.put("Left")
-            print("Forward")
-            print("Left")
-            for t in range(0, middle_tile-tile_needed):
-                print("Forward")
-                clientInfo.toSend.put("Forward")
-            return (1)
-        elif (tile_needed > middle_tile and tile_needed <= right_tile):
-            clientInfo.toSend.put("Forward")
-            clientInfo.toSend.put("Right")
-            print("Forward")
-            print("Right")
-            for t in range(0, tile_needed-middle_tile):
-                print("Forward")
-                clientInfo.toSend.put("Forward")
-            return (1)
-        else:
-            print(action + "gay")
-            clientInfo.toSend.put("Forward")
-        if (tile_needed == middle_tile):
-            return (1)
-        left_tile += 2*levels+1
-        middle_tile += 2*levels+2
-        right_tile += 2*levels+3
-    clientInfo.action = temp
-    return (0)
         
 
 
@@ -212,6 +174,45 @@ class clientIA:
             "thystame": 0
         }
 
+    def findPathToTile(self, tile_needed):
+        if tile_needed == 0:
+            return (1)
+        left_tile = 1
+        middle_tile = 2
+        right_tile = 3
+        action = "Forward"
+        temp = self.toSend
+        for levels in range(1, self.lvl + 1):
+            print("YES!")
+            print(tile_needed, left_tile, middle_tile, right_tile)
+            if (tile_needed < middle_tile and tile_needed >= left_tile):
+                self.toSend.put("Forward")
+                self.toSend.put("Left")
+                print("Forward")
+                print("Left")
+                for t in range(0, middle_tile-tile_needed):
+                    print("Forward")
+                    self.toSend.put("Forward")
+                return (1)
+            elif (tile_needed > middle_tile and tile_needed <= right_tile):
+                self.toSend.put("Forward")
+                self.toSend.put("Right")
+                print("Forward")
+                print("Right")
+                for t in range(0, tile_needed-middle_tile):
+                    print("Forward")
+                    self.toSend.put("Forward")
+                return (1)
+            else:
+                print(action + "gay")
+                self.toSend.put("Forward")
+            if (tile_needed == middle_tile):
+                return (1)
+            left_tile += 2*levels+1
+            middle_tile += 2*levels+2
+            right_tile += 2*levels+3
+        self.action = temp
+        return (0)
 
     def inventory(self, srvMsg):
         srvMsg = srvMsg[1:-1]
@@ -221,22 +222,31 @@ class clientIA:
             self.ressources[a[0]] = int(a[1])
 
     def look(self, srvMsg):
-        print(srvMsg)
-        srvMsg = srvMsg[1:-1]
+        print("1: ", srvMsg)
         look_list = srvMsg.split(",")
-        print(look_list)
-        ressource = checkRessourceForLevel(self.lvl, self.ressources)
-        if (self.ressources["food"] < 8 or ressource == None):
-            ressource = "food"
-        tile_needed = -1
         i = 0
-        for l in look_list:
-            if l.find(ressource) != -1:
-                tile_needed = i
-            i += 1
-        if not findPathToTile(self, tile_needed):
-            print("Not found...")
-            self.toSend.put("Forward")
+        for a in look_list:
+            print("2: ", a)
+            if a.find("food") >= 0:
+                print("oui")
+                self.findPathToTile(i)
+                return 0
+            else:
+                i += 1
+        return 0
+        # print(look_list)
+        # ressource = checkRessourceForLevel(self.lvl, self.ressources)
+        # if (self.ressources["food"] < 8 or ressource == None):
+        #     ressource = "food"
+        # tile_needed = -1
+        # i = 0
+        # for l in look_list:
+        #     if l.find(ressource) != -1:
+        #         tile_needed = i
+        #     i += 1
+        # if not findPathToTile(self, tile_needed):
+        #     print("Not found...")
+        #     self.toSend.put("Forward")
 
     def ejected(self):
         while (not self.cmds.empty()):
