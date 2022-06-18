@@ -50,7 +50,7 @@ public class Map {
     public int width;
     public int height;
     public List<List<Tiles>> tiles;
-    public List<Team> teams;
+    public List<Team> teams = new List<Team>();
     public int time_unit;
 }
 
@@ -61,6 +61,8 @@ public class Main : MonoBehaviour
     private string response;
 
     public GameObject tilePrefab;
+
+    public int nb_teams = 0;
 
     float tileOffset = 1.45f;
 
@@ -104,7 +106,10 @@ public class Main : MonoBehaviour
             CreateTileMap();
         }
         if (cmd.StartsWith("tna ")) {
-            Debug.Log("New team: " + content[1]);
+            map.teams.Add(new Team());
+            Debug.Log(cmd);
+            //map.teams[nb_teams].name = content[1];
+            nb_teams++;
         }
         if (cmd.StartsWith("bct ")) {
             map.tiles[int.Parse(content[1])][int.Parse(content[2])].content.update(cmd);
@@ -129,8 +134,12 @@ public class Main : MonoBehaviour
         if (NetworkManager.connected) {
             while (NetworkManager.stream.DataAvailable)
                 NetworkManager.ReadServer();
+
+            map.teams = new List<Team>();
+
             Debug.Log("Connected");
             NetworkManager.WriteServer("msz");
+            NetworkManager.WriteServer("tna");
             NetworkManager.WriteServer("sgt");
         } else {
             Debug.Log("Not connected");
