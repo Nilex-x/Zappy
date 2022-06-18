@@ -79,7 +79,8 @@ class clientIA:
         self.N = None
         self.M = None
         self.dir = 0
-        self.cmds = Queue(maxsize = 0)
+        self.toSend = Queue(maxsize=0)
+        self.cmds = Queue(maxsize=9)
         self.currentCmd = "Nothing"
         self.ressources = {
             "food": 10,
@@ -101,6 +102,7 @@ class clientIA:
 
     def look(self, srvMsg):
         srvMsg = srvMsg[1:-1]
+        self.toSend.put("Forward")
 
     def ejected(self):
         while (not self.cmds.empty()):
@@ -116,24 +118,23 @@ class clientIA:
             return 1
         srvMsg = srvMsg[:-1]
         if srvMsg == "dead":
-            return 0
-        if srvMsg.find("eject"):
+            return -1
+        if srvMsg.find("eject") >= 0:
             return self.ejected()
-        if srvMsg.find("message"):
+        if srvMsg.find("message") >= 0:
             return self.handleMessage(srvMsg)
         curr = self.currentCmd.split()[0]
-        if self.curr == "Look":
+        if curr == "Look":
             self.look(srvMsg)
-        elif self.curr == "Inventory":
+        elif curr == "Inventory":
             self.inventory(srvMsg)
-        elif self.curr == "Connect_nbr":
+        elif curr == "Connect_nbr":
             self.nbPlayers = int(srvMsg)
-        elif self.curr == "Incantation":
+        elif curr == "Incantation":
             if srvMsg == "Elevation underway":
                 return 1
             else:
                 self.lvl = int(srvMsg[14])
-
         if self.cmds.empty():
             self.currentCmd = "Nothing"
         else:
@@ -141,7 +142,19 @@ class clientIA:
         return 1
 
     def actionAi(self):
-        action = input("INPUT: ")
+        if self.toSend.empty():
+            if self.cmds.empty():
+                action = input("Input: ")
+                if (action == "wait"):  #temp
+                    return action       #temp
+                self.toSend.put(action)
+            else:
+                return "wait"
+        if not self.cmds.full():
+            action = self.toSend.get()
+            self.cmds.put(action)
+        if self.currentCmd == "Nothing":
+            self.currentCmd = self.cmds.get()
         return action
 
 
@@ -166,6 +179,8 @@ class clientInfo:
             self.readBuff = result.value.decode('utf-8')
             if self.readBuff == "end":
                 return -1
+            if self.ai.serverResponse(self.readBuff) < 0:
+                return -1
             print(self.readBuff)
         return 0
 
@@ -176,7 +191,6 @@ class clientInfo:
             if self.serverCommunication(run) < 0:
                 print("server error")
                 return -1
-            run = self.ai.serverResponse(self.readBuff)
             self.writeBuff = self.ai.actionAi()
             self.readBuff = None
             if (self.writeBuff != "wait"):
