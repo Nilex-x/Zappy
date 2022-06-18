@@ -13,8 +13,6 @@ public class Play : MonoBehaviour
     private string ip;
     private string port;
     private string input;
-    public static TcpClient client;
-    public static NetworkStream stream;
     public GameObject errorMessage_ip;
     public GameObject errorMessage_port;
     public GameObject errorMessage;
@@ -58,32 +56,20 @@ public void ReadStringInput_port(string s) {
     }
 
     public void PlayGame(string s) {
-        string message = "team1\n";
-        if (ip_valid && port_valid) {                                           //check if everything is valid before trying to connect
+        if (ip_valid && port_valid) {
             try {
                 errorMessage.GetComponent<TextMeshProUGUI>().text = "";
-                client = new TcpClient(ip, int.Parse(port));                    //create client and connect to server 
-                byte[] data = System.Text.Encoding.ASCII.GetBytes(message);     //send message
-                stream = client.GetStream();                                    //get stream (equivalent to get the file descriptor)
-                stream.Write(data, 0, data.Length);                             //write data to stream (equivalent to write(fd, message, strlen(message)))
-                Debug.Log("Sent: " + message);
-                data = new byte[256];                                           //create new buffer for the answer
-                string response = string.Empty;
-                int bytes = stream.Read(data, 0, data.Length);                  //read answer from stream (equivalent to read(fd, buffer, sizeof(buffer)))
-                response = System.Text.Encoding.ASCII.GetString(data, 0, bytes);//convert answer to string
-                Debug.Log("Received:" + response);
-                SceneManager.LoadScene("Game");                                 //load game scene
-            } catch (System.ArgumentNullException e) {                          //if an argument is null
-                Debug.Log("ArgumentNullException: " + e);
-                errorMessage.GetComponent<TextMeshProUGUI>().text = "Error, ArgumentNullException";
-            } catch (SocketException e) {                                       //if a socket error occurs
+                NetworkManager.StartClient(ip, int.Parse(port));
+            } catch (SocketException e) {
                 errorMessage.GetComponent<TextMeshProUGUI>().text = "Error while creating the socket";
                 Debug.Log("SocketException: " + e);
+            } catch (System.Exception e) {
+                Debug.Log("ArgumentNullException: " + e);
+                errorMessage.GetComponent<TextMeshProUGUI>().text = e.ToString();
             }
         } else {
-            Debug.Log("Not ok");
-            Debug.Log(ip_valid);
-            Debug.Log(port_valid);
+            Debug.Log("Error ip is " + ip_valid);
+            Debug.Log("Error port is " + port_valid);
             errorMessage.GetComponent<TextMeshProUGUI>().text = "Error, IP: " + ip + " Port: " + port;
         }
     }

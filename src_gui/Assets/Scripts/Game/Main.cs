@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Net.Sockets;
 
-class Client
-{
-    public TcpClient client;
-    public NetworkStream stream;
-}
-
 public class Ressources {
     public int food = 0;
     public int linemate = 0;
@@ -32,6 +26,7 @@ public class Ressources {
         mendiane = int.Parse(ressources[7]);
         phiras = int.Parse(ressources[8]);
         thystame = int.Parse(ressources[9]);
+        Debug.Log("Updated " + x + " " + y);
     }
 }
 
@@ -56,14 +51,13 @@ public class Map {
     public int height;
     public List<List<Tiles>> tiles;
     public List<Team> teams;
+    public int time_unit;
 }
 
 public class Main : MonoBehaviour
 {
-    private Client client = new Client();
     public static Map map = new Map();
     public GameObject parent;
-    private string buffer;
     private string response;
 
     public GameObject tilePrefab;
@@ -72,6 +66,17 @@ public class Main : MonoBehaviour
 
     private void CreateTileMap()
     {
+        map.tiles = new List<List<Tiles>>();
+        for (int i = 0; i <= map.height; i++)
+        {
+            map.tiles.Add(new List<Tiles>());
+            for (int j = 0; j <= map.width; j++)
+            {
+                map.tiles[i].Add(new Tiles());
+                map.tiles[i][j].content = new Ressources();
+                map.tiles[i][j].content.food = i;
+            }
+        }
         for (int x = 0; x < map.width; x++) {
             for (int z = 0; z < map.height; z++) {
                 GameObject Temp = Instantiate(tilePrefab);
@@ -87,69 +92,46 @@ public class Main : MonoBehaviour
         Temp.name = x.ToString() + ", " + z.ToString();
     }
 
-    private void sendToServer(string message)
+    private void HandleCommand(string cmd)
     {
-        byte[] response = new byte[256];
-        string resp = "";
-        byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+        Debug.Log("Command: " + cmd);
+        string[] content = cmd.Split(" ");
 
-        buffer = string.Empty;
-        client.stream.Write(data, 0, data.Length);
-        client.stream.Read(response, 0, response.Length);
-        buffer = System.Text.Encoding.ASCII.GetString(response).ToString();
-        while (client.stream.DataAvailable) {
-            client.stream.Read(response, 0, response.Length);
-            resp = System.Text.Encoding.ASCII.GetString(response).ToString();
-            buffer = buffer.Replace("\0", string.Empty);
-            for (int i = 0; i < resp.Length; i++) {
-                buffer += (char)resp[i];
-            }
-        }
-    }
-
-    private void GenerateTileMap()
-    {
-        sendToServer("msz\n");
-        string []response = buffer.Split(" ");
-        Debug.Log(buffer);
-        map.width = int.Parse(response[1]) + 1;
-        map.height = int.Parse(response[2]) + 1;
-        Debug.Log("Generated map");
-        map.tiles = new List<List<Tiles>>();
-        for (int i = 0; i < map.height; i++)
-        {
-            map.tiles.Add(new List<Tiles>());
-            for (int j = 0; j < map.width; j++)
-            {
-                map.tiles[i].Add(new Tiles());
-                map.tiles[i][j].content = new Ressources();
-                map.tiles[i][j].content.food = i;
-            }
-        }
-    }
-
-    private void doMainLoop()
-    {
-        try {
-            GenerateTileMap();
-            sendToServer("tna\n");
-            foreach (string team in buffer.Split("\n")) {
-                Debug.Log("Team: " + team);
-            }
-            Debug.Log("Generated Team");
+        if (cmd.StartsWith("msz ")) {
+            map.width = int.Parse(content[1]);
+            map.height = int.Parse(content[2]);
+            Debug.Log("Updated map size : " + map.width + " " + map.height);
             CreateTileMap();
-        } catch (System.Exception e) {
-            Debug.Log(e);
         }
+        if (cmd.StartsWith("tna ")) {
+            Debug.Log("New team: " + content[1]);
+        }
+        if (cmd.StartsWith("bct ")) {
+            map.tiles[int.Parse(content[1])][int.Parse(content[2])].content.update(cmd);
+        }
+        if (cmd.StartsWith("sgt ")) {
+            map.time_unit = int.Parse(content[1]);
+        }
+    }
+
+    private void Update() {
+        if (!NetworkManager.connected)
+            throw new System.Exception("Error disconnected");
+        try {
+            string cmd = NetworkManager.ReadServer();
+            if (!string.IsNullOrEmpty(cmd) && (cmd != "" || cmd != "WELCOME"))
+                HandleCommand(cmd);
+        } catch { }
     }
 
     void Start()
     {
-        client.stream = Play.stream;
-        client.client = Play.client;
-        if (client.client.Connected) {
+        if (NetworkManager.connected) {
+            while (NetworkManager.stream.DataAvailable)
+                NetworkManager.ReadServer();
             Debug.Log("Connected");
-            doMainLoop();
+            NetworkManager.WriteServer("msz");
+            NetworkManager.WriteServer("sgt");
         } else {
             Debug.Log("Not connected");
         }
