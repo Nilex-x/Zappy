@@ -65,7 +65,7 @@ def findPathToTile(clientInfo, tile_needed):
                 clientInfo.toSend.put("Forward")
             return (1)
         else:
-            print(action)
+            print(action + "gay")
             clientInfo.toSend.put("Forward")
         if (tile_needed == middle_tile):
             return (1)
@@ -221,8 +221,10 @@ class clientIA:
             self.ressources[a[0]] = int(a[1])
 
     def look(self, srvMsg):
+        print(srvMsg)
         srvMsg = srvMsg[1:-1]
         look_list = srvMsg.split(",")
+        print(look_list)
         ressource = checkRessourceForLevel(self.lvl, self.ressources)
         if (self.ressources["food"] < 8 or ressource == None):
             ressource = "food"
