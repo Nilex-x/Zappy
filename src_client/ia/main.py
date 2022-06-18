@@ -15,6 +15,8 @@ from queue import Queue
 from sys import *
 from turtle import left
 
+#test
+
 ressources = ["linemate","deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
 def findPathToTileFromBroadcast(clientInfo, direction):
