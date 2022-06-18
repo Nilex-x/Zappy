@@ -38,7 +38,8 @@ public class Player {
 }
 
 public class Team {
-    public string[] name;
+    public string name;
+    public int nb_players = 0;
     public List<Player> players;
 }
 
@@ -94,6 +95,25 @@ public class Main : MonoBehaviour
         Temp.name = x.ToString() + ", " + z.ToString();
     }
 
+    private void GeneratePlayer(string[] content)
+    {
+        string[] player_tag = content[1].Split("#");
+
+        for (int i_team = 0; i_team < nb_teams; i_team++) {
+            if (map.teams[i_team].name == content[6]) {
+                map.teams[i_team].players.Add(new Player());
+                map.teams[i_team].players[map.teams[i_team].nb_players].player_nb = int.Parse(player_tag[1]);
+                map.teams[i_team].players[map.teams[i_team].nb_players].orientation = int.Parse(content[4]);
+                map.teams[i_team].players[map.teams[i_team].nb_players].level = int.Parse(content[5]);
+                map.teams[i_team].players[map.teams[i_team].nb_players].content = new Ressources();
+                map.teams[i_team].players[map.teams[i_team].nb_players].content.x = int.Parse(content[2]);
+                map.teams[i_team].players[map.teams[i_team].nb_players].content.y = int.Parse(content[3]);
+                map.teams[i_team].nb_players++;
+                break;
+            }
+        }
+    }
+
     private void HandleCommand(string cmd)
     {
         Debug.Log("Command: " + cmd);
@@ -107,7 +127,8 @@ public class Main : MonoBehaviour
         }
         if (cmd.StartsWith("tna ")) {
             map.teams.Add(new Team());
-            Debug.Log(cmd);
+            Debug.Log("Ho mais allo fratelo");
+            map.teams[nb_teams].players = new List<Player>();
             //map.teams[nb_teams].name = content[1];
             nb_teams++;
         }
@@ -116,6 +137,9 @@ public class Main : MonoBehaviour
         }
         if (cmd.StartsWith("sgt ")) {
             map.time_unit = int.Parse(content[1]);
+        }
+        if (cmd.StartsWith("pnw ")) {
+            GeneratePlayer(content);
         }
     }
 
