@@ -14,6 +14,8 @@ from queue import Queue
 from sys import *
 from turtle import left
 
+ressources = ["linemate","deraumere", "sibur", "mendiane", "phiras", "thystame"]
+
 def findPathToTileFromBroadcast(clientInfo, direction):
     if (direction == 1):
         clientInfo.action.append("Forward\n")
@@ -73,44 +75,45 @@ def findPathToTile(clientInfo, tile_needed):
 
 # ---------------------- NEEDED ----------------------
 
-up2 = {
+upLvl = [
+    {
     "player": 1,
     "linemate": 1
-}
-up3 = {
+    },
+    {
     "player": 2,
     "linemate": 1,
     "deraumere": 1,
     "sibur": 1
-}
-up4 = {
+    },
+    {
     "player": 2,
     "linemate": 2,
     "sibur": 1,
     "phiras": 1
-}
-up5 = {
+    },
+    {
     "player": 4,
     "linemate": 1,
     "deraumere": 1,
     "sibur": 2,
     "phiras": 1
-}
-up6 = {
+    },
+    {
     "player": 4,
     "linemate": 1,
     "deraumere": 2,
     "sibur": 1,
     "mendiane": 3
-}
-up7 = {
+    },
+    {
     "player": 6,
     "linemate": 1,
     "deraumere": 2,
     "sibur": 3,
     "phiras": 1
-}
-up8 = {
+    },
+    {
     "player": 6,
     "linemate": 2,
     "deraumere": 2,
@@ -118,8 +121,15 @@ up8 = {
     "mendiane": 2,
     "phiras": 2,
     "thystame": 1
-}
+    }
+]
 
+def checkRessourceForLevel(IA):
+    for lvl in range(0, 8):
+        if (IA.lvl == lvl+1):
+            for r in ressources:
+                if (upLvl[lvl][r] > IA.ressources[r]):
+                    return r
 
 # ---------------------- CLIENT AI ----------------------
 
@@ -156,7 +166,9 @@ class clientIA:
         print(srvMsg)
         look_list = srvMsg.split(",")
         print("look = ",  look_list)
-        ressource = "linemate"
+        ressource = checkRessourceForLevel(self)
+        if (self.ressources["food"] < 8):
+            ressource = "food"
         tile_needed = -1
         i = 0
         for l in look_list:
