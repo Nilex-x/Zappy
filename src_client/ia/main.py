@@ -232,37 +232,37 @@ class clientInfo:
                 self.ai.action.append("Broadcast inventory " + resrc_string + "\n")
                 print(self.ai.action[-1])
                 
-            if (self.readBuff.find("message")):
-                if (self.readBuff.find("inventory")):
-                    res = []
-                    for r in self.readBuff.split(" "):
-                        if (r == "Broadcast" or r == "inventory"):
-                            continue
-                        res.append(int(r))
-                    print("res = ", res)
-                    inventory = []
-                    for i in range(0, 6):
-                        inventory.append(res[i] + self.ai.ressources[i])
-                    if checkRessourceForLevel(self.ai.lvl, inventory) == None:
-                        self.ai.action.append("Broadcast meeting\n")
-                        self.ai.isMeeting = True
-                        self.ai.hasArrived = True
-                if (self.readBuff.find("meeting")):
-                    direction = int(self.readBuff.split(" ")[1])
-                    self.ai.isMeeting = True
-                    if (direction != 0):
-                        findPathToTileFromBroadcast(self, direction)
-                    else:
-                        self.ai.hasArrived = True
-                        self.ai.action.append("Broadcast arrived\n")
-                
-                if(self.readBuff.find("arrived") and int(self.readBuff.split(" ")[1]) == 0):
-                    self.ai.nbMeeting += 1
-                    if (self.ai.nbMeeting == upLvl[self.ai.lvl]["player"]):
-                        self.ai.action.append("Incantation\n")
-                        self.ai.nbMeeting = 1
-                        self.ai.hasArrived = False
-                        self.ai.isMeeting = False
+            #if (self.readBuff.find("message")):
+                #if (self.readBuff.find("inventory")):
+                #    res = []
+                #    for r in self.readBuff.split(" "):
+                #        if (r == "Broadcast" or r == "inventory"):
+                #            continue
+                #        res.append(int(r))
+                #    print("res = ", res)
+                #    inventory = []
+                #    for i in range(0, 6):
+                #        inventory.append(res[i] + self.ai.ressources[i])
+                #    if checkRessourceForLevel(self.ai.lvl, inventory) == None:
+                #        self.ai.action.append("Broadcast meeting\n")
+                #        self.ai.isMeeting = True
+                #        self.ai.hasArrived = True
+                #if (self.readBuff.find("meeting")):
+                #    direction = int(self.readBuff.split(" ")[1])
+                #    self.ai.isMeeting = True
+                #    if (direction != 0):
+                #        findPathToTileFromBroadcast(self, direction)
+                #    else:
+                #        self.ai.hasArrived = True
+                #        self.ai.action.append("Broadcast arrived\n")
+                #
+                #if(self.readBuff.find("arrived") and int(self.readBuff.split(" ")[1]) == 0):
+                #    self.ai.nbMeeting += 1
+                #    if (self.ai.nbMeeting == upLvl[self.ai.lvl]["player"]):
+                #        self.ai.action.append("Incantation\n")
+                #        self.ai.nbMeeting = 1
+                #        self.ai.hasArrived = False
+                #        self.ai.isMeeting = False
                 
             if (self.writeBuff != "wait"):
                 self.writeBuff += '\n'
