@@ -17,6 +17,7 @@ from sys import *
 
 
 # ---------------------- NEEDED ----------------------
+test = test
 
 up2 = {
     "player": 1,
