@@ -105,9 +105,9 @@ public class Main : MonoBehaviour
                 map.teams[i_team].players[map.teams[i_team].nb_players].player_nb = int.Parse(player_tag[1]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].orientation = int.Parse(content[4]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].level = int.Parse(content[5]);
-                map.teams[i_team].players[map.teams[i_team].nb_players].ressources = new Ressources();
-                map.teams[i_team].players[map.teams[i_team].nb_players].ressources.x = int.Parse(content[2]);
-                map.teams[i_team].players[map.teams[i_team].nb_players].ressources.y = int.Parse(content[3]);
+                map.teams[i_team].players[map.teams[i_team].nb_players].content = new Ressources();
+                map.teams[i_team].players[map.teams[i_team].nb_players].content.x = int.Parse(content[2]);
+                map.teams[i_team].players[map.teams[i_team].nb_players].content.y = int.Parse(content[3]);
                 map.teams[i_team].nb_players++;
                 break;
             }
