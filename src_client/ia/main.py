@@ -8,6 +8,7 @@
 
 
 import ctypes
+from gettext import find
 import pathlib
 import getopt
 from queue import Queue
@@ -124,12 +125,15 @@ upLvl = [
     }
 ]
 
-def checkRessourceForLevel(IA):
+def checkRessourceForLevel(iaLvl, inventory):
     for lvl in range(0, 8):
-        if (IA.lvl == lvl+1):
-            for r in ressources:
-                if (upLvl[lvl][r] > IA.ressources[r]):
+        if (iaLvl == lvl+1):
+            for r in inventory: 
+                if (r == "food"):
+                    continue
+                if (upLvl[lvl][r] > inventory[r]):
                     return r
+    return (None)
 
 # ---------------------- CLIENT AI ----------------------
 
@@ -143,6 +147,9 @@ class clientIA:
         self.N = None
         self.M = None
         self.action = []
+        self.isMeeting = False
+        self.nbMeeting = 1
+        self.hasArrived = False
         self.ressources = {
             "food": 10,
             "linemate": 0,
@@ -166,8 +173,8 @@ class clientIA:
         print(srvMsg)
         look_list = srvMsg.split(",")
         print("look = ",  look_list)
-        ressource = checkRessourceForLevel(self)
-        if (self.ressources["food"] < 8):
+        ressource = checkRessourceForLevel(self.lvl, self.ressources)
+        if (self.ressources["food"] < 8 or ressource == None):
             ressource = "food"
         tile_needed = -1
         i = 0
@@ -177,6 +184,7 @@ class clientIA:
             i += 1
         if not findPathToTile(self, tile_needed):
             print("Not found...")
+            self.action.append("Forward\n")
 
     def serverMsg(self, srvMsg):
         res = input("INPUT: ")
@@ -211,8 +219,51 @@ class clientInfo:
             run = clientLib.client_select()
             self.serverCommunication(run)
             self.writeBuff = self.ai.serverMsg(self.readBuff)
+            if (self.ai.isMeeting == True and self.ai.hasArrived == True):
+                self.ai.action.append("Broadcast meeting\n")
+                    
             if (self.writeBuff == "Look"):
                 self.ai.look(self.readBuff)
+                resrc_string = ""
+                print(self.ai.ressources)
+                for i in range(0,6):
+                    resrc_string += str(self.ai.ressources[ressources[i]]) + " "
+                print(resrc_string)
+                self.ai.action.append("Broadcast inventory " + resrc_string + "\n")
+                print(self.ai.action[-1])
+                
+            if (self.readBuff.find("message")):
+                if (self.readBuff.find("inventory")):
+                    res = []
+                    for r in self.readBuff.split(" "):
+                        if (r == "Broadcast" or r == "inventory"):
+                            continue
+                        res.append(int(r))
+                    print("res = ", res)
+                    inventory = []
+                    for i in range(0, 6):
+                        inventory.append(res[i] + self.ai.ressources[i])
+                    if checkRessourceForLevel(self.ai.lvl, inventory) == None:
+                        self.ai.action.append("Broadcast meeting\n")
+                        self.ai.isMeeting = True
+                        self.ai.hasArrived = True
+                if (self.readBuff.find("meeting")):
+                    direction = int(self.readBuff.split(" ")[1])
+                    self.ai.isMeeting = True
+                    if (direction != 0):
+                        findPathToTileFromBroadcast(self, direction)
+                    else:
+                        self.ai.hasArrived = True
+                        self.ai.action.append("Broadcast arrived\n")
+                
+                if(self.readBuff.find("arrived") and int(self.readBuff.split(" ")[1]) == 0):
+                    self.ai.nbMeeting += 1
+                    if (self.ai.nbMeeting == upLvl[self.ai.lvl]["player"]):
+                        self.ai.action.append("Incantation\n")
+                        self.ai.nbMeeting = 1
+                        self.ai.hasArrived = False
+                        self.ai.isMeeting = False
+                
             if (self.writeBuff != "wait"):
                 self.writeBuff += '\n'
                 clientLib.test(self.writeBuff.encode('utf-8'))
