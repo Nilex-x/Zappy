@@ -220,8 +220,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c2de9ea7e55dbb892e477954fb8400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 1257246384}
+  foodPrefab: {fileID: 8148763906990965931, guid: 45aa312d83cb81d79beaaf579f39cdc1, type: 3}
+  linematePrefab: {fileID: 7526826392278952150, guid: bfa5cc21834e34759b91281db623a8a0, type: 3}
+  deraumerePrefab: {fileID: 6143282439221861856, guid: c37033fbffc3b44c29f589fc8d825f4e, type: 3}
+  siburPrefab: {fileID: 5253643215809866065, guid: b3d5c7cdca8d54a0bbb5a14a596ed1cd, type: 3}
+  mendianePrefab: {fileID: 5726623546892582138, guid: 9c1072ff23f1d5adfbb80accca6cf977, type: 3}
+  phirasPrefab: {fileID: 8148763906990965931, guid: 45aa312d83cb81d79beaaf579f39cdc1, type: 3}
+  thystamePrefab: {fileID: 9177906688517214090, guid: ad9a88e60cb25025896020ea23591516, type: 3}
+  playerPrefab: {fileID: 0}
+  eggPrefab: {fileID: 0}
   tilePrefab: {fileID: 8499674414131275041, guid: 8cf8444a9799b7643a0d245dabe7668c, type: 3}
+  parent: {fileID: 1257246384}
+  nb_teams: 0
 --- !u!1 &1128178145
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,7 +350,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1257246384}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 380.69904, y: 330.706, z: -503.20435}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
