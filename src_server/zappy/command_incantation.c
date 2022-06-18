@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 static const struct data_incant DATA_INCANT[] = {
     {
@@ -57,10 +58,9 @@ static int check_incant_ressources(map_t *map, trantorians_t *trant)
     size_t x = trant->tile->x;
     size_t y = trant->tile->y;
 
-    (void) x;
-    for (int x = 0; x < 7; x++)
-        if (map->tiles[x][y]->ressources[x + 1] <
-            DATA_INCANT[trant->lvl - 1].ressources_required[x])
+    for (int i = 0; i < 7; i++)
+        if (map->tiles[x][y]->ressources[i + 1] <
+            DATA_INCANT[trant->lvl - 1].ressources_required[i])
             return (-1);
     return (0);
 }
@@ -97,6 +97,7 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data)
 {
     char *line = NULL;
 
+    (void) arg;
     if (check_trant_required_nb(data->map, cli->trant) == -1
     || check_incant_ressources(data->map, cli->trant) == -1
     || check_trant_required_level(data->map, cli->trant) == -1) {
@@ -112,5 +113,5 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data)
         return (1);
     }
     cli->data_send = add_send(cli->data_send, "Elevation underway\n");
-    
+    return (0);
 }

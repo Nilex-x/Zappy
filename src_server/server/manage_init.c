@@ -28,7 +28,22 @@ void init_data_struct(server_t *info)
     return;
 }
 
-int add_trantoriant(client_t *cli, server_t *info, char *cmd)
+void init_trantoriant(client_t *cli, server_t *info, team_t *team)
+{
+    cli->trant->timeleft = set_timespec(126, info->data->freq);
+    cli->trant->lvl = 1;
+    cli->trant->is_alive = true;
+    cli->trant->client = cli;
+    cli->trant->team_name = strdup(team->name);
+    cli->trant->inventory[0] = 10;
+    cli->trant->action = NULL;
+    for (int i = 1; i < 7; i++)
+        cli->trant->inventory[i] = 0;
+    trantorian_spawn(info->data->map, cli->trant);
+    add_trantoriant_to_team(cli->trant, team);
+}
+
+void add_trantoriant(client_t *cli, server_t *info, char *cmd)
 {
     team_t *team = get_team_by_name(clear_str(cmd), info->data);
     char *line = NULL;
@@ -37,18 +52,16 @@ int add_trantoriant(client_t *cli, server_t *info, char *cmd)
         cli->data_send = add_send(cli->data_send, (!team) ? "unkown team\n" :
         "team is already full please wait until a client disconnect " \
         "or fork\n");
-        return (0);
+    } else {
+        cli->trant = create_add_trantoriant(cli, info->data, team->name);
+        asprintf(&line, "%d\n", (team->player_max - team->nb_player));
+        cli->data_send = add_send(cli->data_send, line);
+        free(line);
+        init_trantoriant(cli, info, team);
+        asprintf(&line, "%d %d\n", info->data->width, info->data->height);
+        cli->data_send = add_send(cli->data_send, line);
+        free(line);
     }
-    cli->trant = create_add_trantoriant(cli, info->data, team->name);
-    asprintf(&line, "%d\n", (team->player_max - team->nb_player));
-    cli->data_send = add_send(cli->data_send, line);
-    free(line);
-    trantorian_spawn(info->data->map, cli->trant);
-    add_trantoriant_to_team(cli->trant, team);
-    asprintf(&line, "%ld %ld\n", cli->trant->tile->x,  cli->trant->tile->y);
-    cli->data_send = add_send(cli->data_send, line);
-    free(line);
-    return (0);
 }
 
 void handle_command(server_t *info, client_t *cli)
@@ -60,7 +73,11 @@ void handle_command(server_t *info, client_t *cli)
         return;
     }
     printf("value client [%s]\n", value);
-    if (!cli->trant)
+    if (strcmp(value, "gui\n") == 0) {
+        cli->is_gui = true;
+        return;
+    }
+    if (!cli->trant && !cli->is_gui)
         add_trantoriant(cli, info, value);
     else
         sort_command(cli, info->data, value);

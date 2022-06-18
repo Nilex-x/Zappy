@@ -43,7 +43,6 @@ void find_socket(server_t *info)
 
     for (client_t *temp = info->list_client; temp; temp = next) {
         next = temp->next;
-
         if (FD_ISSET(temp->socket, &info->efds))
             remove_client(info, temp->socket);
         if (FD_ISSET(temp->socket, &info->rfds))
@@ -57,19 +56,26 @@ void find_socket(server_t *info)
 int handler_connection(server_t *info)
 {
     int retsel = 0;
+    struct timeval time;
 
     init_client(info);
     while (1) {
         clear_list(info);
-        retsel = select(info->max_fd + 1, &info->rfds, &info->wfds, &info->efds, &info->time_left);
-        if (retsel < 0)
+        TIMESPEC_TO_TIMEVAL(&time, &info->time_left);
+        retsel = select(info->max_fd + 1, &info->rfds, &info->wfds,
+                        &info->efds, &time);
+        TIMEVAL_TO_TIMESPEC(&time, &info->time_left);
+        if (retsel < 0) {
             perror("select()");
+            exit(84);
+        }
         if (retsel == 0)
             do_action(info);
         if (retsel > 0) {
             select_interupt(info);
             find_socket(info);
         }
+        verif_life(info);
         get_shortest_time(info);
     }
 }

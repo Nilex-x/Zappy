@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 int get_obj(char *arg)
 {
