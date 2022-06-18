@@ -14,6 +14,67 @@ import enum
 from queue import Queue
 from re import A
 from sys import *
+from turtle import left
+
+#test
+
+ressources = ["linemate","deraumere", "sibur", "mendiane", "phiras", "thystame"]
+
+def findPathToTileFromBroadcast(clientInfo, direction):
+    if (direction == 1):
+        clientInfo.action.append("Forward\n")
+    if (direction == 3):
+        clientInfo.action.append("Left\n")
+        clientInfo.action.append("Forward\n")
+    if (direction == 5):
+        clientInfo.action.append("Left\n")
+        clientInfo.action.append("Left\n")
+        clientInfo.action.append("Forward\n")
+    if (direction == 7):
+        clientInfo.action.append("Right\n")
+        clientInfo.action.append("Forward\n")
+    return (0)
+        
+
+def findPathToTile(clientInfo, tile_needed):
+    if tile_needed == 0:
+        return (1)
+    left_tile = 1
+    middle_tile = 2
+    right_tile = 3
+    action = "Forward"
+    temp = clientInfo.action
+    for levels in range(1, clientInfo.lvl + 1):
+        print(tile_needed, left_tile, middle_tile, right_tile)
+        if (tile_needed < middle_tile and tile_needed >= left_tile):
+            clientInfo.action.append("Forward\n")
+            clientInfo.action.append("Left\n")
+            print("Forward")
+            print("Left")
+            for t in range(0, middle_tile-tile_needed):
+                print("Forward")
+                clientInfo.action.append("Forward\n")
+            return (1)
+        elif (tile_needed > middle_tile and tile_needed <= right_tile):
+            clientInfo.action.append("Forward\n")
+            clientInfo.action.append("Right\n")
+            print("Forward")
+            print("Right")
+            for t in range(0, tile_needed-middle_tile):
+                print("Forward")
+                clientInfo.action.append("Forward\n")
+            return (1)
+        else:
+            print(action)
+            clientInfo.action.append("Forward\n")
+        if (tile_needed == middle_tile):
+            return (1)
+        left_tile += 2*levels+1
+        middle_tile += 2*levels+2
+        right_tile += 2*levels+3
+    clientInfo.action = temp
+    return (0)
+        
 
 
 # ---------------------- NEEDED ----------------------
