@@ -193,9 +193,8 @@ public class Main : MonoBehaviour
         }
         if (cmd.StartsWith("tna ")) {
             map.teams.Add(new Team());
-            Debug.Log("Ho mais allo fratelo");
             map.teams[nb_teams].players = new List<Player>();
-            //map.teams[nb_teams].name = content[1];
+            map.teams[nb_teams].name = content[1];
             nb_teams++;
         }
         if (cmd.StartsWith("bct ")) {
@@ -247,6 +246,7 @@ public class Main : MonoBehaviour
 
             Debug.Log("Connected");
             NetworkManager.WriteServer("msz");
+            NetworkManager.WriteServer("tna");
         } else {
             Debug.Log("Not connected");
         }
