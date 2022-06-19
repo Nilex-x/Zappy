@@ -10,13 +10,8 @@
 import ctypes
 import pathlib
 import getopt
-import enum
 from queue import Queue
-from re import A
 from sys import *
-from turtle import left
-
-#test
 
 ressources = ["linemate","deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
@@ -34,9 +29,6 @@ def findPathToTileFromBroadcast(clientInfo, direction):
         clientInfo.toSend.put("Right")
         clientInfo.toSend.put("Forward")
     return (0)
-        
-
-        
 
 
 # ---------------------- NEEDED ----------------------
@@ -222,7 +214,14 @@ class clientIA:
             self.ressources[a[0]] = int(a[1])
 
     def look(self, srvMsg):
-
+        look_list = srvMsg.split(",")
+        i = 0
+        for a in look_list:
+            if a.find("linemate") >= 0:
+                self.findPathToTile(i)
+                return 0
+            else:
+                i += 1
         return 0
         # print(look_list)
         # ressource = checkRessourceForLevel(self.lvl, self.ressources)
