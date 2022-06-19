@@ -195,6 +195,7 @@ public class Main : MonoBehaviour
             map.teams.Add(new Team());
             map.teams[nb_teams].players = new List<Player>();
             map.teams[nb_teams].name = content[1];
+            Debug.Log("New Team : " + map.teams[nb_teams].name);
             nb_teams++;
         }
         if (cmd.StartsWith("bct ")) {
