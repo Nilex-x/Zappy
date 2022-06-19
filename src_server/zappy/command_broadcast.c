@@ -19,68 +19,70 @@ int get_pos(int a, int b, int map_size)
     return (map_size - abs(dist));
 }
 
+int check_sides(int x_dest, int y_dest, float c_dir)
+{
+    printf("C_DIR: %f\n", c_dir);
+    if (y_dest > 0) {
+        if (c_dir > 1)
+            return 1;
+        if (x_dest > 0)
+            return 3;
+        if (x_dest < 0)
+            return 7;
+    }
+    if (y_dest < 0) {
+        if (c_dir > 1)
+            return 5;
+        if (x_dest > 0)
+            return 3;
+        if (x_dest < 0)
+            return 7;
+    }
+    return 0;
+}
+
 int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data)
 {
     int x_dest = get_pos(src->tile->x, dest->tile->x, data->map->width);
     int y_dest = get_pos(src->tile->y, dest->tile->y, data->map->height);
     float c_dir;
     
+    printf("x_dest: %d, y_dest: %d\n", x_dest, y_dest);
     if (x_dest == 0)
         return (y_dest > 0) ? 5 : (y_dest == 0) ? 0 : 1;
+    if (y_dest == 0)
+        return (x_dest > 0) ? 3 : (x_dest == 0) ? 0 : 7;
     c_dir = y_dest / x_dest;
     if (c_dir < 0)
         c_dir *= -1;
     if (x_dest > 0 && (y_dest == x_dest))
-        return 6;
-    if (x_dest < 0 && (y_dest == x_dest))
         return 2;
-    if (x_dest > 0 && (x_dest == y_dest))
-        return 8;
     if (x_dest < 0 && (y_dest == x_dest))
+        return 6;
+    if (x_dest > 0 && (abs(y_dest) == x_dest))
         return 4;
-    if (y_dest > 0) {
-        if (c_dir > 1)
-            return 5;
-        if (x_dest > 0 && c_dir < 1)
-            return 7;
-        if (x_dest < 0 && c_dir < 1)
-            return 3;
-    }
-    if (y_dest < 0) {
-        if (c_dir > 1)
-            return 1;
-        if (x_dest > 0 && c_dir < 1)
-            return 7;
-        if (x_dest < 0 && c_dir < 1)
-            return 3;
-    }
-    return 0;
-}
-
-int send_broadcast(trantorians_t *trant, tile_t *tile, zappy_data_t *data, char *msg)
-{
-    trantorians_t *current = tile->trantorians;
-    char buff[512];
-    int dir;
-
-    while (current != NULL) {
-        dir = find_path(trant, current, data);
-        if (dir)
-            dir = (dir + current->direction * 3) % 8 + 1;
-        sprintf(buff, "Received [%s] from [%d].\n", msg, dir);
-        current->client->data_send = add_send(current->client->data_send, buff);
-        current = current->next;
-    }
-    return 0;
+    if (x_dest < 0 && (y_dest == abs(x_dest)))
+        return 8;
+    return (check_sides(x_dest, y_dest, c_dir));
 }
 
 int broadcast(client_t *client, char **args, zappy_data_t *data)
 {
-    int width = data->map->width;
-    int height = data->map->height;
+    trantorians_t *current = data->trants;
+    char *buff;
+    int dir;
+    int cdir;
 
-    for (int i = 0; i < height; i++)
-        for (int j = 0; j < width; j++)
-            send_broadcast(client->trant, data->map->tiles[i][j], data, args[1]);
+    while (current != NULL) {
+        dir = find_path(client->trant, current, data);
+        cdir = current->direction;
+        printf("DIR: %d\n", dir);
+        if (dir)
+            dir = (dir + cdir * 2) % (8 + (dir + cdir * 2 == 8));
+        asprintf(&buff, "Received [%s] from [%d].\n", args[1], dir);
+        current->client->data_send = add_send(current->client->data_send, buff);
+        current = current->next;
+        free(buff);
+    }
     return 0;
 }

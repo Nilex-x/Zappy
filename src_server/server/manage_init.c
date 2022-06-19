@@ -56,7 +56,7 @@ void add_trantoriant(client_t *cli, server_t *info, char *cmd)
         cli->data_send = add_send(cli->data_send, line);
         free(line);
         init_trantoriant(cli, info, team);
-        asprintf(&line, "%ld %ld\n", cli->trant->tile->x,  cli->trant->tile->y);
+        asprintf(&line, "%d %d\n", info->data->width, info->data->height);
         cli->data_send = add_send(cli->data_send, line);
         free(line);
     }
@@ -71,7 +71,11 @@ void handle_command(server_t *info, client_t *cli)
         return;
     }
     printf("value client [%s]\n", value);
-    if (!cli->trant)
+    if (strcmp(value, "gui\n") == 0) {
+        cli->is_gui = true;
+        return;
+    }
+    if (!cli->trant && !cli->is_gui)
         add_trantoriant(cli, info, value);
     else
         sort_command(cli, info->data, value);

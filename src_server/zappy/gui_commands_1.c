@@ -42,10 +42,10 @@ int gui_map_content(client_t *client, char **args, zappy_data_t *data)
     int height = data->map->height;
 
     (void) args;
-    for (int i = 0; i < height; i++)
-        for (int j = 0; j < width; j++)
+    for (int i = 0; i < width; i++)
+        for (int j = 0; j < height; j++)
             client->data_send = add_send(client->data_send,
-             get_tile_content(i, j, data));
+            get_tile_content(i, j, data));
 
     return 0;
 }

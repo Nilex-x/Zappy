@@ -67,7 +67,7 @@ void handler_connection(server_t *info)
         TIMEVAL_TO_TIMESPEC(&time, &info->time_left);
         if (retsel < 0) {
             perror("select()");
-            exit(0);
+            exit(84);
         }
         if (retsel == 0)
             do_action(info);

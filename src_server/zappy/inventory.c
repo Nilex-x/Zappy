@@ -8,21 +8,38 @@
 #define _GNU_SOURCE
 #include "inventory.h"
 
-int display_inventory(client_t *client, char **args, zappy_data_t *data)
+static int get_inventory_length(client_t *client)
 {
-    (void) data;
-    (void) args;
-
-    client->data_send = add_send(client->data_send, "[");
+    int length = 0;
     for (int i = 0; i < 7; i++) {
         char *line = NULL;
         asprintf(&line, "%s %d", ressources[i], client->trant->inventory[i]);
-        //client->data_send = add_send(client->data_send, line);
-        if(i+1 != 7)
-            strcat(line, ", ");
-            //client->data_send = add_send(client->data_send, ", ");
-        client->data_send = add_send(client->data_send, line);
+        length += strlen(line);
+        if (i + 1 != 7)
+            length += 2;
+        free(line);
     }
-    client->data_send = add_send(client->data_send, "]\n");
+    return (length);
+}
+
+int display_inventory(client_t *client, char **args, zappy_data_t *data)
+{
+    int length = get_inventory_length(client);
+    char *new_line = malloc(length + 4);
+
+    (void) data;
+    (void) args;
+    strcpy(new_line, "[");
+    for (int i = 0; i < 7; i++) {
+        char *line = NULL;
+        asprintf(&line, "%s %d", ressources[i], client->trant->inventory[i]);
+        strcat(new_line, line);
+        if(i+1 != 7)
+            strcat(new_line, ", ");
+        free(line);
+    }
+    strcat(new_line, "]\n\0");
+    client->data_send = add_send(client->data_send, new_line);
+    printf("inventory = %s\n", client->data_send->data);
     return 0;
 }
