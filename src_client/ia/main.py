@@ -222,17 +222,7 @@ class clientIA:
             self.ressources[a[0]] = int(a[1])
 
     def look(self, srvMsg):
-        print("1: ", srvMsg)
-        look_list = srvMsg.split(",")
-        i = 0
-        for a in look_list:
-            print("2: ", a)
-            if a.find("food") >= 0:
-                print("oui")
-                self.findPathToTile(i)
-                return 0
-            else:
-                i += 1
+
         return 0
         # print(look_list)
         # ressource = checkRessourceForLevel(self.lvl, self.ressources)
@@ -287,7 +277,7 @@ class clientIA:
 
     def actionAi(self):
         if self.toSend.empty():
-            if self.cmds.empty():
+            if self.cmds.empty() and self.currentCmd == "Nothing":
                 action = input("Input: ")
                 if (action == "wait"):  #temp
                     return action       #temp
@@ -321,11 +311,12 @@ class clientInfo:
             res = clientLib.read_server(self.socket)
             result = ctypes.cast(res, ctypes.c_char_p)
             self.readBuff = result.value.decode('utf-8')
+            print("[" + self.readBuff + "]")
             if self.readBuff == "end":
                 return -1
-            if self.ai.serverResponse(self.readBuff) < 0:
-                return -1
-            print(self.readBuff)
+            for x in self.readBuff.split("\n"):
+                if self.ai.serverResponse(x) < 0:
+                    return -1
         return 0
 
     def mainLoop(self):
