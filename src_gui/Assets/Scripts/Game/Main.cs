@@ -40,6 +40,7 @@ public class Team {
     public string name;
     public int nb_players = 0;
     public List<Player> players;
+    public List<GameObject> playersObj;
 }
 
 public class Tiles {
@@ -67,7 +68,9 @@ public class Main : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject eggPrefab;
     public GameObject tilePrefab;
-    public GameObject parent;
+    public GameObject tileParent;
+    public GameObject playerModel;
+    public GameObject playerParent;
     public static Map map = new Map();
     private string response;
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
@@ -157,23 +160,31 @@ public class Main : MonoBehaviour
 
     private void SetTileInfo(GameObject Temp, int x, int z)
     {
-        Temp.transform.SetParent(parent.transform);
+        Temp.transform.SetParent(tileParent.transform);
         Temp.name = x.ToString() + ", " + z.ToString();
+    }
+
+    private void SetPlayerInfo(GameObject Temp, string teamName, string playerTag)
+    {
+        Temp.transform.SetParent(playerParent.transform);
+        Temp.name = teamName + ", " + playerTag;
     }
 
     private void GeneratePlayer(string[] content)
     {
-        string[] player_tag = content[1].Split("#");
+        string[] playerTag = content[1].Split("#");
 
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             if (map.teams[i_team].name == content[6]) {
                 map.teams[i_team].players.Add(new Player());
-                map.teams[i_team].players[map.teams[i_team].nb_players].player_nb = int.Parse(player_tag[1]);
+                map.teams[i_team].players[map.teams[i_team].nb_players].player_nb = int.Parse(playerTag[1]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].orientation = int.Parse(content[4]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].level = int.Parse(content[5]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].content = new Ressources();
                 map.teams[i_team].players[map.teams[i_team].nb_players].content.x = int.Parse(content[2]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].content.y = int.Parse(content[3]);
+                map.teams[i_team].playersObj.Add(Instantiate(playerModel));
+                SetPlayerInfo(map.teams[i_team].playersObj[map.teams[i_team].nb_players], content[6], playerTag[1]);
                 map.teams[i_team].nb_players++;
                 break;
             }
@@ -194,6 +205,7 @@ public class Main : MonoBehaviour
         if (cmd.StartsWith("tna ")) {
             map.teams.Add(new Team());
             map.teams[nb_teams].players = new List<Player>();
+            map.teams[nb_teams].playersObj = new List<GameObject>();
             map.teams[nb_teams].name = content[1];
             Debug.Log("New Team : " + map.teams[nb_teams].name);
             nb_teams++;
