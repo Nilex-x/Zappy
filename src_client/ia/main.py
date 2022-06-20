@@ -313,6 +313,7 @@ class clientInfo:
             print("[" + self.readBuff + "]")
             if self.readBuff == "end":
                 return -1
+            self.readBuff = self.readBuff[:-1]
             for x in self.readBuff.split("\n"):
                 if self.ai.serverResponse(x) < 0:
                     return -1

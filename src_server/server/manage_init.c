@@ -62,4 +62,5 @@ void handle_command(server_t *info, client_t *cli)
     else
         sort_command(cli, info->data, value);
     free(value);
+    handle_command(info, cli);
 }
