@@ -10,10 +10,15 @@
 
 int gui_player_pos(client_t *cli, char **args, zappy_data_t *data)
 {
-    int player_nb = atoi(args[1] + 1);
+    int player_nb = 0;
     char *line = NULL;
     trantorians_t *curr = NULL;
 
+    if (len_array(args) != 2) {
+        cli->data_send = add_send(cli->data_send, "ko\n");
+        return 1;
+    }
+    player_nb = atoi(args[1] + 1);
     for (client_t *c = data->trants->client; c; c = c->next) {
         if (c->socket == player_nb) {
             curr = c->trant;
@@ -29,10 +34,15 @@ int gui_player_pos(client_t *cli, char **args, zappy_data_t *data)
 
 int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data)
 {
-    int player_nb = atoi(args[1] + 1);
+    int player_nb = 0;
     char *line = NULL;
     trantorians_t *curr = NULL;
 
+    if (len_array(args) != 2) {
+        cli->data_send = add_send(cli->data_send, "ko\n");
+        return 1;
+    }
+    player_nb = atoi(args[1] + 1);
     for (client_t *c = data->trants->client; c; c = c->next)
         if (c->socket == player_nb) {
             curr = c->trant;
@@ -46,10 +56,15 @@ int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data)
 
 int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data)
 {
-    int player_nb = atoi(args[1] + 1);
+    int player_nb = 0;
     char *line = NULL;
     trantorians_t *curr = NULL;
 
+    if (len_array(args) != 2) {
+        cli->data_send = add_send(cli->data_send, "ko\n");
+        return 1;
+    }
+    player_nb = atoi(args[1] + 1);
     for (client_t *c = data->trants->client; c; c = c->next)
         if (c->socket == player_nb) {
             curr = c->trant;
@@ -77,9 +92,14 @@ int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data)
 
 int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data)
 {
-    int new_freq = atoi(args[1]);
+    int new_freq = 0;
     char *line = NULL;
 
+    if (len_array(args) != 2) {
+        cli->data_send = add_send(cli->data_send, "ko\n");
+        return 0;
+    }
+    new_freq = atoi(args[1]);
     asprintf(&line, "sgt %d\n", data->freq);
     cli->data_send = add_send(cli->data_send, line);
     free(line);
