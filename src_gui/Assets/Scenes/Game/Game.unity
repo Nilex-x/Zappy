@@ -229,7 +229,7 @@ MonoBehaviour:
   thystamePrefab: {fileID: 9177906688517214090, guid: ad9a88e60cb25025896020ea23591516, type: 3}
   playerPrefab: {fileID: 0}
   eggPrefab: {fileID: 0}
-  tilePrefab: {fileID: 6045360219279714781, guid: 43558a301bc478e68ade370e34923bef, type: 3}
+  tilePrefab: {fileID: 3111516843822257580, guid: 9e4bd3c0c7d523d46adde5207836ef8e, type: 3}
   tileParent: {fileID: 1257246384}
   playerModel: {fileID: 919132149155446097, guid: e080f40406a318b49a187d5c7bff5777, type: 3}
   playerParent: {fileID: 1261170350}
