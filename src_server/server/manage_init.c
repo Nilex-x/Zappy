@@ -73,6 +73,8 @@ void handle_command(server_t *info, client_t *cli)
     printf("value client [%s]\n", value);
     if (strcmp(value, "gui\n") == 0) {
         cli->is_gui = true;
+        cli->data_send = add_send(cli->data_send, "ok\n");
+        free(value);
         return;
     }
     if (!cli->trant && !cli->is_gui)

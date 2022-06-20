@@ -86,4 +86,5 @@ void verif_life(server_t *info)
         }
         temp = temp->next;
     }
+    get_shortest_time(info);
 }

@@ -68,10 +68,18 @@ void remove_client(server_t *info, int client)
     client_t *temp = info->list_client;
 
     while (temp) {
+        if (temp->socket == client && info->list_client->socket == client) {
+            info->list_client = info->list_client->next;
+            free(temp->buff_read);
+            free_data_send(temp->data_send);
+            free(temp);
+            return;
+        }
         if (temp->socket == client) {
             temp->prev->next = temp->next;
+            (temp->next) ? (temp->next->prev = temp->prev) : 0;
             free(temp->buff_read);
-            remove_trantoriant(info->data, temp->trant);
+            free_data_send(temp->data_send);
             free(temp);
             return;
         }

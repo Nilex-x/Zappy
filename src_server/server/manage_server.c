@@ -76,7 +76,6 @@ void handler_connection(server_t *info)
             find_socket(info);
         }
         verif_life(info);
-        get_shortest_time(info);
     }
 }
 

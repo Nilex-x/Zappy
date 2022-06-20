@@ -12,97 +12,118 @@ static const cmd_t MY_CMDS[] = {
     {
         .cmd = "Inventory",
         .fct = &display_inventory,
-        .time = 1
+        .time = 1,
+        .gui = false
     },
     {
         .cmd = "Eject",
         .fct = &eject,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Forward",
         .fct = &forward,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Right",
         .fct = &right,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Left",
         .fct = &left,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Look",
         .fct = &look,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Fork",
         .fct = &fork_command,
-        .time = 42
+        .time = 42,
+        .gui = false
     },
     {
         .cmd = "Connect_nbr",
-        .fct = &team_unused_slot
+        .fct = &team_unused_slot,
+        .gui = false
     },
     {
         .cmd = "Take",
         .fct = &pick_item,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Set",
         .fct = &drop_item,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Broadcast",
         .fct = &broadcast,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Incantation",
         .fct = &incantation,
-        .time = 300
+        .time = 300,
+        .gui = false
     },
     {
         .cmd = "msz",
-        .fct = &gui_map_size
+        .fct = &gui_map_size,
+        .gui = true
     },
     {
         .cmd = "bct",
-        .fct = &gui_tile_content
+        .fct = &gui_tile_content,
+        .gui = true
     },
     {
         .cmd = "mct",
-        .fct = &gui_map_content
+        .fct = &gui_map_content,
+        .gui = true
     },
     {
         .cmd = "tna",
-        .fct = &gui_teams_name
+        .fct = &gui_teams_name,
+        .gui = true
     },
     {
         .cmd = "ppo",
-        .fct = &gui_player_pos
+        .fct = &gui_player_pos,
+        .gui = true
     },
     {
         .cmd = "plv",
-        .fct = &gui_player_lvl
+        .fct = &gui_player_lvl,
+        .gui = true
     },
     {
         .cmd = "pin",
-        .fct = &gui_player_inventory
+        .fct = &gui_player_inventory,
+        .gui = true
     },
     {
         .cmd = "sgt",
-        .fct = &gui_time_unit_request
+        .fct = &gui_time_unit_request,
+        .gui = true
     },
     {
         .cmd = "sst",
-        .fct = &gui_time_unit_modif
+        .fct = &gui_time_unit_modif,
+        .gui = true
     }
 };
 
@@ -128,13 +149,20 @@ static void append_action(trantorians_t *trant, char **args, int pos, zappy_data
 
 int sort_command(client_t *client, zappy_data_t *data, char *arg)
 {
-    int cmd_size = sizeof(MY_CMDS) / sizeof(*MY_CMDS);
     char **args = my_str_to_word_array(clear_str(arg));
 
-    for (int pos = 0; pos != cmd_size; pos++) {
-        if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd))) {
-            (client->trant) ? append_action(client->trant, args
-            , pos, data) : MY_CMDS[pos].fct(client, args, data);
+    for (int pos = 0; pos != (sizeof(MY_CMDS) / sizeof(*MY_CMDS)); pos++) {
+        if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
+            MY_CMDS[pos].gui && client->is_gui) {
+            MY_CMDS[pos].fct(client, args, data);
+            free_array(args);
+            return (0);
+        }
+        if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
+            !MY_CMDS[pos].gui && !client->is_gui) {
+            printf("nice command [%s]\n", MY_CMDS[pos].cmd);
+            append_action(client->trant, args, pos, data);
+            free_array(args);
             return (0);
         }
     }
