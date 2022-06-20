@@ -33,8 +33,6 @@ void init_trantoriant(client_t *cli, server_t *info, team_t *team)
     cli->trant->timeleft = set_timespec(126, info->data->freq);
     cli->trant->lvl = 1;
     cli->trant->is_alive = true;
-    cli->trant->client = cli;
-    cli->trant->team_name = strdup(team->name);
     cli->trant->inventory[0] = 10;
     cli->trant->action = NULL;
     for (int i = 1; i < 7; i++)

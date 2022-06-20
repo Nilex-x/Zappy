@@ -18,6 +18,7 @@ void clear_list(server_t *info)
     FD_ZERO(&info->rfds);
     FD_ZERO(&info->efds);
     while (temp) {
+        printf("temp: %d\n", temp->socket);
         FD_SET(temp->socket, &info->efds);
         if (!temp->data_send)
             FD_SET(temp->socket, &info->rfds);
@@ -53,12 +54,11 @@ void find_socket(server_t *info)
     return;
 }
 
-int handler_connection(server_t *info)
+void handler_connection(server_t *info)
 {
     int retsel = 0;
     struct timeval time;
 
-    init_client(info);
     while (1) {
         clear_list(info);
         TIMESPEC_TO_TIMEVAL(&time, &info->time_left);

@@ -37,6 +37,7 @@ int main(int argc, char **argv)
     info.data->map = map_create(info.data->width, info.data->height);
     if (create_socket(&info) == -1)
         return (84);
+    init_client(&info);
     handler_connection(&info);
     close(info.fd_server);
     return (0);

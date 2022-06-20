@@ -21,7 +21,7 @@ int gui_map_size(client_t *client, char **args, zappy_data_t *data)
 char *get_tile_content(int x, int y, zappy_data_t *data)
 {
     char *buff;
-    int *r = data->map->tiles[x][y]->ressources;
+    int *r = data->map->tiles[y][x]->ressources;
 
     asprintf(&buff, "bct %d %d %d %d %d %d %d %d %d\n"
     , x, y, r[0], r[1], r[2], r[3], r[4], r[5], r[6]);
@@ -42,10 +42,10 @@ int gui_map_content(client_t *client, char **args, zappy_data_t *data)
     int height = data->map->height;
 
     (void) args;
-    for (int i = 0; i < width; i++)
-        for (int j = 0; j < height; j++)
+    for (int i = 0; i < height; i++)
+        for (int j = 0; j < width; j++)
             client->data_send = add_send(client->data_send,
-            get_tile_content(i, j, data));
+            get_tile_content(j, i, data));
 
     return 0;
 }
