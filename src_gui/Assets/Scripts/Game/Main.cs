@@ -71,6 +71,7 @@ public class Main : MonoBehaviour
     public GameObject tileParent;
     public GameObject playerModel;
     public GameObject playerParent;
+    public GameObject CameraRig;
     public static Map map = new Map();
     private string response;
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
@@ -139,15 +140,20 @@ public class Main : MonoBehaviour
         UpdateRessources(x, y, thystamePrefab, thystame, Ressources_type.thystame);
     }
 
+    private void setRigPosition()
+    {
+        CameraRig.transform.position = new Vector3((float)map.tiles.Count/2 + 0.45f, 0, -1.45f);
+    }
+
     private void CreateTileMap()
     {
         map.tiles_obj = new List<List<GameObject>>();
         map.tiles = new List<List<Tiles>>();
-        for (int i = 0; i <= map.height; i++)
+        for (int i = 0; i < map.height; i++)
         {
             map.tiles_obj.Add(new List<GameObject>());
             map.tiles.Add(new List<Tiles>());
-            for (int j = 0; j <= map.width; j++)
+            for (int j = 0; j < map.width; j++)
             {
                 map.tiles[i].Add(new Tiles());
                 map.tiles[i][j].content = new Ressources();
@@ -156,6 +162,7 @@ public class Main : MonoBehaviour
                 SetTileInfo(map.tiles_obj[i][j], i, j);
             }
         }
+        setRigPosition();
     }
 
     private void SetTileInfo(GameObject Temp, int x, int z)
