@@ -80,7 +80,7 @@ public class Main : MonoBehaviour
 
     public int nb_teams = 0;
 
-    float TileOffset = 1f;
+    float TileOffset = 5.7f;
     float movementSpeed = 0.15f;
     float rotationSpeed = 0.65f;
 
