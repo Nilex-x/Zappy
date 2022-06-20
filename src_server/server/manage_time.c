@@ -14,6 +14,8 @@ struct timespec set_timespec(long long int time, long long int freq)
 
     ts.tv_sec = time / freq;
     ts.tv_nsec = (time % freq) * 1000000000 / freq;
+    printf("test: %lld\n", (time / freq) % 1);
+    printf("sec: %ld | %.10lld - nsec: %ld |  %.10lld\n", ts.tv_sec, (time / freq), ts.tv_nsec, ((time % freq) * 1000000000 / freq));
     return (ts);
 }
 
@@ -79,7 +81,7 @@ void verif_life(server_t *info)
             "dead\n");
             death_of_a_player(temp);
         } else if (temp->timeleft.tv_sec == 0 && temp->timeleft.tv_nsec == 0) {
-            printf("remove food client: %d\n", temp->client->socket);
+            printf("remove food client: %d - food: %d\n", temp->client->socket, temp->inventory[0]);
             temp->inventory[0]--;
             temp->timeleft = set_timespec(126, info->data->freq);
         }

@@ -25,7 +25,7 @@ static char *look_right(map_t *map, trantorians_t *trant)
             , "%s%s", line, res));
             free(res);
         }
-    asprintf(&line, "%s]", line);
+    asprintf(&line, "%s]\n", line);
     return line;
 }
 
@@ -46,7 +46,7 @@ static char *look_left(map_t *map, trantorians_t *trant)
             , "%s%s", line, res));
             free(res);
         }
-    asprintf(&line, "%s]", line);
+    asprintf(&line, "%s]\n", line);
     return line;
 }
 
@@ -67,7 +67,7 @@ static char *look_up(map_t *map, trantorians_t *trant)
             , "%s%s", line, res));
             free(res);
         }
-    asprintf(&line, "%s]", line);
+    asprintf(&line, "%s]\n", line);
     return line;
 }
 
@@ -88,7 +88,7 @@ static char *look_down(map_t *map, trantorians_t *trant)
             , "%s%s", line, res));
             free(res);
         }
-    asprintf(&line, "%s]", line);
+    asprintf(&line, "%s]\n", line);
     return line;
 }
 

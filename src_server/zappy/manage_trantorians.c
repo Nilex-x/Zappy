@@ -45,7 +45,9 @@ void remove_trantoriant(zappy_data_t *data, trantorians_t *torm)
     trantorians_t *temp = data->trants;
     trantorians_t *prev = NULL;
 
-     if (temp == torm) {
+    if (!torm)
+        return;
+    if (temp == torm) {
         data->trants = temp->next;
         free_trantoriant(torm);
         return;

@@ -74,7 +74,7 @@ int create_socket(server_t *info);
 int read_client(server_t *info, client_t *client);
 char *get_client_command(server_t *info, client_t *client);
 void remove_client(server_t *info, int client);
-int handler_connection(server_t *info);
+void handler_connection(server_t *info);
 void init_client(server_t *info);
 void clear_list(server_t *info);
 client_t *add_client(server_t *info, int client);
