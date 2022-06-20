@@ -138,6 +138,8 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
             return (0);
         }
     }
+    if (client->is_gui)
+        unknown_gui_command(client);
     free_array(args);
     return (1);
 }

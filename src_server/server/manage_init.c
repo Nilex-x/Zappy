@@ -61,6 +61,7 @@ void add_trantoriant(client_t *cli, server_t *info, char *cmd)
         asprintf(&line, "%d %d\n", info->data->width, info->data->height);
         cli->data_send = add_send(cli->data_send, line);
         free(line);
+        new_player_connect(cli->trant);
     }
 }
 
@@ -74,6 +75,7 @@ void handle_command(server_t *info, client_t *cli)
     }
     printf("value client [%s]\n", value);
     if (strcmp(value, "gui\n") == 0) {
+        gui_connect_new_player(cli, info->data);
         cli->is_gui = true;
         return;
     }
