@@ -289,16 +289,20 @@ class clientIA:
             self.currentCmd = self.cmds.get()
         return 1
 
+    def checkAction(self):
+        action = "Look"
+        if checkRessourceForLevel(self.lvl, self.ressources) == None:
+            for i in range(1, 7):
+                for j in range (0, self.ressources[ressources[i-1]]):
+                    if upLvl[self.lvl-1][ressources[i-1]] != 0:
+                        self.toSend.put("Set " + ressources[i-1])
+            action = "Incantation"
+        return (action)
+
     def actionAi(self):
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
-                action = "Look"
-                if checkRessourceForLevel(self.lvl, self.ressources) == None:
-                    for i in range(1, 7):
-                        for j in range (0, self.ressources[ressources[i-1]]):
-                            if upLvl[self.lvl-1][ressources[i-1]] != 0:
-                                self.toSend.put("Set " + ressources[i-1])
-                    action = "Incantation"
+                action = self.checkAction()
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
