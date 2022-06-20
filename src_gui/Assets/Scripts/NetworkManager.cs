@@ -36,7 +36,6 @@ public class NetworkManager : MonoBehaviour
         connected = true;
         SceneManager.LoadScene("game");
     }
-
     public static string ReadServer()
     {
         if (!connected || !stream.DataAvailable)

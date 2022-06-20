@@ -186,8 +186,8 @@ public class Main : MonoBehaviour
         string[] content = cmd.Split(" ");
 
         if (cmd.StartsWith("msz ")) {
-            map.width = int.Parse(content[1]);
-            map.height = int.Parse(content[2]);
+            map.width = int.Parse(content[1]) - 1;
+            map.height = int.Parse(content[2]) - 1;
             Debug.Log("Updated map size : " + map.width + " " + map.height);
             CreateTileMap();
         }
