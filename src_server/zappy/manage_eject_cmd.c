@@ -9,18 +9,15 @@
 
 int eject(trantorians_t *trant, char **arg, zappy_data_t *data)
 {
-    action_t *curr = NULL;
     bool ejected = false;
+    int dir;
 
     for (trantorians_t *c = trant->tile->trantorians; c; c = c->next)
         if (trant != c) {
-            c->direction = (c->direction + 2) % 4;
+            dir = c->direction;
+            c->direction = trant->direction;
             move_trantorian(data->map, c);
-            c->direction = (c->direction + 2) % 4;
-            curr = c->action;
-            (curr) ? (c->action = curr->next) : 0;
-            (curr) ? free(curr) : 0;
-            curr = NULL;
+            c->direction = dir;
             ejected = true;
         }
     if (ejected)
