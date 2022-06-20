@@ -199,9 +199,18 @@ class clientIA:
         self.N = None
         self.M = None
         self.dir = 0
+        self.drop = 0
         self.toSend = Queue(maxsize=0)
         self.cmds = Queue(maxsize=9)
         self.currentCmd = "Nothing"
+        self.commonInventory = {
+            "linemate": 0,
+            "deraumere": 0,
+            "sibur": 0,
+            "mendiane": 0,
+            "phiras": 0,
+            "thystame": 0
+        }
         self.ressources = {
             "food": 10,
             "linemate": 0,
@@ -220,10 +229,19 @@ class clientIA:
             a = rsc.split()
             self.ressources[a[0]] = int(a[1])
 
-    def look(self, srvMsg):
+    def look(self, srvMsg, drop):
         print(srvMsg)
         srvMsg = srvMsg[1:-1]
         look_list = srvMsg.split(",")
+        if drop == 1:
+            res = []
+            for ress in look_list[0].split(" "):
+                res.append(int(ress))
+            for i in range(1, 7):
+                for j in range (0, self.ressources[i] - res[i-1]):
+                    self.toSend.put("Set " + ressources[i])
+            self.drop = 0
+            return 1
         print(look_list)
         ressource = checkRessourceForLevel(self.lvl, self.ressources)
         if (self.ressources["food"] < 8 or ressource == None):
@@ -237,6 +255,10 @@ class clientIA:
         if not findPathToTile(self, tile_needed):
             print("Not found...")
             self.toSend.put("Forward")
+        else:
+            self.toSend.put("Take " + ressource)
+            self.toSend.put("Broadcast inventory " + ressource)
+        return 0
 
     def ejected(self):
         while (not self.cmds.empty()):
@@ -246,6 +268,34 @@ class clientIA:
     def handleMessage(self, message):
         self.dir = int(message[8])
         self.M = message[11:]
+        if (message.find("inventory") != -1):
+            res = message.split(" ")[2]
+            print("res = ", res)
+            self.commonInventory[res] += 1
+            if checkRessourceForLevel(self.lvl, self.commonInventory) == None:
+                self.toSend.put("Broadcast meeting" + self.lvl)
+                self.isMeeting = True
+                self.hasArrived = True
+        if (message.find("meeting") != -1):
+            direction = int(message.split(" ")[3])
+            self.isMeeting = True
+            if (direction != 0):
+                findPathToTileFromBroadcast(self, direction)
+            else:
+                self.hasArrived = True
+                self.toSend.put("Broadcast arrived")
+                self.drop = 1
+        if (message.find("incantation") != -1):
+            self.toSend.put("Incantation")
+        
+        if(message.find("arrived") != -1 and int(message.split(" ")[2]) == 0):
+            self.nbMeeting += 1
+            if (self.nbMeeting == upLvl[self.lvl]["player"]):
+                self.toSend.put("Broadcast incantation")
+                self.toSend.put("Incantation")
+                self.nbMeeting = 1
+                self.hasArrived = False
+                self.isMeeting = False
 
     def serverResponse(self, srvMsg):
         if srvMsg == None:
@@ -259,7 +309,7 @@ class clientIA:
             return self.handleMessage(srvMsg)
         curr = self.currentCmd.split()[0]
         if curr == "Look":
-            self.look(srvMsg)
+            self.look(srvMsg, self.drop)
         elif curr == "Inventory":
             self.inventory(srvMsg)
         elif curr == "Connect_nbr":
@@ -269,6 +319,7 @@ class clientIA:
                 return 1
             else:
                 self.lvl = int(srvMsg[14])
+        
         if self.cmds.empty():
             self.currentCmd = "Nothing"
         else:
