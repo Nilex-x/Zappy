@@ -58,6 +58,7 @@ public class Map {
 
 public class Main : MonoBehaviour
 {
+    private int count = 0;
     public GameObject foodPrefab;
     public GameObject linematePrefab;
     public GameObject deraumerePrefab;
@@ -96,7 +97,7 @@ public class Main : MonoBehaviour
 
     private void SpawnRessources(GameObject tile, GameObject prefab, Ressources_type type)
     {
-        Vector3 randPosInTile = new Vector3(Random.Range(-tileOffset, tileOffset), 0, Random.Range(-tileOffset, tileOffset));
+        Vector3 randPosInTile = new Vector3(Random.Range(-0.5f, 0.5f), 0, Random.Range(-0.5f, 0.5f));
         string tag = ressources_name[(int)type];
 
         GameObject ressource = Instantiate(
@@ -104,18 +105,18 @@ public class Main : MonoBehaviour
             tile.transform.position + randPosInTile,
             Quaternion.identity
         ) as GameObject;
+        ressource.transform.localScale = new Vector3(1.75f, 1.75f, 1.75f);
         ressource.tag = tag;
         ressource.transform.parent = tile.transform;
     }
 
     private void UpdateRessources(int x, int y, GameObject prefab, int nbr, Ressources_type type)
     {
-        GameObject tile = map.tiles_obj[x][y];
-        List<GameObject> pref_Ressources = getRessourcesOnTile(tile, type);
+        List<GameObject> pref_Ressources = getRessourcesOnTile(map.tiles_obj[x][y], type);
 
         if (pref_Ressources.Count < nbr) {
             for (int i = pref_Ressources.Count; i < nbr; i++) {
-                SpawnRessources(tile, prefab, type);
+                SpawnRessources(map.tiles_obj[x][y], prefab, type);
             }
         } else if (pref_Ressources.Count > nbr) {
             for (int i = pref_Ressources.Count; i > nbr; i--) {
@@ -128,9 +129,7 @@ public class Main : MonoBehaviour
     private void UpdateTiles(int x, int y, int food, int linemate, int deraumere, 
     int sibur, int mendiane, int phiras, int thystame)
     {
-        if (x < 0 || y < 0 || x >= map.width || y >= map.height)
-            return;
-        Debug.Log("Updating tile : niglo : " + x + "," + y);
+        Debug.Log("Updating tile : " + x + "," + y);
         UpdateRessources(x, y, foodPrefab, food, Ressources_type.food);
         UpdateRessources(x, y, linematePrefab, linemate, Ressources_type.linemate);
         UpdateRessources(x, y, deraumerePrefab, deraumere, Ressources_type.deraumere);
@@ -149,11 +148,11 @@ public class Main : MonoBehaviour
     {
         map.tiles_obj = new List<List<GameObject>>();
         map.tiles = new List<List<Tiles>>();
-        for (int i = 0; i < map.height; i++)
+        for (int i = 0; i < map.width; i++)
         {
             map.tiles_obj.Add(new List<GameObject>());
             map.tiles.Add(new List<Tiles>());
-            for (int j = 0; j < map.width; j++)
+            for (int j = 0; j < map.height; j++)
             {
                 map.tiles[i].Add(new Tiles());
                 map.tiles[i][j].content = new Ressources();
@@ -204,8 +203,8 @@ public class Main : MonoBehaviour
         string[] content = cmd.Split(" ");
 
         if (cmd.StartsWith("msz ")) {
-            map.width = int.Parse(content[1]) - 1;
-            map.height = int.Parse(content[2]) - 1;
+            map.width = int.Parse(content[1]);
+            map.height = int.Parse(content[2]);
             Debug.Log("Updated map size : " + map.width + " " + map.height);
             CreateTileMap();
         }
@@ -241,32 +240,27 @@ public class Main : MonoBehaviour
     }
 
     private void Update() {
-        if (!NetworkManager.connected)
-            throw new System.Exception("Error disconnected");
-        try {
-            NetworkManager.WriteServer("mct");
+        if (count > 1) {
+            if (!NetworkManager.connected)
+                throw new System.Exception("Error disconnected");
+            try {
             if (NetworkManager.stream.DataAvailable) {
-                Debug.Log("RAAAAAAAAAAAAAAAAAAAAAHH");
-                string cmd = NetworkManager.ReadServer();
-                if (!string.IsNullOrEmpty(cmd) && (cmd != "" || cmd != "WELCOME"))
+                    string cmd = NetworkManager.ReadServer();
                     HandleCommand(cmd);
+                }
+            } catch (System.Exception e) {
+                Debug.Log("Exception : " + e.Message);
             }
-        } catch (System.Exception e) { 
-            Debug.Log("Exception : " + e.Message);
+        } else {
+            count++;
         }
     }
 
     void Start()
     {
         if (NetworkManager.connected) {
-            while (NetworkManager.stream.DataAvailable)
-                NetworkManager.ReadServer();
-
             map.teams = new List<Team>();
-
             Debug.Log("Connected");
-            NetworkManager.WriteServer("msz");
-            NetworkManager.WriteServer("tna");
         } else {
             Debug.Log("Not connected");
         }

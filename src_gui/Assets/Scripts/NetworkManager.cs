@@ -13,7 +13,7 @@ public class NetworkManager : MonoBehaviour
     public static StreamWriter writer;
     public static bool connected = false;
     public static bool finished_read = false;
-    // Start is called before the first frame update
+
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -29,9 +29,11 @@ public class NetworkManager : MonoBehaviour
     public static void StartClient(string host, int port) {
         socket = new TcpClient(host, port);
         stream = socket.GetStream();
-        writer = new StreamWriter(stream);
+        writer = new StreamWriter(stream) {
+            AutoFlush = true
+        };
         reader = new StreamReader(stream);
-        writer.WriteLine("gui");
+        writer.WriteLine("GRAPHIC");
         writer.Flush();
         connected = true;
         SceneManager.LoadScene("game");
@@ -47,7 +49,8 @@ public class NetworkManager : MonoBehaviour
     {
         if (!connected)
             throw new System.Exception("Not connected");
+        if (!stream.CanWrite)
+            throw new System.Exception("Cannot write");
         writer.WriteLine(message);
-        writer.Flush();
     }
 }
