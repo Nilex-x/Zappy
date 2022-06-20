@@ -78,91 +78,60 @@ def findPathToTile(clientInfo, tile_needed):
 
 
 # ---------------------- NEEDED ----------------------
-up2 = {
-    "player": 1,
-    "linemate": 1
-}
-up3 = {
-    "player": 2,
-    "linemate": 1,
-    "deraumere": 1,
-    "sibur": 1
-}
-up4 = {
-    "player": 2,
-    "linemate": 2,
-    "sibur": 1,
-    "phiras": 1
-}
-up5 = {
-    "player": 4,
-    "linemate": 1,
-    "deraumere": 1,
-    "sibur": 2,
-    "phiras": 1
-}
-up6 = {
-    "player": 4,
-    "linemate": 1,
-    "deraumere": 2,
-    "sibur": 1,
-    "mendiane": 3
-}
-up7 = {
-    "player": 6,
-    "linemate": 1,
-    "deraumere": 2,
-    "sibur": 3,
-    "phiras": 1
-}
-up8 = {
-    "player": 6,
-    "linemate": 2,
-    "deraumere": 2,
-    "sibur": 2,
-    "mendiane": 2,
-    "phiras": 2,
-    "thystame": 1
-}
-
 
 upLvl = [
     {
     "player": 1,
-    "linemate": 1
+    "linemate": 1,
+    "deraumere": 0,
+    "sibur": 0,
+    "mendiane": 0,
+    "phiras": 0,
+    "thystame": 0
     },
     {
     "player": 2,
     "linemate": 1,
     "deraumere": 1,
-    "sibur": 1
+    "sibur": 1,
+    "mendiane": 0,
+    "phiras": 0,
+    "thystame": 0
     },
     {
     "player": 2,
     "linemate": 2,
     "sibur": 1,
-    "phiras": 1
+    "phiras": 1,
+    "mendiane": 0,
+    "thystame": 0
     },
     {
     "player": 4,
     "linemate": 1,
     "deraumere": 1,
     "sibur": 2,
-    "phiras": 1
+    "phiras": 1,
+    "mendiane": 0,
+    "thystame": 0
     },
     {
     "player": 4,
     "linemate": 1,
     "deraumere": 2,
     "sibur": 1,
-    "mendiane": 3
+    "mendiane": 3,
+    "phiras": 0,
+    "thystame": 0
     },
     {
     "player": 6,
     "linemate": 1,
     "deraumere": 2,
     "sibur": 3,
-    "phiras": 1
+    "phiras": 1,
+    "mendiane": 0,
+    "thystame": 0
     },
     {
     "player": 6,
