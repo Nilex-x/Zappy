@@ -82,6 +82,27 @@ public class Main : MonoBehaviour
 
     float tileOffset = 1.45f;
 
+    float movementSpeed = 0.15f;
+    float rotationSpeed = 0.65f;
+
+    private void CamMovement()
+    {
+        if (Input.GetKey(KeyCode.Z))
+            transform.position = transform.position + new Vector3(0, 0, movementSpeed);
+        if (Input.GetKey(KeyCode.S))
+            transform.position = transform.position + new Vector3(0, 0, -movementSpeed);
+        if (Input.GetKey(KeyCode.Q))
+            transform.position = transform.position + new Vector3(-movementSpeed, 0, 0);
+        if (Input.GetKey(KeyCode.D))
+            transform.position = transform.position + new Vector3(movementSpeed, 0, 0);
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f && transform.position.y >= 1f)
+            transform.position = transform.position + new Vector3(0, -movementSpeed, 0);
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+            transform.position = transform.position + new Vector3(0, movementSpeed, 0);
+        if (Input.GetMouseButton(0))
+            transform.eulerAngles += rotationSpeed * new Vector3(0, Input.GetAxis("Mouse X"), 0);
+    }
+
     private List<GameObject> getRessourcesOnTile(GameObject tile, Ressources_type type)
     {
         List<GameObject> ressources = new List<GameObject>();
@@ -149,11 +170,11 @@ public class Main : MonoBehaviour
     {
         map.tiles_obj = new List<List<GameObject>>();
         map.tiles = new List<List<Tiles>>();
-        for (int i = 0; i < map.height; i++)
+        for (int i = 0; i <= map.height; i++)
         {
             map.tiles_obj.Add(new List<GameObject>());
             map.tiles.Add(new List<Tiles>());
-            for (int j = 0; j < map.width; j++)
+            for (int j = 0; j <= map.width; j++)
             {
                 map.tiles[i].Add(new Tiles());
                 map.tiles[i][j].content = new Ressources();
@@ -254,6 +275,7 @@ public class Main : MonoBehaviour
         } catch (System.Exception e) { 
             Debug.Log("Exception : " + e.Message);
         }
+        CamMovement();
     }
 
     void Start()
