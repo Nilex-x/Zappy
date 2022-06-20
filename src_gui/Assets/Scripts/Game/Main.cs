@@ -80,7 +80,7 @@ public class Main : MonoBehaviour
 
     public int nb_teams = 0;
 
-    float TileOffset = 5.7f;
+    float TileOffset = 5.73f;
     float movementSpeed = 0.15f;
     float rotationSpeed = 0.65f;
 
@@ -94,7 +94,7 @@ public class Main : MonoBehaviour
             transform.position = transform.position + new Vector3(-movementSpeed, 0, 0);
         if (Input.GetKey(KeyCode.D))
             transform.position = transform.position + new Vector3(movementSpeed, 0, 0);
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f && transform.position.y >= 1f)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f && transform.position.y >= 2f)
             transform.position = transform.position + new Vector3(0, -movementSpeed, 0);
         if (Input.GetAxis("Mouse ScrollWheel") < 0f)
             transform.position = transform.position + new Vector3(0, movementSpeed, 0);
@@ -160,7 +160,7 @@ public class Main : MonoBehaviour
 
     private void setRigPosition()
     {
-        CameraRig.transform.position = new Vector3((float)map.tiles.Count/2, 0, -1.45f);
+        CameraRig.transform.position = new Vector3((float)(map.tiles.Count * TileOffset)/2, 0, -TileOffset);
     }
 
     private void CreateTileMap()
