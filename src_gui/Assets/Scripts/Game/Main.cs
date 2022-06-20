@@ -78,10 +78,31 @@ public class Main : MonoBehaviour
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
     enum Ressources_type { food, linemate, deraumere, sibur, mendiane, phiras, thystame };
 
-
     public int nb_teams = 0;
 
-    float tileOffset = 1.45f;
+    float xTileOffset = 3.15f;
+    float yTileOffset = 3f;
+
+    float movementSpeed = 0.15f;
+    float rotationSpeed = 0.65f;
+
+    private void CamMovement()
+    {
+        if (Input.GetKey(KeyCode.Z))
+            transform.position = transform.position + new Vector3(0, 0, movementSpeed);
+        if (Input.GetKey(KeyCode.S))
+            transform.position = transform.position + new Vector3(0, 0, -movementSpeed);
+        if (Input.GetKey(KeyCode.Q))
+            transform.position = transform.position + new Vector3(-movementSpeed, 0, 0);
+        if (Input.GetKey(KeyCode.D))
+            transform.position = transform.position + new Vector3(movementSpeed, 0, 0);
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f && transform.position.y >= 1f)
+            transform.position = transform.position + new Vector3(0, -movementSpeed, 0);
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+            transform.position = transform.position + new Vector3(0, movementSpeed, 0);
+        if (Input.GetMouseButton(0))
+            transform.eulerAngles += rotationSpeed * new Vector3(0, Input.GetAxis("Mouse X"), 0);
+    }
 
     private List<GameObject> getRessourcesOnTile(GameObject tile, Ressources_type type)
     {
@@ -141,7 +162,7 @@ public class Main : MonoBehaviour
 
     private void setRigPosition()
     {
-        CameraRig.transform.position = new Vector3((float)map.tiles.Count/2 + 0.45f, 0, -1.45f);
+        CameraRig.transform.position = new Vector3((float)map.tiles.Count/2, 0, -1.45f);
     }
 
     private void CreateTileMap()
@@ -157,7 +178,7 @@ public class Main : MonoBehaviour
                 map.tiles[i].Add(new Tiles());
                 map.tiles[i][j].content = new Ressources();
                 map.tiles_obj[i].Add(Instantiate(tilePrefab));
-                map.tiles_obj[i][j].transform.position = new Vector3(i * tileOffset, 0, j * tileOffset);
+                map.tiles_obj[i][j].transform.position = new Vector3(i * xTileOffset, 0, j * yTileOffset);
                 SetTileInfo(map.tiles_obj[i][j], i, j);
             }
         }
@@ -180,6 +201,7 @@ public class Main : MonoBehaviour
     {
         string[] playerTag = content[1].Split("#");
 
+        Debug.Log("New Player connecter : Tag " + playerTag[1]);
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             if (map.teams[i_team].name == content[6]) {
                 map.teams[i_team].players.Add(new Player());
@@ -254,6 +276,7 @@ public class Main : MonoBehaviour
         } else {
             count++;
         }
+        CamMovement();
     }
 
     void Start()
