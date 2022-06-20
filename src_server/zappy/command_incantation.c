@@ -107,11 +107,13 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data)
     if (cli->trant->action->time_left.tv_sec <= 0
     && cli->trant->action->time_left.tv_nsec <= 0) {
         cli->trant->lvl ++;
+        end_of_incantation(cli->trant->tile, cli->trant->lvl);
         asprintf(&line, "Current level: %d\n", cli->trant->lvl);
         cli->data_send = add_send(cli->data_send, line);
         free(line);
         return (1);
     }
+    start_of_incantation(cli->trant->tile, cli->trant->lvl);
     cli->data_send = add_send(cli->data_send, "Elevation underway\n");
     return (0);
 }

@@ -26,6 +26,7 @@ typedef enum direction_s {
 } direction_t;
 
 typedef struct egg_s {
+    int number;
     char *team_name;
     int time_until_hatch;
     struct tile_s *tile;
@@ -365,5 +366,42 @@ int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
 int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
 int incantation(client_t *cli, char **arg, zappy_data_t *data);
+
+void new_player_connect(trantorians_t *t);
+
+void gui_connect_new_player(client_t *gui, zappy_data_t *data);
+
+void expulsion_message(trantorians_t *t);
+
+void broadcast_message(trantorians_t *t, char **args);
+
+void ressource_dropping(trantorians_t *t, int obj);
+
+void ressource_collecting(trantorians_t *t, int obj);
+
+void death_of_a_player(trantorians_t *t);
+
+void end_of_game(team_t *team, zappy_data_t *data);
+
+void message_from_server(client_t *cli, char *str);
+
+void unknown_gui_command(client_t *cli);
+
+void command_parameter(client_t *cli);
+
+void start_of_incantation(tile_t *tile, int level);
+
+void end_of_incantation(tile_t *tile, int level);
+
+void egg_laying(trantorians_t *trant);
+
+void egg_layed(trantorians_t *t, egg_t *egg);
+
+void egg_hatching(egg_t *egg, tile_t *tile);
+
+void player_connexion_for_egg(trantorians_t *t, egg_t *egg);
+
+void death_hatched_egg(egg_t *egg, zappy_data_t *data);
+
 
 #endif /* !ZAPPY_H_ */

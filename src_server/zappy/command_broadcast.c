@@ -73,6 +73,7 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
     int dir;
     int cdir;
 
+    broadcast_message(current, args);
     while (current != NULL) {
         dir = find_path(client->trant, current, data);
         cdir = current->direction;
