@@ -14,8 +14,6 @@ struct timespec set_timespec(long long int time, long long int freq)
 
     ts.tv_sec = time / freq;
     ts.tv_nsec = (time % freq) * 1000000000 / freq;
-    printf("test: %lld\n", (time / freq) % 1);
-    printf("sec: %ld | %.10lld - nsec: %ld |  %.10lld\n", ts.tv_sec, (time / freq), ts.tv_nsec, ((time % freq) * 1000000000 / freq));
     return (ts);
 }
 
@@ -48,9 +46,6 @@ void get_shortest_time(server_t *info)
     struct timespec smallest = set_timespec(900, 1);
 
     for (trantorians_t *t = info->data->trants; t; t = t->next) {
-        printf("life sec: %ld | nsec: %ld\n", t->timeleft.tv_sec, t->timeleft.tv_nsec);
-        if (t->action)
-            printf("life sec: %ld | nsec: %ld\n", t->action->time_left.tv_sec,  t->action->time_left.tv_nsec);
         if ((t->action && t->action->time_left.tv_sec < smallest.tv_sec)
         || ((t->action && t->action->time_left.tv_sec == smallest.tv_sec
         && t->action->time_left.tv_nsec < smallest.tv_nsec))) {

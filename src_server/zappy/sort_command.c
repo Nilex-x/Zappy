@@ -210,7 +210,7 @@ void handle_command(server_t *info, client_t *cli)
         return;
     }
     printf("value client [%s]\n", value);
-    if (strcmp(value, "gui\n") == 0) {
+    if (!strcasecmp(value, "gui\n") || !strcasecmp(value, "graphic\n")) {
         connect_gui(cli, info->data);
         free(value);
         return;
