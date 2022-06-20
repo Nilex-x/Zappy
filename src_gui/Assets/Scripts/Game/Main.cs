@@ -116,7 +116,7 @@ public class Main : MonoBehaviour
 
     private void SpawnRessources(GameObject tile, GameObject prefab, Ressources_type type)
     {
-        Vector3 randPosInTile = new Vector3(Random.Range(-0.5f, 0.5f), 0, Random.Range(-0.5f, 0.5f));
+        Vector3 randPosInTile = new Vector3(Random.Range(-0.5f, 0.5f), 1f, Random.Range(-0.5f, 0.5f));
         string tag = ressources_name[(int)type];
 
         GameObject ressource = Instantiate(
@@ -124,7 +124,7 @@ public class Main : MonoBehaviour
             tile.transform.position + randPosInTile,
             Quaternion.identity
         ) as GameObject;
-        ressource.transform.localScale = new Vector3(1.75f, 1.75f, 1.75f);
+        ressource.transform.localScale = new Vector3(5f, 5f, 5f);
         ressource.tag = tag;
         ressource.transform.parent = tile.transform;
     }
