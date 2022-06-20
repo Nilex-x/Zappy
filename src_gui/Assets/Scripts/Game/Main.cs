@@ -80,9 +80,7 @@ public class Main : MonoBehaviour
 
     public int nb_teams = 0;
 
-    float xTileOffset = 3.15f;
-    float yTileOffset = 3f;
-
+    float TileOffset = 1f;
     float movementSpeed = 0.15f;
     float rotationSpeed = 0.65f;
 
@@ -178,7 +176,7 @@ public class Main : MonoBehaviour
                 map.tiles[i].Add(new Tiles());
                 map.tiles[i][j].content = new Ressources();
                 map.tiles_obj[i].Add(Instantiate(tilePrefab));
-                map.tiles_obj[i][j].transform.position = new Vector3(i * xTileOffset, 0, j * yTileOffset);
+                map.tiles_obj[i][j].transform.position = new Vector3(i * TileOffset, 0, j * TileOffset);
                 SetTileInfo(map.tiles_obj[i][j], i, j);
             }
         }
@@ -225,6 +223,7 @@ public class Main : MonoBehaviour
         string[] content = cmd.Split(" ");
 
         if (cmd.StartsWith("msz ")) {
+            Debug.Log("Ici");
             map.width = int.Parse(content[1]);
             map.height = int.Parse(content[2]);
             Debug.Log("Updated map size : " + map.width + " " + map.height);
