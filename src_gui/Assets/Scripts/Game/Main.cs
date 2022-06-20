@@ -77,10 +77,10 @@ public class Main : MonoBehaviour
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
     enum Ressources_type { food, linemate, deraumere, sibur, mendiane, phiras, thystame };
 
-
     public int nb_teams = 0;
 
-    float tileOffset = 1.45f;
+    float xTileOffset = 3.15f;
+    float yTileOffset = 3f;
 
     float movementSpeed = 0.15f;
     float rotationSpeed = 0.65f;
@@ -117,7 +117,7 @@ public class Main : MonoBehaviour
 
     private void SpawnRessources(GameObject tile, GameObject prefab, Ressources_type type)
     {
-        Vector3 randPosInTile = new Vector3(Random.Range(-tileOffset, tileOffset), 0, Random.Range(-tileOffset, tileOffset));
+        Vector3 randPosInTile = new Vector3(Random.Range(-xTileOffset, xTileOffset), 0, Random.Range(-yTileOffset, yTileOffset));
         string tag = ressources_name[(int)type];
 
         GameObject ressource = Instantiate(
@@ -163,7 +163,7 @@ public class Main : MonoBehaviour
 
     private void setRigPosition()
     {
-        CameraRig.transform.position = new Vector3((float)map.tiles.Count/2 + 0.45f, 0, -1.45f);
+        CameraRig.transform.position = new Vector3((float)map.tiles.Count/2, 0, -1.45f);
     }
 
     private void CreateTileMap()
@@ -179,7 +179,7 @@ public class Main : MonoBehaviour
                 map.tiles[i].Add(new Tiles());
                 map.tiles[i][j].content = new Ressources();
                 map.tiles_obj[i].Add(Instantiate(tilePrefab));
-                map.tiles_obj[i][j].transform.position = new Vector3(i * tileOffset, 0, j * tileOffset);
+                map.tiles_obj[i][j].transform.position = new Vector3(i * xTileOffset, 0, j * yTileOffset);
                 SetTileInfo(map.tiles_obj[i][j], i, j);
             }
         }
@@ -202,6 +202,7 @@ public class Main : MonoBehaviour
     {
         string[] playerTag = content[1].Split("#");
 
+        Debug.Log("New Player connecter : Tag " + playerTag[1]);
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             if (map.teams[i_team].name == content[6]) {
                 map.teams[i_team].players.Add(new Player());
