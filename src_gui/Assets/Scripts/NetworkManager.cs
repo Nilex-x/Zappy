@@ -31,7 +31,7 @@ public class NetworkManager : MonoBehaviour
         stream = socket.GetStream();
         writer = new StreamWriter(stream);
         reader = new StreamReader(stream);
-        writer.WriteLine("gui");
+        writer.WriteLine("GRAPHIC");
         writer.Flush();
         connected = true;
         SceneManager.LoadScene("game");

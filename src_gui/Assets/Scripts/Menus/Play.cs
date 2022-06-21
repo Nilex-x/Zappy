@@ -39,7 +39,7 @@ public class Play : MonoBehaviour
             Debug.Log("Invalid input");
         }
     }
-public void ReadStringInput_port(string s) {
+    public void ReadStringInput_port(string s) {
         input = s;
         Regex port_reg = new Regex(@"^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$", RegexOptions.IgnoreCase);
         

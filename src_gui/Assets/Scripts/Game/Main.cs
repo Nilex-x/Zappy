@@ -96,7 +96,7 @@ public class Main : MonoBehaviour
 
     private void SpawnRessources(GameObject tile, GameObject prefab, Ressources_type type)
     {
-        Vector3 randPosInTile = new Vector3(Random.Range(-tileOffset, tileOffset), 0, Random.Range(-tileOffset, tileOffset));
+        Vector3 randPosInTile = new Vector3(Random.Range(-0.45f, 0.45f), 0, Random.Range(-0.45f, 0.45f));
         string tag = ressources_name[(int)type];
 
         GameObject ressource = Instantiate(
@@ -105,6 +105,7 @@ public class Main : MonoBehaviour
             Quaternion.identity
         ) as GameObject;
         ressource.tag = tag;
+        ressource.transform.localScale = new Vector3(1, 1, 1);
         ressource.transform.parent = tile.transform;
     }
 
@@ -204,8 +205,8 @@ public class Main : MonoBehaviour
         string[] content = cmd.Split(" ");
 
         if (cmd.StartsWith("msz ")) {
-            map.width = int.Parse(content[1]) - 1;
-            map.height = int.Parse(content[2]) - 1;
+            map.width = int.Parse(content[1]);
+            map.height = int.Parse(content[2]);
             Debug.Log("Updated map size : " + map.width + " " + map.height);
             CreateTileMap();
         }
@@ -244,7 +245,6 @@ public class Main : MonoBehaviour
         if (!NetworkManager.connected)
             throw new System.Exception("Error disconnected");
         try {
-            NetworkManager.WriteServer("mct");
             if (NetworkManager.stream.DataAvailable) {
                 Debug.Log("RAAAAAAAAAAAAAAAAAAAAAHH");
                 string cmd = NetworkManager.ReadServer();
@@ -259,14 +259,8 @@ public class Main : MonoBehaviour
     void Start()
     {
         if (NetworkManager.connected) {
-            while (NetworkManager.stream.DataAvailable)
-                NetworkManager.ReadServer();
-
             map.teams = new List<Team>();
-
             Debug.Log("Connected");
-            NetworkManager.WriteServer("msz");
-            NetworkManager.WriteServer("tna");
         } else {
             Debug.Log("Not connected");
         }
