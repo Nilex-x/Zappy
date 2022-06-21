@@ -81,25 +81,61 @@ public class Main : MonoBehaviour
     public int nb_teams = 0;
 
     float TileOffset = 5.73f;
-    float movementSpeed = 0.15f;
-    float rotationSpeed = 0.65f;
 
+    float mainSpeed = 50f;
+    float shiftAdd = 75f;
+    float maxShift = 175f;
+    float camSens = 0.25f;
+    private Vector3 lastMouse = new Vector3(255, 255, 255);
+    private float totalRun= 1.0f;
+
+    private Vector3 GetBaseInput() {
+        Vector3 p_Velocity = new Vector3();
+        if (Input.GetKey (KeyCode.Z)){
+            p_Velocity += new Vector3(0, 0 , 1);
+        }
+        if (Input.GetKey (KeyCode.S)){
+            p_Velocity += new Vector3(0, 0, -1);
+        }
+        if (Input.GetKey (KeyCode.Q)){
+            p_Velocity += new Vector3(-1, 0, 0);
+        }
+        if (Input.GetKey (KeyCode.D)){
+            p_Velocity += new Vector3(1, 0, 0);
+        }
+        return p_Velocity;
+    }
     private void CamMovement()
     {
-        if (Input.GetKey(KeyCode.Z))
-            transform.position = transform.position + new Vector3(0, 0, movementSpeed);
-        if (Input.GetKey(KeyCode.S))
-            transform.position = transform.position + new Vector3(0, 0, -movementSpeed);
-        if (Input.GetKey(KeyCode.Q))
-            transform.position = transform.position + new Vector3(-movementSpeed, 0, 0);
-        if (Input.GetKey(KeyCode.D))
-            transform.position = transform.position + new Vector3(movementSpeed, 0, 0);
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f && transform.position.y >= 2f)
-            transform.position = transform.position + new Vector3(0, -movementSpeed, 0);
-        if (Input.GetAxis("Mouse ScrollWheel") < 0f)
-            transform.position = transform.position + new Vector3(0, movementSpeed, 0);
-        if (Input.GetMouseButton(0))
-            transform.eulerAngles += rotationSpeed * new Vector3(0, Input.GetAxis("Mouse X"), 0);
+        lastMouse = Input.mousePosition - lastMouse ;
+        lastMouse = new Vector3(-lastMouse.y * camSens, lastMouse.x * camSens, 0 );
+        lastMouse = new Vector3(transform.eulerAngles.x + lastMouse.x , transform.eulerAngles.y + lastMouse.y, 0);
+        transform.eulerAngles = lastMouse;
+        lastMouse = Input.mousePosition;
+       
+        Vector3 p = GetBaseInput();
+        if (p.sqrMagnitude > 0){
+            if (Input.GetKey (KeyCode.LeftShift)){
+                totalRun += Time.deltaTime;
+                p  = p * totalRun * shiftAdd;
+                p.x = Mathf.Clamp(p.x, -maxShift, maxShift);
+                p.y = Mathf.Clamp(p.y, -maxShift, maxShift);
+                p.z = Mathf.Clamp(p.z, -maxShift, maxShift);
+            } else {
+                totalRun = Mathf.Clamp(totalRun * 0.5f, 1f, 1000f);
+                p = p * mainSpeed;
+            }
+            p = p * Time.deltaTime;
+            Vector3 newPosition = transform.position;
+            if (Input.GetKey(KeyCode.Space)){
+                transform.Translate(p);
+                newPosition.x = transform.position.x;
+                newPosition.z = transform.position.z;
+                transform.position = newPosition;
+            } else {
+                transform.Translate(p);
+            }
+        }
     }
 
     private List<GameObject> getRessourcesOnTile(GameObject tile, Ressources_type type)
@@ -116,7 +152,7 @@ public class Main : MonoBehaviour
 
     private void SpawnRessources(GameObject tile, GameObject prefab, Ressources_type type)
     {
-        Vector3 randPosInTile = new Vector3(Random.Range(-0.5f, 0.5f), 1f, Random.Range(-0.5f, 0.5f));
+        Vector3 randPosInTile = new Vector3(Random.Range(-(TileOffset/2), (TileOffset/2)), 1f, Random.Range(-(TileOffset/2), (TileOffset/2)));
         string tag = ressources_name[(int)type];
 
         GameObject ressource = Instantiate(
@@ -124,6 +160,9 @@ public class Main : MonoBehaviour
             tile.transform.position + randPosInTile,
             Quaternion.identity
         ) as GameObject;
+        if (tag == "sibur" || tag == "mendiane" || tag == "linemate" || tag == "phiras") {
+            ressource.transform.eulerAngles = new Vector3(90, 0, 0);
+        }
         ressource.transform.localScale = new Vector3(5f, 5f, 5f);
         ressource.tag = tag;
         ressource.transform.parent = tile.transform;
@@ -284,6 +323,7 @@ public class Main : MonoBehaviour
 
     void Start()
     {
+        Cursor.visible = false;
         if (NetworkManager.connected) {
             map.teams = new List<Team>();
             Debug.Log("Connected");
