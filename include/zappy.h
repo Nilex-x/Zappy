@@ -82,17 +82,6 @@ typedef struct action_s {
 typedef struct server_s server_t;
 
 /*
-** @brief Get the list of team's name
-**
-** @param info Server's data struct
-** @param argc Number of argument
-** @param name_list List of team's name
-** @param index index to start
-** @return int
-*/
-int get_name_team(server_t *info, char **name_list, int index);
-
-/*
 ** @brief Manage flags of prog
 **
 ** @param info Server data struct
@@ -368,6 +357,7 @@ int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
 int incantation(client_t *cli, char **arg, zappy_data_t *data);
 
+<<<<<<< HEAD
 void new_player_connect(trantorians_t *t);
 
 void gui_connect_new_player(client_t *gui, zappy_data_t *data);
@@ -404,5 +394,22 @@ void player_connexion_for_egg(trantorians_t *t, egg_t *egg);
 
 void death_hatched_egg(egg_t *egg, zappy_data_t *data);
 
+=======
+/*
+** @brief Find if a team win a game
+**
+** @param data Data struct server
+** @return int
+*/
+int find_win(zappy_data_t *data);
+
+/*
+** @brief Remove trantorians to team list
+**
+** @param team Team to remove client
+** @param torm Client to remove
+*/
+void remove_trant_in_team(team_t *team, trantorians_t *torm);
+>>>>>>> Server
 
 #endif /* !ZAPPY_H_ */

@@ -13,13 +13,13 @@
 
 server_t info;
 
-void interrupt_sig(int sigint)
+static void interrupt_sig(int sigint)
 {
     if (sigint == SIGINT)
         close_server(&info);
 }
 
-void print_help(void)
+static void print_help(void)
 {
     printf("USAGE:\t./myteams_server port\n\n\tport ");
     printf("is the port number on which the server socket listens\n\n");

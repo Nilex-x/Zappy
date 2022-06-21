@@ -7,6 +7,23 @@
 
 #include "server.h"
 
+static const int ejected_from[4][4] = {
+    {5, 7, 1, 3},
+    {3, 5, 7, 1},
+    {1, 3, 5, 7},
+    {7, 1, 3, 5}
+};
+
+void send_ejected_message(trantorians_t *pusher, trantorians_t *pushed)
+{
+    char *msg = NULL;
+
+    asprintf(&msg, "eject: %d\n", ejected_from[pusher->direction]
+    [pushed->direction]);
+    pushed->client->data_send = add_send(pushed->client->data_send, msg);
+    free(msg);
+}
+
 int eject(client_t *client, char **arg, zappy_data_t *data)
 {
     trantorians_t *trant = client->trant;
@@ -22,6 +39,7 @@ int eject(client_t *client, char **arg, zappy_data_t *data)
             c->direction = dir;
             ejected = true;
             expulsion_message(c);
+            send_ejected_message(trant, c);
         }
     if (ejected)
         client->data_send = add_send(client->data_send, "ok\n");
