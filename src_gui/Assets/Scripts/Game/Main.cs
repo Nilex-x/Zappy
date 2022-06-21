@@ -199,7 +199,7 @@ public class Main : MonoBehaviour
     {
         string[] playerTag = content[1].Split("#");
 
-        Debug.Log("New Player connecter : Tag " + playerTag[1]);
+        Debug.Log("New Player connected : Tag " + playerTag[1]);
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             if (map.teams[i_team].name == content[6]) {
                 map.teams[i_team].players.Add(new Player());

@@ -7,6 +7,8 @@ public class BackMenu : MonoBehaviour
     public GameObject Settings;
     public GameObject StartMenu;
     public GameObject InputMenu;
+    public GameObject GameName;
+    public GameObject SettingsButton;
 
     public void BackToMenu()
     {
@@ -16,5 +18,9 @@ public class BackMenu : MonoBehaviour
             InputMenu.SetActive(false);
         if (StartMenu != null)
             StartMenu.SetActive(true);
+        if (SettingsButton != null)
+            SettingsButton.SetActive(true);
+        if (GameName != null)
+            GameName.SetActive(true);
     }
 }
