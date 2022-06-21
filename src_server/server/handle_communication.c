@@ -59,7 +59,7 @@ void write_client(server_t *info, int s_client)
     }
 }
 
-void free_data(zappy_data_t *data)
+static void free_data(zappy_data_t *data)
 {
     free_teams(data->teams);
     free_trantorians(data->trants);

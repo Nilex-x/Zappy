@@ -30,7 +30,6 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
 
 void free_trantoriant(trantorians_t *trant)
 {
-
     free(trant->team_name);
     while (trant->action) {
         free_array(trant->action->args);

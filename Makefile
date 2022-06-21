@@ -30,7 +30,8 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/zappy/handle_move_cmd.c \
 						src_server/zappy/manage_eject_cmd.c \
 						src_server/zappy/handle_look_command.c \
-						src_server/zappy/command_object.c
+						src_server/zappy/command_object.c \
+						src_server/zappy/handle_win.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 

@@ -8,7 +8,7 @@
 #include "server.h"
 #include <stdio.h>
 
-int get_obj(char *arg)
+static int get_obj(char *arg)
 {
     int i = 0;
 
