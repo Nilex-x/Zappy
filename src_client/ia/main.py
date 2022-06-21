@@ -201,6 +201,7 @@ class clientIA:
     def look(self, srvMsg, drop):
         srvMsg = srvMsg[1:-1]
         look_list = srvMsg.split(",")
+        #when ai has arrived to meeting, he needs to drop all the needed ressources
         if drop == 1:
             res = []
             for ress in look_list[0].split(" "):
@@ -250,10 +251,7 @@ class clientIA:
             res = message.split(" ")[2]
             print("res = ", res)
             self.commonInventory[res] += 1
-            if checkRessourceForLevel(self.lvl, self.commonInventory) == None:
-                self.toSend.put("Broadcast meeting" + self.lvl)
-                self.isMeeting = True
-                self.hasArrived = True
+
         if (message.find("meeting") != -1):
             direction = int(message.split(" ")[3])
             self.isMeeting = True
@@ -263,8 +261,12 @@ class clientIA:
                 self.hasArrived = True
                 self.toSend.put("Broadcast arrived")
                 self.drop = 1
+        
         if (message.find("incantation") != -1 and int(message.split(" ")[2]) == 0):
             self.toSend.put("Incantation")
+            self.nbMeeting = 1
+            self.hasArrived = False
+            self.isMeeting = False
         
         if(message.find("arrived") != -1 and int(message.split(" ")[2]) == 0):
             self.nbMeeting += 1
@@ -305,16 +307,18 @@ class clientIA:
 
     def checkAction(self):
         self.toSend.put("Inventory")
-        action = "Look"
-        if checkRessourceForLevel(self.lvl, self.ressources) == None:
-            for i in range(1, 7):
-                for j in range (0, self.ressources[ressources[i-1]]):
-                    if upLvl[self.lvl-1][ressources[i-1]] != 0:
-                        self.toSend.put("Set " + ressources[i-1])
-            action = "Incantation"
+        
+        if self.isMeeting:
+            if self.hasArrived:
+                action = "Broadcast meeting " + str(self.lvl)
+            if not self.hasArrived and self.ressources["food"] >= 8:
+                action = "Look"
+        else:
+            action = "Look"
+
         if self.isMeeting and self.hasArrived and self.nbMeeting >= upLvl[self.lvl-1]["player"]:
                 self.toSend.put("Broadcast incantation")
-                self.toSend.put("Incantation")
+                action = "Incantation"
                 self.nbMeeting = 1
                 self.hasArrived = False
                 self.isMeeting = False
@@ -323,8 +327,8 @@ class clientIA:
     def actionAi(self):
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
-                # action = self.checkAction()
-                action = input("> ")
+                action = self.checkAction()
+                #action = input("> ")
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
