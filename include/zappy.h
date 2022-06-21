@@ -80,17 +80,6 @@ typedef struct action_s {
 typedef struct server_s server_t;
 
 /*
-** @brief Get the list of team's name
-**
-** @param info Server's data struct
-** @param argc Number of argument
-** @param name_list List of team's name
-** @param index index to start
-** @return int
-*/
-int get_name_team(server_t *info, char **name_list, int index);
-
-/*
 ** @brief Manage flags of prog
 **
 ** @param info Server data struct
@@ -129,6 +118,15 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
 team_t *get_team_by_name(char *name, zappy_data_t *data);
 
 /*
+** @brief
+**
+** @param cli Client linked to trantorian
+** @param info Server struct data
+** @param team Team of trantorian
+*/
+void init_trantoriant(client_t *cli, server_t *info, team_t *team);
+
+/*
 ** @brief Add trantorians in team
 **
 ** @param trant Trantorians to add
@@ -153,8 +151,20 @@ team_t *create_team(char *name, zappy_data_t *data);
 */
 void free_teams(team_t *teams);
 
+/*
+** @brief Remove trantorian in list
+**
+** @param data Data struct of server
+** @param torm Trantorian to remove
+*/
 void remove_trantoriant(zappy_data_t *data, trantorians_t *torm);
 
+/*
+** @brief Move trantorian in map
+**
+** @param map
+** @param trant Trantorian to move
+*/
 void move_trantorian(map_t *map, trantorians_t *trant);
 
 /*
@@ -295,41 +305,41 @@ int team_unused_slot(client_t *client, char **args, zappy_data_t *data);
 
 /*
 ** @brief send map size to the gui
-** 
+**
 ** @param client the gui
 ** @param args
-** @param data 
-** @return int 
+** @param data
+** @return int
 */
 int gui_map_size(client_t *client, char **args, zappy_data_t *data);
 
 /*
 ** @brief send tile content to the gui
-** 
+**
 ** @param client the gui
 ** @param args wanted tile
-** @param data 
-** @return int 
+** @param data
+** @return int
 */
 int gui_tile_content(client_t *client, char **args, zappy_data_t *data);
 
 /*
 ** @brief send information of each tile of the map to the gui
-** 
+**
 ** @param client the gui
-** @param args 
-** @param data 
-** @return int 
+** @param args
+** @param data
+** @return int
 */
 int gui_map_content(client_t *client, char **args, zappy_data_t *data);
 
 /*
 ** @brief send the different teams names to the gui
-** 
+**
 ** @param client the gui
-** @param args 
-** @param data 
-** @return int 
+** @param args
+** @param data
+** @return int
 */
 int gui_teams_name(client_t *client, char **args, zappy_data_t *data);
 
@@ -344,5 +354,21 @@ int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
 int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
 int incantation(client_t *cli, char **arg, zappy_data_t *data);
+
+/*
+** @brief Find if a team win a game
+**
+** @param data Data struct server
+** @return int
+*/
+int find_win(zappy_data_t *data);
+
+/*
+** @brief Remove trantorians to team list
+**
+** @param team Team to remove client
+** @param torm Client to remove
+*/
+void remove_trant_in_team(team_t *team, trantorians_t *torm);
 
 #endif /* !ZAPPY_H_ */

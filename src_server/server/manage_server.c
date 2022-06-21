@@ -6,29 +6,9 @@
 */
 
 #include "server.h"
-#include <sys/socket.h>
-#include <netinet/ip.h>
 #include <stdio.h>
 
-void clear_list(server_t *info)
-{
-    client_t *temp = info->list_client;
-
-    FD_ZERO(&info->wfds);
-    FD_ZERO(&info->rfds);
-    FD_ZERO(&info->efds);
-    while (temp) {
-        printf("temp: %d\n", temp->socket);
-        FD_SET(temp->socket, &info->efds);
-        if (!temp->data_send)
-            FD_SET(temp->socket, &info->rfds);
-        if (temp->data_send)
-            FD_SET(temp->socket, &info->wfds);
-        temp = temp->next;
-    }
-}
-
-void sort_client(client_t *client, server_t *info)
+static void sort_client(client_t *client, server_t *info)
 {
     if (client->socket == info->fd_server) {
         accept_connect(info);
@@ -38,7 +18,7 @@ void sort_client(client_t *client, server_t *info)
         handle_command(info, client);
 }
 
-void find_socket(server_t *info)
+static void find_socket(server_t *info)
 {
     client_t *next = NULL;
 
@@ -54,6 +34,20 @@ void find_socket(server_t *info)
     return;
 }
 
+static void sort_select_return(int ret, server_t *info)
+{
+    if (ret < 0) {
+        perror("select()");
+        exit(84);
+    }
+    if (ret == 0)
+        do_action(info);
+    if (ret > 0) {
+        select_interupt(info);
+        find_socket(info);
+    }
+}
+
 void handler_connection(server_t *info)
 {
     int retsel = 0;
@@ -65,42 +59,8 @@ void handler_connection(server_t *info)
         retsel = select(info->max_fd + 1, &info->rfds, &info->wfds,
                         &info->efds, &time);
         TIMEVAL_TO_TIMESPEC(&time, &info->time_left);
-        if (retsel < 0) {
-            perror("select()");
-            exit(84);
-        }
-        if (retsel == 0)
-            do_action(info);
-        if (retsel > 0) {
-            select_interupt(info);
-            find_socket(info);
-        }
+        sort_select_return(retsel, info);
         verif_life(info);
-        get_shortest_time(info);
+        find_win(info->data);
     }
-}
-
-int create_socket(server_t *info)
-{
-    struct sockaddr_in my_addr;
-    size_t len = sizeof(struct sockaddr_in);
-
-    info->fd_server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (info->fd_server == -1)
-        return -1;
-    my_addr.sin_family = AF_INET;
-    my_addr.sin_port = htons((uint16_t) info->port);
-    my_addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(info->fd_server, (struct sockaddr *) &my_addr, len) == -1) {
-        perror("Bind()");
-        return -1;
-    }
-    if (listen(info->fd_server, NB_LISTEN) == -1)
-        return -1;
-    info->max_fd = info->fd_server;
-    FD_ZERO(&info->rfds);
-    FD_ZERO(&info->wfds);
-    FD_ZERO(&info->efds);
-    FD_SET(info->fd_server, &info->rfds);
-    return (0);
 }

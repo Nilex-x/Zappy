@@ -8,6 +8,8 @@
 #define _GNU_SOURCE
 #include "server.h"
 #include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/ip.h>
 
 void init_buff_client(client_t *node)
 {
@@ -41,43 +43,44 @@ void init_trantoriant(client_t *cli, server_t *info, team_t *team)
     add_trantoriant_to_team(cli->trant, team);
 }
 
-void add_trantoriant(client_t *cli, server_t *info, char *cmd)
+void clear_list(server_t *info)
 {
-    team_t *team = get_team_by_name(clear_str(cmd), info->data);
-    char *line = NULL;
+    client_t *temp = info->list_client;
 
-    if (!team || team->nb_player == team->player_max) {
-        cli->data_send = add_send(cli->data_send, (!team) ? "unkown team\n" :
-        "team is already full please wait until a client disconnect " \
-        "or fork\n");
-    } else {
-        cli->trant = create_add_trantoriant(cli, info->data, team->name);
-        asprintf(&line, "%d\n", (team->player_max - team->nb_player));
-        cli->data_send = add_send(cli->data_send, line);
-        free(line);
-        init_trantoriant(cli, info, team);
-        asprintf(&line, "%d %d\n", info->data->width, info->data->height);
-        cli->data_send = add_send(cli->data_send, line);
-        free(line);
+    FD_ZERO(&info->wfds);
+    FD_ZERO(&info->rfds);
+    FD_ZERO(&info->efds);
+    while (temp) {
+        FD_SET(temp->socket, &info->efds);
+        if (!temp->data_send)
+            FD_SET(temp->socket, &info->rfds);
+        if (temp->data_send)
+            FD_SET(temp->socket, &info->wfds);
+        temp = temp->next;
     }
 }
 
-void handle_command(server_t *info, client_t *cli)
+int create_socket(server_t *info)
 {
-    char *value = NULL;
-    value = read_to_buffer(cli->buff_read, '\n', LENGTH_COMMAND);
-    if (!value || value[0] == '\n') {
-        free(value);
-        return;
+    struct sockaddr_in my_addr;
+    size_t len = sizeof(struct sockaddr_in);
+
+    info->fd_server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (info->fd_server == -1)
+        return -1;
+    my_addr.sin_family = AF_INET;
+    my_addr.sin_port = htons((uint16_t) info->port);
+    my_addr.sin_addr.s_addr = INADDR_ANY;
+    if (bind(info->fd_server, (struct sockaddr *) &my_addr, len) == -1) {
+        perror("Bind()");
+        return -1;
     }
-    printf("value client [%s]\n", value);
-    if (strcmp(value, "gui\n") == 0) {
-        cli->is_gui = true;
-        return;
-    }
-    if (!cli->trant && !cli->is_gui)
-        add_trantoriant(cli, info, value);
-    else
-        sort_command(cli, info->data, value);
-    free(value);
+    if (listen(info->fd_server, NB_LISTEN) == -1)
+        return -1;
+    info->max_fd = info->fd_server;
+    FD_ZERO(&info->rfds);
+    FD_ZERO(&info->wfds);
+    FD_ZERO(&info->efds);
+    FD_SET(info->fd_server, &info->rfds);
+    return (0);
 }
