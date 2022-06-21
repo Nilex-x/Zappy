@@ -30,6 +30,9 @@ public class Ressources {
 }
 
 public class Player {
+    public int playerTag;
+    public int x;
+    public int y;
     public int player_nb;
     public int orientation;
     public int level;
@@ -262,13 +265,11 @@ public class Main : MonoBehaviour
         }
     }
 
-    private void UpdatePlayer(string cmd)
-    {
-        string[] content = cmd.Split(" ");
-    
+    private void UpdatePlayer(string[] content)
+    {    
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
-                if (map.teams[i_team].players[i_player].playerTag == content[1]) {
+                if (map.teams[i_team].players[i_player].playerTag == int.Parse(content[1])) {
                     map.teams[i_team].players[i_player].x = int.Parse(content[2]);
                     map.teams[i_team].players[i_player].y = int.Parse(content[3]);
                     map.teams[i_team].players[i_player].orientation = int.Parse(content[4]);
