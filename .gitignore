@@ -54,3 +54,4 @@ dkms.conf
 # binaries
 zappy_*
 .vscode
+bin_test

@@ -18,7 +18,6 @@ void clear_list(server_t *info)
     FD_ZERO(&info->rfds);
     FD_ZERO(&info->efds);
     while (temp) {
-        printf("temp: %d\n", temp->socket);
         FD_SET(temp->socket, &info->efds);
         if (!temp->data_send)
             FD_SET(temp->socket, &info->rfds);
@@ -76,7 +75,6 @@ void handler_connection(server_t *info)
             find_socket(info);
         }
         verif_life(info);
-        get_shortest_time(info);
     }
 }
 
