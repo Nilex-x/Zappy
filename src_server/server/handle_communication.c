@@ -81,7 +81,6 @@ void do_action(server_t *info)
         if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
             act->action(temp->client, act->args, info->data);
             temp->action = act->next;
-            free_array(act->args);
             free(act);
         } else if (act != NULL)
             act->time_left = time;
