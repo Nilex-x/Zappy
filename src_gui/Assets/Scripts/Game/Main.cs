@@ -223,7 +223,6 @@ public class Main : MonoBehaviour
         string[] content = cmd.Split(" ");
 
         if (cmd.StartsWith("msz ")) {
-            Debug.Log("Ici");
             map.width = int.Parse(content[1]);
             map.height = int.Parse(content[2]);
             Debug.Log("Updated map size : " + map.width + " " + map.height);
