@@ -39,6 +39,7 @@ int eject(client_t *client, char **arg, zappy_data_t *data)
             c->direction = dir;
             ejected = true;
             expulsion_message(c);
+            send_ejected_message(trant, c);
         }
     if (ejected)
         client->data_send = add_send(client->data_send, "ok\n");
