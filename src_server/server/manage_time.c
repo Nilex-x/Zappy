@@ -60,6 +60,8 @@ void get_shortest_time(server_t *info)
         }
     }
     printf("sec: %ld | nsec: %ld\n", smallest.tv_sec, smallest.tv_nsec);
+    if (smallest.tv_sec < 0)
+        smallest.tv_sec = 0;
     info->time_left = smallest;
     info->time_ref = smallest;
 }
