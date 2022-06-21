@@ -66,25 +66,44 @@ team_t *create_team(char *name, zappy_data_t *data)
     return (new);
 }
 
-void free_trant_in_team(trantorians_list_t *list)
+void remove_trant_in_team(team_t *team, trantorians_t *torm)
 {
-    trantorians_list_t *next = NULL;
+    trantorians_list_t *temp = team->list;
+    trantorians_list_t *prev = NULL;
 
-    while (list) {
-        next = list->next;
-        free(list);
-        list = next;
+    if (!torm)
+        return;
+    if (temp->trant == torm) {
+        team->list = temp->next;
+        free(temp);
+        return;
+    }
+    while (temp) {
+        if (temp->trant == torm) {
+            prev->next = temp->next;
+            free(temp);
+            return;
+        } else {
+            prev = temp;
+            temp = temp->next;
+        }
     }
 }
 
 void free_teams(team_t *teams)
 {
     team_t *next = NULL;
+    trantorians_list_t *next_list = NULL;
+    trantorians_list_t *list = teams->list;
 
     while (teams) {
         next = teams->next;
         free(teams->name);
-        free_trant_in_team(teams->list);
+        while (list) {
+            next_list = list->next;
+            free(list);
+            list = next_list;
+        }
         free(teams);
         teams = next;
     }

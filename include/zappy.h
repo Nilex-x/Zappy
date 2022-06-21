@@ -363,4 +363,12 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data);
 */
 int find_win(zappy_data_t *data);
 
+/*
+** @brief Remove trantorians to team list
+**
+** @param team Team to remove client
+** @param torm Client to remove
+*/
+void remove_trant_in_team(team_t *team, trantorians_t *torm);
+
 #endif /* !ZAPPY_H_ */
