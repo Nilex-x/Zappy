@@ -39,6 +39,7 @@ typedef struct trantorians_s {
     bool is_alive;
     int inventory[8];
     char *team_name;
+    bool is_incanting;
     direction_t direction;
     client_t *client;
     struct timespec timeleft;
@@ -46,6 +47,7 @@ typedef struct trantorians_s {
     struct tile_s *tile;
     struct team_s *team;
     struct trantorians_s *next;
+    struct trantorians_list_s *incanting_with;
 } trantorians_t;
 
 typedef struct trantorians_list_s {
@@ -357,7 +359,6 @@ int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
 int incantation(client_t *cli, char **arg, zappy_data_t *data);
 
-<<<<<<< HEAD
 void new_player_connect(trantorians_t *t);
 
 void gui_connect_new_player(client_t *gui, zappy_data_t *data);
@@ -394,7 +395,6 @@ void player_connexion_for_egg(trantorians_t *t, egg_t *egg);
 
 void death_hatched_egg(egg_t *egg, zappy_data_t *data);
 
-=======
 /*
 ** @brief Find if a team win a game
 **
@@ -410,6 +410,5 @@ int find_win(zappy_data_t *data);
 ** @param torm Client to remove
 */
 void remove_trant_in_team(team_t *team, trantorians_t *torm);
->>>>>>> Server
 
 #endif /* !ZAPPY_H_ */

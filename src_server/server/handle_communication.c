@@ -76,7 +76,9 @@ void do_action(server_t *info)
     for (trantorians_t *temp = info->data->trants; temp; temp = temp->next) {
         act = temp->action;
         temp->timeleft = sub_timespec(temp->timeleft, info->time_ref);
-;        if (act)
+        if (temp->is_incanting)
+            continue;
+        if (act)
             time = sub_timespec(info->time_ref, act->time_left);
         if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
             act->action(temp->client, act->args, info->data);
