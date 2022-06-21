@@ -249,7 +249,6 @@ public class Main : MonoBehaviour
                 int.Parse(content[9])
             );
             Debug.Log("Updated tile : " + content[1] + " " + content[2]);
-            // map.tiles[int.Parse(content[1])][int.Parse(content[2])].content.update(cmd);
         }
         if (cmd.StartsWith("sgt ")) {
             map.time_unit = int.Parse(content[1]);
