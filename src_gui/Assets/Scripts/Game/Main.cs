@@ -223,6 +223,27 @@ public class Main : MonoBehaviour
         }
     }
 
+    private void UpdatePlayer(string cmd)
+    {
+        string[] content = cmd.Split(" ");
+    
+        for (int i_team = 0; i_team < nb_teams; i_team++) {
+            for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
+                if (map.teams[i_team].players[i_player].playerTag == content[1]) {
+                    map.teams[i_team].players[i_player].x = int.Parse(content[2]);
+                    map.teams[i_team].players[i_player].y = int.Parse(content[3]);
+                    map.teams[i_team].players[i_player].orientation = int.Parse(content[4]);
+                    map.teams[i_team].playersObj[i_player].transform.position =
+                        new Vector3(map.teams[i_team].players[i_player].content.x * TileOffset,
+                            1.9f, map.teams[i_team].players[i_player].content.y * TileOffset);
+                    map.teams[i_team].playersObj[i_player].transform.eulerAngles =
+                        new Vector3(0, 90 * (map.teams[i_team].players[i_player].orientation - 1), 0);
+                    break;
+                }
+            }
+        }
+    }
+
     private void HandleCommand(string cmd)
     {
         Debug.Log("Command: " + cmd);
@@ -259,9 +280,10 @@ public class Main : MonoBehaviour
         if (cmd.StartsWith("sgt ")) {
             map.time_unit = int.Parse(content[1]);
         }
-        if (cmd.StartsWith("pnw ")) {
+        if (cmd.StartsWith("pnw "))
             GeneratePlayer(content);
-        }
+        if (cmd.StartsWith("ppo "))
+            UpdatePlayer(content);
     }
 
     private void Update() {
