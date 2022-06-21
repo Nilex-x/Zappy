@@ -172,13 +172,13 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     return (1);
 }
 
-void add_trantoriant(client_t *cli, server_t *info, char *cmd)
+static void add_trantoriant(client_t *cli, server_t *info, char *cmd)
 {
     team_t *team = get_team_by_name(clear_str(cmd), info->data);
     char *line = NULL;
 
     if (!team || team->nb_player == team->player_max) {
-        cli->data_send = add_send(cli->data_send, (!team) ? "unkown team\n" :
+        cli->data_send = add_send(cli->data_send, (!team) ? "unknow team\n" :
         "team is already full please wait until a client disconnect " \
         "or fork\n");
     } else {
@@ -193,7 +193,7 @@ void add_trantoriant(client_t *cli, server_t *info, char *cmd)
     }
 }
 
-void connect_gui(client_t *cli, zappy_data_t *data)
+static void connect_gui(client_t *cli, zappy_data_t *data)
 {
     cli->is_gui = true;
     gui_map_size(cli, NULL, data);
@@ -220,5 +220,6 @@ void handle_command(server_t *info, client_t *cli)
         add_trantoriant(cli, info, value);
     else
         sort_command(cli, info->data, value);
+    handle_command(info, cli);
     free(value);
 }
