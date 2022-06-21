@@ -211,6 +211,12 @@ public class Main : MonoBehaviour
                 map.teams[i_team].players[map.teams[i_team].nb_players].content.y = int.Parse(content[3]);
                 map.teams[i_team].playersObj.Add(Instantiate(playerModel));
                 SetPlayerInfo(map.teams[i_team].playersObj[map.teams[i_team].nb_players], content[6], playerTag[1]);
+                map.teams[i_team].playersObj[map.teams[i_team].nb_players].transform.position =
+                    new Vector3(map.teams[i_team].players[map.teams[i_team].nb_players].content.x * TileOffset,
+                        1.9f, map.teams[i_team].players[map.teams[i_team].nb_players].content.y * TileOffset);
+                map.teams[i_team].playersObj[map.teams[i_team].nb_players].transform.eulerAngles =
+                    new Vector3(0, 90 * (map.teams[i_team].players[map.teams[i_team].nb_players].orientation - 1), 0);
+                map.teams[i_team].nb_players++;
                 map.teams[i_team].nb_players++;
                 break;
             }
