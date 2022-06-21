@@ -24,7 +24,7 @@ void send_ejected_message(trantorians_t *pusher, trantorians_t *pushed)
     free(msg);
 }
 
-int eject(trantorians_t *trant, char **arg, zappy_data_t *data)
+int eject(client_t *client, char **arg, zappy_data_t *data)
 {
     trantorians_t *trant = client->trant;
     bool ejected = false;
