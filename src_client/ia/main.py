@@ -155,7 +155,7 @@ class clientIA:
         middle_tile = 2
         right_tile = 3
         action = "Forward"
-        temp = self.toSend
+        reset = 0
         for levels in range(1, self.lvl + 1):
             print(tile_needed, left_tile, middle_tile, right_tile)
             if (tile_needed < middle_tile and tile_needed >= left_tile):
@@ -184,7 +184,10 @@ class clientIA:
             left_tile += 2*levels+1
             middle_tile += 2*levels+2
             right_tile += 2*levels+3
-        self.toSend = temp
+            reset +=1
+        for i in range (0, reset):
+            print("remove =", self.toSend.get())
+        
         return (0)
 
     def inventory(self, srvMsg):
@@ -330,8 +333,8 @@ class clientIA:
     def actionAi(self):
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
-                #action = self.checkAction()
-                action = input("> ")
+                action = self.checkAction()
+                #action = input("> ")
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
