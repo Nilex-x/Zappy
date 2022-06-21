@@ -59,8 +59,6 @@ typedef struct server_s
 struct data_incant {
     int ressources_required[6];
     int trant_nb_required;
-    int trant_min_lvl_required;
-    int trant_max_lvl_required;
 };
 
 typedef struct cmd_s {

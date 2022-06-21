@@ -187,6 +187,7 @@ static void add_trantoriant(client_t *cli, server_t *info, char *cmd)
         cli->data_send = add_send(cli->data_send, line);
         free(line);
         init_trantoriant(cli, info, team);
+        new_player_connect(cli->trant);
         asprintf(&line, "%d %d\n", info->data->width, info->data->height);
         cli->data_send = add_send(cli->data_send, line);
         free(line);
