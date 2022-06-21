@@ -17,7 +17,7 @@
     #include <sys/time.h>
 
     #define NB_LISTEN 32
-    #define LENGTH_COMMAND 512
+    #define LENGTH_COMMAND 1024
 
 typedef enum client_status {
     WRITE,

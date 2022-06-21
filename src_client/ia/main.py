@@ -13,8 +13,6 @@ import getopt
 from queue import Queue
 from sys import *
 
-from matplotlib.collections import BrokenBarHCollection
-
 ressources = ["linemate","deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
 def findPathToTileFromBroadcast(clientInfo, direction):
@@ -59,6 +57,7 @@ upLvl = [
     "linemate": 2,
     "sibur": 1,
     "phiras": 1,
+    "deraumere": 0,
     "mendiane": 0,
     "thystame": 0
     },
@@ -101,9 +100,9 @@ upLvl = [
 ]
 
 def checkRessourceForLevel(iaLvl, inventory):
-    for lvl in range(0, 8):
+    for lvl in range(0, 7):
         if (iaLvl == lvl+1):
-            for r in inventory: 
+            for r in inventory:
                 if (r == "food"):
                     continue
                 if (upLvl[lvl][r] > inventory[r]):
@@ -119,12 +118,15 @@ class clientIA:
         self.height = -1
         self.width = -1
         self.alive = True
-        self.nbPlayers = 1
+        self.nbMeeting = 1
+        self.isMeeting = False
+        self.hasArrived = False
         self.lvl = 1
         self.N = None
         self.M = None
         self.dir = 0
         self.drop = 0
+        self.incantation = False
         self.toSend = Queue(maxsize=0)
         self.cmds = Queue(maxsize=9)
         self.currentCmd = "Nothing"
@@ -153,86 +155,99 @@ class clientIA:
         middle_tile = 2
         right_tile = 3
         action = "Forward"
-        temp = self.toSend
+        reset = 0
         for levels in range(1, self.lvl + 1):
             print(tile_needed, left_tile, middle_tile, right_tile)
             if (tile_needed < middle_tile and tile_needed >= left_tile):
                 self.toSend.put("Forward")
                 self.toSend.put("Left")
-                print("Forward")
-                print("Left")
                 for t in range(0, middle_tile-tile_needed):
-                    print("Forward")
                     self.toSend.put("Forward")
                 return (1)
             elif (tile_needed > middle_tile and tile_needed <= right_tile):
                 self.toSend.put("Forward")
                 self.toSend.put("Right")
-                print("Forward")
-                print("Right")
                 for t in range(0, tile_needed-middle_tile):
-                    print("Forward")
                     self.toSend.put("Forward")
                 return (1)
             else:
-                print(action + "gay")
                 self.toSend.put("Forward")
             if (tile_needed == middle_tile):
                 return (1)
             left_tile += 2*levels+1
             middle_tile += 2*levels+2
             right_tile += 2*levels+3
-        self.action = temp
+            reset +=1
+        for i in range (0, reset):
+            print("remove =", self.toSend.get())
+        
         return (0)
 
     def inventory(self, srvMsg):
-        print("ININV: ", srvMsg)
         srvMsg = srvMsg[1:-1]
         inv = srvMsg.split(",")
         for rsc in inv:
-            print(rsc)
             a = rsc.split()
-            print(a)
             self.ressources[a[0]] = int(a[1])
 
     def look(self, srvMsg, drop):
+        print("SERV in LOOK: ", srvMsg)
         srvMsg = srvMsg[1:-1]
         look_list = srvMsg.split(",")
-        x = 0
-        for i in look_list:
-            if i.find("food") >= 0:
-                self.findPathToTile(x)
+        #when ai has arrived to meeting, he needs to drop all the needed ressources
+        if drop == 1:
+            res = []
+            for ress in look_list[0].split(" "):
+                res.append(int(ress))
+            for i in range(1, 7):
+                for j in range (0, self.ressources[i] - res[i-1]):
+                    self.toSend.put("Set " + ressources[i])
+            self.drop = 0
+            return 1
+        ressource = checkRessourceForLevel(self.lvl, self.ressources)
+        if (self.ressources["food"] < 8 or ressource == None):
+            ressource = "food"
+        tile_needed = -1
+        i = 0
+        for l in look_list:
+            if l.find(ressource) != -1:
+                tile_needed = i
+                break
+            i += 1
+        if not self.findPathToTile(tile_needed):
+            print("Not found...")
+            self.toSend.put("Forward")
+        else:
+            self.ressources[ressource] += 1
+            if ressource != "food":
+                self.commonInventory[ressource] += 1
+            if (checkRessourceForLevel(self.lvl, self.commonInventory) == None):
+                self.toSend.put("Broadcast meeting " + str(self.lvl))
+                self.ressources[ressource] -= 1
+                self.commonInventory[ressource] -= 1
+                self.isMeeting = True
+                self.hasArrived = True
+                print("Enter")
             else:
-                x += 1
-
-        # if drop == 1:
-        #     res = []
-        #     for ress in look_list[0].split(" "):
-        #         res.append(int(ress))
-        #     for i in range(1, 7):
-        #         for j in range (0, self.ressources[i] - res[i-1]):
-        #             self.toSend.put("Set " + ressources[i])
-        #     self.drop = 0
-        #     return 1
-        # print(look_list)
-        # ressource = checkRessourceForLevel(self.lvl, self.ressources)
-        # if (self.ressources["food"] < 8 or ressource == None):
-        #     ressource = "food"
-        # tile_needed = -1
-        # i = 0
-        # for l in look_list:
-        #     if l.find(ressource) != -1:
-        #         tile_needed = i
-        #         break
-        #     i += 1
-        # if not self.findPathToTile(tile_needed):
-        #     print("Not found...")
-        #     self.toSend.put("Forward")
-        # else:
-        #     self.toSend.put("Take " + ressource)
-        #     self.ressources[ressource] += 1
-        #     self.toSend.put("Broadcast inventory " + ressource)
+                self.toSend.put("Take " + ressource)
+                if ressource != "food":
+                    self.toSend.put("Broadcast inventory " + ressource)
         return 0
+
+    def look(self, srvMsg):
+        srvMsg = srvMsg[1:-1]
+        # look_list = srvMsg.split(",")
+        # x = 0
+        # for i in look_list:
+        #     if i.find("food") >= 0:
+        #         self.findPathToTile(x)
+        #         self.toSend.put("Take food")
+        #         return 0
+        #     else:
+        #         x += 1
+        # self.toSend.put("Forward")
+        return 0
+
 
     def ejected(self):
         while (not self.cmds.empty()):
@@ -243,15 +258,11 @@ class clientIA:
         self.dir = int(message[8])
         self.M = message[11:]
         if (message.find("inventory") != -1):
-            res = message.split(" ")[2]
-            print("res = ", res)
+            res = message.split(",")[1].split(" ")[1]
             self.commonInventory[res] += 1
-            if checkRessourceForLevel(self.lvl, self.commonInventory) == None:
-                self.toSend.put("Broadcast meeting" + self.lvl)
-                self.isMeeting = True
-                self.hasArrived = True
+
         if (message.find("meeting") != -1):
-            direction = int(message.split(" ")[3])
+            direction = int(message.split(",")[1].split(" ")[1])
             self.isMeeting = True
             if (direction != 0):
                 findPathToTileFromBroadcast(self, direction)
@@ -259,12 +270,16 @@ class clientIA:
                 self.hasArrived = True
                 self.toSend.put("Broadcast arrived")
                 self.drop = 1
-        if (message.find("incantation") != -1):
+
+        if (message.find("incantation") != -1 and int(message.split(",")[1].split(" ")[1]) == 0):
             self.toSend.put("Incantation")
-        
-        if(message.find("arrived") != -1 and int(message.split(" ")[2]) == 0):
+            self.nbMeeting = 1
+            self.hasArrived = False
+            self.isMeeting = False
+
+        if(message.find("arrived") != -1 and int(message.split(",")[1].split(" ")[1]) == 0):
             self.nbMeeting += 1
-            if (self.nbMeeting == upLvl[self.lvl]["player"]):
+            if (self.nbMeeting == upLvl[self.lvl-1]["player"]):
                 self.toSend.put("Broadcast incantation")
                 self.toSend.put("Incantation")
                 self.nbMeeting = 1
@@ -282,7 +297,8 @@ class clientIA:
             return self.handleMessage(srvMsg)
         curr = self.currentCmd.split()[0]
         if curr == "Look":
-            self.look(srvMsg, self.drop)
+            # self.look(srvMsg, self.drop)
+            self.look(srvMsg)
         elif curr == "Inventory":
             self.inventory(srvMsg)
         elif curr == "Connect_nbr":
@@ -291,23 +307,38 @@ class clientIA:
             if srvMsg == "Elevation underway":
                 return 1
             else:
-                self.lvl = int(srvMsg[14])
-        
+                self.lvl = self.lvl + 1
+
         if self.cmds.empty():
             self.currentCmd = "Nothing"
         else:
             self.currentCmd = self.cmds.get()
         return 1
 
+    # def checkAction(self):
+    #     self.toSend.put("Inventory")
+        
+    #     if self.isMeeting:
+    #         if self.hasArrived:
+    #             action = "Broadcast meeting " + str(self.lvl)
+    #         if not self.hasArrived and self.ressources["food"] >= 8:
+    #             action = "Look"
+    #     else:
+    #         action = "Look"
+
+    #     if self.isMeeting and self.hasArrived and self.nbMeeting >= upLvl[self.lvl-1]["player"]:
+    #             self.toSend.put("Broadcast incantation")
+    #             action = "Incantation"
+    #             self.nbMeeting = 1
+    #             self.hasArrived = False
+    #             self.isMeeting = False
+    #     print("action = ", action)
+    #     return (action)
+
     def checkAction(self):
+        self.toSend.put("Inventory")
         action = "Look"
-        if checkRessourceForLevel(self.lvl, self.ressources) == None:
-            for i in range(1, 7):
-                for j in range (0, self.ressources[ressources[i-1]]):
-                    if upLvl[self.lvl-1][ressources[i-1]] != 0:
-                        self.toSend.put("Set " + ressources[i-1])
-            action = "Incantation"
-        return (action)
+        return action
 
     def actionAi(self):
         if self.toSend.empty():
@@ -348,10 +379,12 @@ class clientInfo:
             self.readBuff = result.value.decode('utf-8')
             print("[" + self.readBuff + "]")
             if self.readBuff == "end":
+                print("error")
                 return -1
             self.readBuff = self.readBuff[:-1]
             for x in self.readBuff.split("\n"):
                 if self.ai.serverResponse(x) < 0:
+                    print("dead")
                     return -1
         return 0
 
@@ -360,7 +393,6 @@ class clientInfo:
         while (run > -1):
             run = clientLib.client_select()
             if self.serverCommunication(run) < 0:
-                print("server error")
                 return -1
             self.writeBuff = self.ai.actionAi()
             self.readBuff = None

@@ -87,6 +87,7 @@ int client_select()
 
 int test(char *send) {
     info->buff = strdup(send);
+    printf("SEND: [%s]\n", info->buff);
     info->read_write = WRITE;
     return 0;
 }
