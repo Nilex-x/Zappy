@@ -389,15 +389,15 @@ void unknown_gui_command(client_t *cli);
 
 void command_parameter(client_t *cli);
 
-void start_of_incantation(tile_t *tile, int level);
+//void start_of_incantation(tile_t *tile, int level);
 
-void end_of_incantation(tile_t *tile, int level);
+//void end_of_incantation(tile_t *tile, int level);
 
 void egg_laying(trantorians_t *trant);
 
 void egg_layed(trantorians_t *t, egg_t *egg);
 
-void egg_hatching(egg_t *egg, tile_t *tile);
+//void egg_hatching(egg_t *egg, tile_t *tile);
 
 void player_connexion_for_egg(trantorians_t *t, egg_t *egg);
 
