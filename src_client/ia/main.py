@@ -13,8 +13,6 @@ import getopt
 from queue import Queue
 from sys import *
 
-from matplotlib.collections import BrokenBarHCollection
-
 ressources = ["linemate","deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
 def findPathToTileFromBroadcast(clientInfo, direction):
@@ -128,6 +126,7 @@ class clientIA:
         self.M = None
         self.dir = 0
         self.drop = 0
+        self.incantation = False
         self.toSend = Queue(maxsize=0)
         self.cmds = Queue(maxsize=9)
         self.currentCmd = "Nothing"
@@ -185,7 +184,7 @@ class clientIA:
             left_tile += 2*levels+1
             middle_tile += 2*levels+2
             right_tile += 2*levels+3
-        self.action = temp
+        self.toSend = temp
         return (0)
 
     def inventory(self, srvMsg):
@@ -227,16 +226,19 @@ class clientIA:
             self.toSend.put("Forward")
         else:
             self.ressources[ressource] += 1
-            self.commonInventory[ressource] += 1
+            if ressource != "food":
+                self.commonInventory[ressource] += 1
             if (checkRessourceForLevel(self.lvl, self.commonInventory) == None):
                 self.toSend.put("Broadcast meeting " + str(self.lvl))
                 self.ressources[ressource] -= 1
                 self.commonInventory[ressource] -= 1
                 self.isMeeting = True
                 self.hasArrived = True
+                print("Enter")
             else:
                 self.toSend.put("Take " + ressource)
-                self.toSend.put("Broadcast inventory " + ressource)
+                if ressource != "food":
+                    self.toSend.put("Broadcast inventory " + ressource)
         return 0
 
     def ejected(self):
@@ -248,12 +250,12 @@ class clientIA:
         self.dir = int(message[8])
         self.M = message[11:]
         if (message.find("inventory") != -1):
-            res = message.split(" ")[2]
+            res = message.split(",")[1].split(" ")[1]
             print("res = ", res)
             self.commonInventory[res] += 1
 
         if (message.find("meeting") != -1):
-            direction = int(message.split(" ")[3])
+            direction = int(message.split(",")[1].split(" ")[1])
             self.isMeeting = True
             if (direction != 0):
                 findPathToTileFromBroadcast(self, direction)
@@ -262,13 +264,13 @@ class clientIA:
                 self.toSend.put("Broadcast arrived")
                 self.drop = 1
         
-        if (message.find("incantation") != -1 and int(message.split(" ")[2]) == 0):
+        if (message.find("incantation") != -1 and int(message.split(",")[1].split(" ")[1]) == 0):
             self.toSend.put("Incantation")
             self.nbMeeting = 1
             self.hasArrived = False
             self.isMeeting = False
         
-        if(message.find("arrived") != -1 and int(message.split(" ")[2]) == 0):
+        if(message.find("arrived") != -1 and int(message.split(",")[1].split(" ")[1]) == 0):
             self.nbMeeting += 1
             if (self.nbMeeting == upLvl[self.lvl-1]["player"]):
                 self.toSend.put("Broadcast incantation")
@@ -322,13 +324,14 @@ class clientIA:
                 self.nbMeeting = 1
                 self.hasArrived = False
                 self.isMeeting = False
+        print("action = ", action)
         return (action)
 
     def actionAi(self):
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
-                action = self.checkAction()
-                #action = input("> ")
+                #action = self.checkAction()
+                action = input("> ")
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
@@ -373,7 +376,9 @@ class clientInfo:
     def mainLoop(self):
         run = 1
         while (run > -1):
+            #
             run = clientLib.client_select()
+            #print("after")
             if self.serverCommunication(run) < 0:
                 print("server error")
                 return -1
