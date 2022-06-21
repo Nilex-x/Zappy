@@ -46,7 +46,7 @@ int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data)
     int x_dest = get_pos(src->tile->x, dest->tile->x, data->map->width);
     int y_dest = get_pos(src->tile->y, dest->tile->y, data->map->height);
     float c_dir;
-    
+
     printf("x_dest: %d, y_dest: %d\n", x_dest, y_dest);
     if (x_dest == 0)
         return (y_dest > 0) ? 5 : (y_dest == 0) ? 0 : 1;
@@ -69,10 +69,14 @@ int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data)
 int broadcast(client_t *client, char **args, zappy_data_t *data)
 {
     trantorians_t *current = data->trants;
-    char *buff;
-    int dir;
-    int cdir;
+    char *buff = 0;
+    int dir = 0;
+    int cdir = 0;
 
+    if (len_array(args) != 2) {
+        client->data_send = add_send(client->data_send, "ko\n");
+        return 0;
+    }
     while (current != NULL) {
         dir = find_path(client->trant, current, data);
         cdir = current->direction;
