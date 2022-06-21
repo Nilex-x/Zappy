@@ -13,6 +13,8 @@ import getopt
 from queue import Queue
 from sys import *
 
+from matplotlib.collections import BrokenBarHCollection
+
 ressources = ["linemate","deraumere", "sibur", "mendiane", "phiras", "thystame"]
 
 def findPathToTileFromBroadcast(clientInfo, direction):
@@ -153,7 +155,6 @@ class clientIA:
         action = "Forward"
         temp = self.toSend
         for levels in range(1, self.lvl + 1):
-            print("YES!")
             print(tile_needed, left_tile, middle_tile, right_tile)
             if (tile_needed < middle_tile and tile_needed >= left_tile):
                 self.toSend.put("Forward")
@@ -185,14 +186,16 @@ class clientIA:
         return (0)
 
     def inventory(self, srvMsg):
+        print("ININV: ", srvMsg)
         srvMsg = srvMsg[1:-1]
         inv = srvMsg.split(",")
         for rsc in inv:
+            print(rsc)
             a = rsc.split()
+            print(a)
             self.ressources[a[0]] = int(a[1])
 
     def look(self, srvMsg, drop):
-        print(srvMsg)
         srvMsg = srvMsg[1:-1]
         look_list = srvMsg.split(",")
         if drop == 1:
@@ -213,6 +216,7 @@ class clientIA:
         for l in look_list:
             if l.find(ressource) != -1:
                 tile_needed = i
+                break
             i += 1
         if not self.findPathToTile(tile_needed):
             print("Not found...")
@@ -263,7 +267,6 @@ class clientIA:
     def serverResponse(self, srvMsg):
         if srvMsg == None:
             return 1
-        srvMsg = srvMsg[:-1]
         if srvMsg == "dead":
             return -1
         if srvMsg.find("eject") >= 0:
@@ -302,7 +305,8 @@ class clientIA:
     def actionAi(self):
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
-                action = self.checkAction()
+                # action = self.checkAction()
+                action = input("> ")
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
