@@ -57,6 +57,7 @@ upLvl = [
     "linemate": 2,
     "sibur": 1,
     "phiras": 1,
+    "deraumere": 0,
     "mendiane": 0,
     "thystame": 0
     },
@@ -99,9 +100,9 @@ upLvl = [
 ]
 
 def checkRessourceForLevel(iaLvl, inventory):
-    for lvl in range(0, 8):
+    for lvl in range(0, 7):
         if (iaLvl == lvl+1):
-            for r in inventory: 
+            for r in inventory:
                 if (r == "food"):
                     continue
                 if (upLvl[lvl][r] > inventory[r]):
@@ -117,7 +118,9 @@ class clientIA:
         self.height = -1
         self.width = -1
         self.alive = True
-        self.nbPlayers = 1
+        self.nbMeeting = 1
+        self.isMeeting = False
+        self.hasArrived = False
         self.lvl = 1
         self.N = None
         self.M = None
@@ -185,7 +188,7 @@ class clientIA:
         return (0)
 
     def inventory(self, srvMsg):
-        srvMsg = srvMsg[1:-1]
+        srvMsg = srvMsg[1:]
         inv = srvMsg.split(",")
         for rsc in inv:
             a = rsc.split()
@@ -193,7 +196,7 @@ class clientIA:
 
     def look(self, srvMsg, drop):
         print(srvMsg)
-        srvMsg = srvMsg[1:-1]
+        srvMsg = srvMsg[1:]
         look_list = srvMsg.split(",")
         if drop == 1:
             res = []
@@ -218,9 +221,17 @@ class clientIA:
             print("Not found...")
             self.toSend.put("Forward")
         else:
-            self.toSend.put("Take " + ressource)
             self.ressources[ressource] += 1
-            self.toSend.put("Broadcast inventory " + ressource)
+            self.commonInventory[ressource] += 1
+            if (checkRessourceForLevel(self.lvl, self.commonInventory) == None):
+                self.toSend.put("Broadcast meeting " + str(self.lvl))
+                self.ressources[ressource] -= 1
+                self.commonInventory[ressource] -= 1
+                self.isMeeting = True
+                self.hasArrived = True
+            else:
+                self.toSend.put("Take " + ressource)
+                self.toSend.put("Broadcast inventory " + ressource)
         return 0
 
     def ejected(self):
@@ -248,12 +259,12 @@ class clientIA:
                 self.hasArrived = True
                 self.toSend.put("Broadcast arrived")
                 self.drop = 1
-        if (message.find("incantation") != -1):
+        if (message.find("incantation") != -1 and int(message.split(" ")[2]) == 0):
             self.toSend.put("Incantation")
         
         if(message.find("arrived") != -1 and int(message.split(" ")[2]) == 0):
             self.nbMeeting += 1
-            if (self.nbMeeting == upLvl[self.lvl]["player"]):
+            if (self.nbMeeting == upLvl[self.lvl-1]["player"]):
                 self.toSend.put("Broadcast incantation")
                 self.toSend.put("Incantation")
                 self.nbMeeting = 1
@@ -281,7 +292,7 @@ class clientIA:
             if srvMsg == "Elevation underway":
                 return 1
             else:
-                self.lvl = int(srvMsg[14])
+                self.lvl = self.lvl + 1
         
         if self.cmds.empty():
             self.currentCmd = "Nothing"
@@ -290,6 +301,7 @@ class clientIA:
         return 1
 
     def checkAction(self):
+        self.toSend.put("Inventory")
         action = "Look"
         if checkRessourceForLevel(self.lvl, self.ressources) == None:
             for i in range(1, 7):
@@ -297,12 +309,19 @@ class clientIA:
                     if upLvl[self.lvl-1][ressources[i-1]] != 0:
                         self.toSend.put("Set " + ressources[i-1])
             action = "Incantation"
+        if self.isMeeting and self.hasArrived and self.nbMeeting >= upLvl[self.lvl-1]["player"]:
+                self.toSend.put("Broadcast incantation")
+                self.toSend.put("Incantation")
+                self.nbMeeting = 1
+                self.hasArrived = False
+                self.isMeeting = False
         return (action)
 
     def actionAi(self):
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
                 action = self.checkAction()
+                print(self.lvl)
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
