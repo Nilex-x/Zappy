@@ -162,7 +162,6 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
             !MY_CMDS[pos].gui && !client->is_gui) {
             printf("nice command [%s]\n", MY_CMDS[pos].cmd);
             append_action(client->trant, args, pos, data);
-            free_array(args);
             return (0);
         }
     }
