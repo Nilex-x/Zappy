@@ -35,6 +35,7 @@ int main(int argc, char **argv)
     init_data_struct(&info);
     handle_flags(&info, argc, argv);
     info.data->map = map_create(info.data->width, info.data->height);
+    info.data->map->timeleft = set_timespec(20, info.data->freq);
     if (create_socket(&info) == -1)
         return (84);
     init_client(&info);

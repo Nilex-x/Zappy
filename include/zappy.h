@@ -37,6 +37,7 @@ typedef struct trantorians_s {
     bool is_alive;
     int inventory[8];
     char *team_name;
+    int nb_action;
     direction_t direction;
     client_t *client;
     struct timespec timeleft;
@@ -297,10 +298,34 @@ int drop_item(client_t *client, char **args, zappy_data_t *data);
 */
 int broadcast(client_t *client, char **args, zappy_data_t *data);
 
+/*
+** @brief Send inventory to client
+**
+** @param client Client who do command
+** @param args Argument of command
+** @param data Data zappy struct
+** @return int
+*/
 int display_inventory(client_t *client, char **args, zappy_data_t *data);
 
+/*
+** @brief Create a egg for team
+**
+** @param client Client who do command
+** @param args Argument of command
+** @param data Data zappy struct
+** @return int
+*/
 int fork_command(client_t *client, char **args, zappy_data_t *data);
 
+/*
+** @brief Send free slot in team
+**
+** @param client Client who do command
+** @param args Argument of command
+** @param data Data zappy strcut
+** @return int
+*/
 int team_unused_slot(client_t *client, char **args, zappy_data_t *data);
 
 /*
@@ -343,16 +368,64 @@ int gui_map_content(client_t *client, char **args, zappy_data_t *data);
 */
 int gui_teams_name(client_t *client, char **args, zappy_data_t *data);
 
+/*
+** @brief Send player's position
+**
+** @param cli Client who do command
+** @param args Argument of command
+** @param data Data zappy struct
+** @return int
+*/
 int gui_player_pos(client_t *cli, char **args, zappy_data_t *data);
 
+/*
+** @brief Send Level of player
+**
+** @param cli Client who do command
+** @param args Argument of command
+** @param data Data zappy struct
+** @return int
+*/
 int gui_player_lvl(client_t *cli, char **args, zappy_data_t *data);
 
+/*
+** @brief Send player's inventory
+**
+** @param cli Client who do command
+** @param args Argument of command
+** @param data Data zappy struct
+** @return int
+*/
 int gui_player_inventory(client_t *cli, char **args, zappy_data_t *data);
 
+/*
+** @brief Send frequency of server
+**
+** @param cli Client who do command
+** @param args Argument of command
+** @param data Data zappy struct
+** @return int
+*/
 int gui_time_unit_request(client_t *cli, char **args, zappy_data_t *data);
 
+/*
+** @brief Modify frequency of server
+**
+** @param cli Client who do command
+** @param args Argument of command
+** @param data Data zappy struct
+** @return int
+*/
 int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 
+/*
+** @brief Do incantation
+**
+** @param cli Client who do command
+** @param args Argument of command
+** @param data Data zappy struct
+** @return int
+*/
 int incantation(client_t *cli, char **arg, zappy_data_t *data);
 
 /*
@@ -370,5 +443,12 @@ int find_win(zappy_data_t *data);
 ** @param torm Client to remove
 */
 void remove_trant_in_team(team_t *team, trantorians_t *torm);
+
+/*
+** @brief Refill Map
+**
+** @param info Server data struct
+*/
+void refill_map(server_t *info);
 
 #endif /* !ZAPPY_H_ */

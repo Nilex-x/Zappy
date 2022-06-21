@@ -62,5 +62,6 @@ void handler_connection(server_t *info)
         sort_select_return(retsel, info);
         verif_life(info);
         find_win(info->data);
+        refill_map(info);
     }
 }
