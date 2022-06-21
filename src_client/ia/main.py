@@ -236,16 +236,16 @@ class clientIA:
 
     def look(self, srvMsg):
         srvMsg = srvMsg[1:-1]
-        # look_list = srvMsg.split(",")
-        # x = 0
-        # for i in look_list:
-        #     if i.find("food") >= 0:
-        #         self.findPathToTile(x)
-        #         self.toSend.put("Take food")
-        #         return 0
-        #     else:
-        #         x += 1
-        # self.toSend.put("Forward")
+        look_list = srvMsg.split(",")
+        x = 0
+        for i in look_list:
+            if i.find("food") >= 0:
+                self.findPathToTile(x)
+                self.toSend.put("Take food")
+                return 0
+            else:
+                x += 1
+        self.toSend.put("Forward")
         return 0
 
 
@@ -343,8 +343,8 @@ class clientIA:
     def actionAi(self):
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
-                # action = self.checkAction()
-                action = input("> ")
+                action = self.checkAction()
+                # action = input("> ")
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
