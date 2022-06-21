@@ -17,6 +17,7 @@
 
 typedef struct map_s map_t;
 typedef struct client_s client_t;
+typedef struct tile_s tile_t;
 
 typedef enum direction_s {
     NORTH,

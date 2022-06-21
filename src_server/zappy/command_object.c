@@ -26,7 +26,7 @@ int pick_item(client_t *client, char **args, zappy_data_t *data)
         client->trant->tile->ressources[object]--;
         client->trant->inventory[object]++;
         client->data_send = add_send(client->data_send, "ok\n");
-        ressource_collecting(client->trant->tile, object);
+        ressource_collecting(client->trant, object);
         return 1;
     }
     client->data_send = add_send(client->data_send, "ko\n");
@@ -42,7 +42,7 @@ int drop_item(client_t *client, char **args, zappy_data_t *data)
         client->trant->inventory[object]--;
         client->trant->tile->ressources[object]++;
         client->trant->client->data_send = add_send(client->data_send, "ok\n");
-        ressource_dropping(client->trant->tile, object);
+        ressource_dropping(client->trant, object);
         return 1;
     }
     client->data_send = add_send(client->data_send, "ko\n");
