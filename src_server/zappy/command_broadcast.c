@@ -8,7 +8,7 @@
 #include "server.h"
 #include <stdio.h>
 
-int get_pos(int a, int b, int map_size)
+static int get_pos(int a, int b, int map_size)
 {
     int dist = b - a;
 
@@ -19,7 +19,7 @@ int get_pos(int a, int b, int map_size)
     return (map_size - abs(dist));
 }
 
-int check_sides(int x_dest, int y_dest, float c_dir)
+static int check_sides(int x_dest, int y_dest, float c_dir)
 {
     printf("C_DIR: %f\n", c_dir);
     if (y_dest > 0) {
@@ -41,7 +41,7 @@ int check_sides(int x_dest, int y_dest, float c_dir)
     return 0;
 }
 
-int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data)
+static int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data)
 {
     int x_dest = get_pos(src->tile->x, dest->tile->x, data->map->width);
     int y_dest = get_pos(src->tile->y, dest->tile->y, data->map->height);
@@ -77,6 +77,7 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
         client->data_send = add_send(client->data_send, "ko\n");
         return 0;
     }
+    broadcast_message(current, args);
     while (current != NULL) {
         dir = find_path(client->trant, current, data);
         cdir = current->direction;

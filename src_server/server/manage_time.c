@@ -76,6 +76,7 @@ void verif_life(server_t *info)
             temp->client->is_quit = true;
             temp->client->data_send = add_send(temp->client->data_send,
             "dead\n");
+            death_of_a_player(temp);
         } else if (temp->timeleft.tv_sec == 0 && temp->timeleft.tv_nsec == 0) {
             printf("remove food client: %d - food: %d\n", temp->client->socket, temp->inventory[0]);
             temp->inventory[0]--;

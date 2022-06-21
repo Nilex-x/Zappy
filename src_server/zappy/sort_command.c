@@ -165,6 +165,8 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
             return (0);
         }
     }
+    if (client->is_gui)
+        unknown_gui_command(client);
     free_array(args);
     client->data_send = add_send(client->data_send, "ko\n");
     return (1);
@@ -185,6 +187,7 @@ static void add_trantoriant(client_t *cli, server_t *info, char *cmd)
         cli->data_send = add_send(cli->data_send, line);
         free(line);
         init_trantoriant(cli, info, team);
+        new_player_connect(cli->trant);
         asprintf(&line, "%d %d\n", info->data->width, info->data->height);
         cli->data_send = add_send(cli->data_send, line);
         free(line);

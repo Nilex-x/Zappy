@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-int get_name_team(server_t *info, char **name_list, int index)
+static int get_name_team(server_t *info, char **name_list, int index)
 {
     while (name_list[index] && name_list[index][0] != '-') {
         printf("%d\n", info->data->max_teams_player);
@@ -19,7 +19,7 @@ int get_name_team(server_t *info, char **name_list, int index)
     return (0);
 }
 
-int verif_team_created(server_t *info)
+static int verif_team_created(server_t *info)
 {
     team_t *temp = info->data->teams;
 
@@ -30,7 +30,7 @@ int verif_team_created(server_t *info)
     return (0);
 }
 
-int sort_flags(server_t *info, char **argv, int index, int ret)
+static int sort_flags(server_t *info, char **argv, int index, int ret)
 {
     switch (ret) {
         case 'p':
@@ -53,7 +53,7 @@ int sort_flags(server_t *info, char **argv, int index, int ret)
     return (0);
 }
 
-int init_zappy_data(zappy_data_t *data)
+static int init_zappy_data(zappy_data_t *data)
 {
     data->freq = 100;
     data->width = 0;
