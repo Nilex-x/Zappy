@@ -198,33 +198,40 @@ class clientIA:
     def look(self, srvMsg, drop):
         srvMsg = srvMsg[1:-1]
         look_list = srvMsg.split(",")
-        if drop == 1:
-            res = []
-            for ress in look_list[0].split(" "):
-                res.append(int(ress))
-            for i in range(1, 7):
-                for j in range (0, self.ressources[i] - res[i-1]):
-                    self.toSend.put("Set " + ressources[i])
-            self.drop = 0
-            return 1
-        print(look_list)
-        ressource = checkRessourceForLevel(self.lvl, self.ressources)
-        if (self.ressources["food"] < 8 or ressource == None):
-            ressource = "food"
-        tile_needed = -1
-        i = 0
-        for l in look_list:
-            if l.find(ressource) != -1:
-                tile_needed = i
-                break
-            i += 1
-        if not self.findPathToTile(tile_needed):
-            print("Not found...")
-            self.toSend.put("Forward")
-        else:
-            self.toSend.put("Take " + ressource)
-            self.ressources[ressource] += 1
-            self.toSend.put("Broadcast inventory " + ressource)
+        x = 0
+        for i in look_list:
+            if i.find("food") >= 0:
+                self.findPathToTile(x)
+            else:
+                x += 1
+
+        # if drop == 1:
+        #     res = []
+        #     for ress in look_list[0].split(" "):
+        #         res.append(int(ress))
+        #     for i in range(1, 7):
+        #         for j in range (0, self.ressources[i] - res[i-1]):
+        #             self.toSend.put("Set " + ressources[i])
+        #     self.drop = 0
+        #     return 1
+        # print(look_list)
+        # ressource = checkRessourceForLevel(self.lvl, self.ressources)
+        # if (self.ressources["food"] < 8 or ressource == None):
+        #     ressource = "food"
+        # tile_needed = -1
+        # i = 0
+        # for l in look_list:
+        #     if l.find(ressource) != -1:
+        #         tile_needed = i
+        #         break
+        #     i += 1
+        # if not self.findPathToTile(tile_needed):
+        #     print("Not found...")
+        #     self.toSend.put("Forward")
+        # else:
+        #     self.toSend.put("Take " + ressource)
+        #     self.ressources[ressource] += 1
+        #     self.toSend.put("Broadcast inventory " + ressource)
         return 0
 
     def ejected(self):

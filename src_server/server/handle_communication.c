@@ -53,9 +53,9 @@ void write_client(server_t *info, int s_client)
     }
     free(data);
     client->status = (get_size_data_to_send(client->data_send)) ? WRITE : READ;
-    if (w_value < 0 || client->isQuit) {
+    if (w_value < 0 || client->is_quit) {
+        (client->is_quit) ? close(s_client) : 0;
         remove_client(info, s_client);
-        (client->isQuit) ? close(s_client) : 0;
     }
 }
 
@@ -66,6 +66,27 @@ void free_data(zappy_data_t *data)
     free_eggs(data->eggs);
     free_map(data->map);
     free(data);
+}
+
+void do_action(server_t *info)
+{
+    action_t *act = NULL;
+    struct timespec time;
+
+    for (trantorians_t *temp = info->data->trants; temp; temp = temp->next) {
+        act = temp->action;
+        temp->timeleft = sub_timespec(temp->timeleft, info->time_ref);
+;        if (act)
+            time = sub_timespec(info->time_ref, act->time_left);
+        if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
+            act->action(temp->client, act->args, info->data);
+            temp->action = act->next;
+            free(act);
+        } else if (act != NULL)
+            act->time_left = time;
+        if (temp->action && temp->action->action == &incantation)
+            incantation(temp->client, temp->action->args, info->data);
+    }
 }
 
 void close_server(server_t *info)

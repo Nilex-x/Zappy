@@ -12,108 +12,212 @@ static const cmd_t MY_CMDS[] = {
     {
         .cmd = "Inventory",
         .fct = &display_inventory,
-        .time = 1
+        .time = 1,
+        .gui = false
     },
     {
         .cmd = "Eject",
         .fct = &eject,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Forward",
         .fct = &forward,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Right",
         .fct = &right,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Left",
         .fct = &left,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Look",
         .fct = &look,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Fork",
         .fct = &fork_command,
-        .time = 42
+        .time = 42,
+        .gui = false
     },
     {
         .cmd = "Connect_nbr",
-        .fct = &team_unused_slot
+        .fct = &team_unused_slot,
+        .gui = false
     },
     {
         .cmd = "Take",
         .fct = &pick_item,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Set",
         .fct = &drop_item,
-        .time = 7
+        .time = 7,
+        .gui = false
     },
     {
         .cmd = "Broadcast",
         .fct = &broadcast,
-        .time = 7
+        .time = 7,
+        .gui = false
+    },
+    {
+        .cmd = "Incantation",
+        .fct = &incantation,
+        .time = 300,
+        .gui = false
     },
     {
         .cmd = "msz",
-        .fct = &gui_map_size
+        .fct = &gui_map_size,
+        .gui = true
     },
     {
         .cmd = "bct",
-        .fct = &gui_tile_content
+        .fct = &gui_tile_content,
+        .gui = true
     },
     {
         .cmd = "mct",
-        .fct = &gui_map_content
+        .fct = &gui_map_content,
+        .gui = true
     },
     {
         .cmd = "tna",
-        .fct = &gui_teams_name
+        .fct = &gui_teams_name,
+        .gui = true
     },
     {
         .cmd = "ppo",
-        .fct = &gui_player_pos
+        .fct = &gui_player_pos,
+        .gui = true
     },
     {
         .cmd = "plv",
-        .fct = &gui_player_lvl
+        .fct = &gui_player_lvl,
+        .gui = true
     },
     {
         .cmd = "pin",
-        .fct = &gui_player_inventory
+        .fct = &gui_player_inventory,
+        .gui = true
     },
     {
         .cmd = "sgt",
-        .fct = &gui_time_unit_request
+        .fct = &gui_time_unit_request,
+        .gui = true
     },
     {
         .cmd = "sst",
-        .fct = &gui_time_unit_modif
+        .fct = &gui_time_unit_modif,
+        .gui = true
     }
 };
 
+static void append_action(trantorians_t *trant, char **args, int pos, zappy_data_t *data)
+{
+    action_t *curr = trant->action;
+    action_t *new = malloc(sizeof(action_t));
+
+    new->action = MY_CMDS[pos].fct;
+    new->time_left = set_timespec(MY_CMDS[pos].time, data->freq);
+    new->args = args;
+    new->next = NULL;
+    while (curr && curr->next)
+        curr = curr->next;
+    if (curr)
+        curr->next = new;
+    else if (new->action == &incantation) {
+        incantation(trant->client, args, data);
+        trant->action = new;
+    } else
+        trant->action = new;
+}
+
 int sort_command(client_t *client, zappy_data_t *data, char *arg)
 {
-    int cmd_size = sizeof(MY_CMDS) / sizeof(*MY_CMDS);
-    char **args = my_str_to_word_array(arg);
+    char **args = my_str_to_word_array(clear_str(arg));
 
-    for (int pos = 0; pos != cmd_size; pos++) {
-        // printf("toto\n");
-        if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd))) {
+    for (int pos = 0; pos != (sizeof(MY_CMDS) / sizeof(*MY_CMDS)); pos++) {
+        if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
+            MY_CMDS[pos].gui && client->is_gui) {
             MY_CMDS[pos].fct(client, args, data);
+            free_array(args);
+            return (0);
+        }
+        if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
+            !MY_CMDS[pos].gui && !client->is_gui) {
+            printf("nice command [%s]\n", MY_CMDS[pos].cmd);
+            append_action(client->trant, args, pos, data);
             free_array(args);
             return (0);
         }
     }
     free_array(args);
+    client->data_send = add_send(client->data_send, "ko\n");
     return (1);
+}
+
+void add_trantoriant(client_t *cli, server_t *info, char *cmd)
+{
+    team_t *team = get_team_by_name(clear_str(cmd), info->data);
+    char *line = NULL;
+
+    if (!team || team->nb_player == team->player_max) {
+        cli->data_send = add_send(cli->data_send, (!team) ? "unkown team\n" :
+        "team is already full please wait until a client disconnect " \
+        "or fork\n");
+    } else {
+        cli->trant = create_add_trantoriant(cli, info->data, team->name);
+        asprintf(&line, "%d\n", (team->player_max - team->nb_player));
+        cli->data_send = add_send(cli->data_send, line);
+        free(line);
+        init_trantoriant(cli, info, team);
+        asprintf(&line, "%d %d\n", info->data->width, info->data->height);
+        cli->data_send = add_send(cli->data_send, line);
+        free(line);
+    }
+}
+
+void connect_gui(client_t *cli, zappy_data_t *data)
+{
+    cli->is_gui = true;
+    gui_map_size(cli, NULL, data);
+    gui_time_unit_request(cli, NULL, data);
+    gui_map_content(cli, NULL, data);
+    gui_teams_name(cli, NULL, data);
+}
+
+void handle_command(server_t *info, client_t *cli)
+{
+    char *value = NULL;
+    value = read_to_buffer(cli->buff_read, '\n', LENGTH_COMMAND);
+    if (!value || value[0] == '\n') {
+        free(value);
+        return;
+    }
+    printf("value client [%s]\n", value);
+    if (!strcasecmp(value, "gui\n") || !strcasecmp(value, "graphic\n")) {
+        connect_gui(cli, info->data);
+        free(value);
+        return;
+    }
+    if (!cli->trant && !cli->is_gui)
+        add_trantoriant(cli, info, value);
+    else
+        sort_command(cli, info->data, value);
+    free(value);
 }
