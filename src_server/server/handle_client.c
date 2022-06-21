@@ -22,7 +22,8 @@ void init_client(server_t *info)
     list_client->prev = NULL;
     list_client->status = READ;
     list_client->socket = info->fd_server;
-    list_client->isQuit = false;
+    list_client->is_quit = false;
+    list_client->is_gui = false;
     list_client->data_send = NULL;
     init_buff_client(list_client);
     info->list_client = list_client;
@@ -44,7 +45,8 @@ client_t *add_client(server_t *info, int client)
     node->next = NULL;
     node->status = READ;
     node->data_send = NULL;
-    node->isQuit = false;
+    node->is_quit = false;
+    node->is_gui = false;
     init_buff_client(node);
     return (node);
 }
@@ -66,9 +68,18 @@ void remove_client(server_t *info, int client)
     client_t *temp = info->list_client;
 
     while (temp) {
+        if (temp->socket == client && info->list_client->socket == client) {
+            info->list_client = info->list_client->next;
+            free(temp->buff_read);
+            free_data_send(temp->data_send);
+            free(temp);
+            return;
+        }
         if (temp->socket == client) {
             temp->prev->next = temp->next;
+            (temp->next) ? (temp->next->prev = temp->prev) : 0;
             free(temp->buff_read);
+            free_data_send(temp->data_send);
             free(temp);
             return;
         }
