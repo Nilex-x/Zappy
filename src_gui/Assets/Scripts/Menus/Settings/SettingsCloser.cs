@@ -7,6 +7,8 @@ public class SettingsCloser : MonoBehaviour
     public GameObject Settings;
     public GameObject SettingsButton;
     public GameObject GameName;
+    public GameObject MainMenu;
+    public GameObject InputMenu;
 
     public void CloseSettings()
     {
@@ -16,5 +18,7 @@ public class SettingsCloser : MonoBehaviour
             SettingsButton.SetActive(true);
         if (GameName != null)
             GameName.SetActive(true);
+        if (!MainMenu.active)
+            InputMenu.SetActive(true);
     }
 }
