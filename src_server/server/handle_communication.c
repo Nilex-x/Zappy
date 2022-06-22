@@ -87,6 +87,7 @@ void do_action(server_t *info)
             temp->action = act->next;
             (temp->action) ? (temp->action->action == &incantation) ? incantation(temp->client,
             temp->action->args, info->data) : 0 : 0;
+            temp->nb_action--;
             free_array(act->args);
             free(act);
         } else if (act != NULL)
