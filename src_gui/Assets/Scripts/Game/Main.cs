@@ -57,6 +57,11 @@ public class Map {
     public int time_unit;
 }
 
+public class Environnement {
+    public List<GameObject> details;
+    public int nb_details = 0;
+}
+
 public class Main : MonoBehaviour
 {
     private int count = 0;
@@ -76,9 +81,10 @@ public class Main : MonoBehaviour
     public GameObject CameraRig;
     public GameObject time_unit_txt;
     public GameObject tab;
-    public GameObject MoutainSlopping;
-    public GameObject MountainTall;
+    public GameObject EnvironnementHandler;
+    public GameObject MainIsland;
     public static Map map = new Map();
+    public static Environnement environnement = new Environnement();
     private string response;
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
     enum Ressources_type { food, linemate, deraumere, sibur, mendiane, phiras, thystame };
@@ -87,9 +93,9 @@ public class Main : MonoBehaviour
 
     float TileOffset = 5.73f;
 
-    float mainSpeed = 50f;
-    float shiftAdd = 75f;
-    float maxShift = 175f;
+    float mainSpeed = 25f;
+    float shiftAdd = 50f;
+    float maxShift = 125f;
     float camSens = 0.25f;
     private Vector3 lastMouse = new Vector3(255, 255, 255);
     private float totalRun= 1.0f;
@@ -122,13 +128,17 @@ public class Main : MonoBehaviour
         if (p.sqrMagnitude > 0){
             if (Input.GetKey (KeyCode.LeftShift)){
                 totalRun += Time.deltaTime;
-                p  = p * totalRun * shiftAdd;
-                p.x = Mathf.Clamp(p.x, -maxShift, maxShift);
-                p.y = Mathf.Clamp(p.y, -maxShift, maxShift);
-                p.z = Mathf.Clamp(p.z, -maxShift, maxShift);
+                if (transform.position.y >= 4) {
+                    p = p * totalRun * shiftAdd;
+                    p.x = Mathf.Clamp(p.x, -maxShift, maxShift);
+                    p.y = Mathf.Clamp(p.y, -maxShift, maxShift);
+                    p.z = Mathf.Clamp(p.z, -maxShift, maxShift);
+                }
             } else {
-                totalRun = Mathf.Clamp(totalRun * 0.5f, 1f, 1000f);
-                p = p * mainSpeed;
+                if (transform.position.y >= 3) {
+                    totalRun = Mathf.Clamp(totalRun * 0.5f, 1f, 1000f);
+                    p = p * mainSpeed;
+                }
             }
             p = p * Time.deltaTime;
             Vector3 newPosition = transform.position;
@@ -168,6 +178,8 @@ public class Main : MonoBehaviour
         if (tag == "sibur" || tag == "mendiane" || tag == "linemate" || tag == "phiras") {
             ressource.transform.eulerAngles = new Vector3(90, 0, 0);
         }
+        if (tag == "food" || tag == "thystame")
+            ressource.transform.position = ressource.transform.position - new Vector3(0, 0.2f, 0);
         ressource.transform.localScale = new Vector3(5f, 5f, 5f);
         ressource.tag = tag;
         ressource.transform.parent = tile.transform;
@@ -202,6 +214,28 @@ public class Main : MonoBehaviour
         UpdateRessources(x, y, thystamePrefab, thystame, Ressources_type.thystame);
     }
 
+    private void generateMainIsland()
+    {
+        int maxMapTiles = 0;
+    
+        environnement.details = new List<GameObject>();
+        environnement.details.Add(Instantiate(MainIsland));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(map.tiles.Count * TileOffset)/2, 0, (float)(map.tiles[0].Count * TileOffset)/2);
+        if (map.tiles.Count > map.tiles[0].Count)
+            maxMapTiles = map.tiles.Count;
+        else
+            maxMapTiles = map.tiles[0].Count;
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(maxMapTiles * 0.35f, maxMapTiles * 0.35f, maxMapTiles * 0.35f);
+    }
+
+    private void generateEnvironnement()
+    {
+        generateMainIsland();
+        
+    }
+
     private void setRigPosition()
     {
         CameraRig.transform.position = new Vector3((float)(map.tiles.Count * TileOffset)/2, 0, -TileOffset);
@@ -225,6 +259,7 @@ public class Main : MonoBehaviour
             }
         }
         setRigPosition();
+        generateEnvironnement();
     }
 
     private void SetTileInfo(GameObject Temp, int x, int z)
