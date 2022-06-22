@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 void new_player_connect(trantorians_t *t)
 {

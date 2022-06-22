@@ -18,7 +18,7 @@ char *get_items_on_tile(map_t *map, size_t x, size_t y)
     char *line = NULL;
 
     for (int i = 0; i < c->nb_player; i++)
-        (line) ? asprintf(&line, "%s player", line) : 
+        (line) ? asprintf(&line, "%s player", line) :
         asprintf(&line, "player");
     for (int i = 0; i < 7; i++)
         for (int j = 0; j < c->ressources[i]; j++)
@@ -42,10 +42,11 @@ void update_map_ressources(map_t *map)
         }
     }
     srand(time(NULL));
-    for (size_t i = 0; i < 7; i++)
+    for (size_t i = 0; i < 7; i++) {
         for (size_t j = 0; j < missing[i]; j++) {
             map->tiles[rand() % w][rand() % h]->ressources[i]++;
         }
+    }
 }
 
 void init_map_ressources(map_t *map)

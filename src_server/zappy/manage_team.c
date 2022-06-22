@@ -71,6 +71,7 @@ void remove_trant_in_team(team_t *team, trantorians_t *torm)
     trantorians_list_t *temp = team->list;
     trantorians_list_t *prev = NULL;
 
+    team->nb_player--;
     if (!torm)
         return;
     if (temp->trant == torm) {
@@ -83,10 +84,9 @@ void remove_trant_in_team(team_t *team, trantorians_t *torm)
             prev->next = temp->next;
             free(temp);
             return;
-        } else {
-            prev = temp;
-            temp = temp->next;
         }
+        prev = temp;
+        temp = temp->next;
     }
 }
 
