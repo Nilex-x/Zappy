@@ -7,7 +7,7 @@
 
 #ifndef LIB_H_
     #define LIB_H_
-    #define LENGHT 1024
+    #define LENGHT 512
 
 typedef struct buffer_s {
     char buffer[LENGHT];

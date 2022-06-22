@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 void command_parameter(client_t *cli)
 {
@@ -17,7 +18,7 @@ void start_of_incantation(tile_t *tile, int level)
     client_t *client = tile->trantorians->client;
     char *str = NULL;
 
-    asprintf(&str, "pic %d %d %d", tile->x, tile->y, level);
+    asprintf(&str, "pic %ld %ld %d", tile->x, tile->y, level);
     for (trantorians_t *t = tile->trantorians; t; t = t->next) {
         if (t->lvl == level)
             asprintf(&str, "%s %d", str, t->client->socket);
@@ -37,7 +38,7 @@ void end_of_incantation(tile_t *tile, int level)
     client_t *client = tile->trantorians->client;
     char *str = NULL;
 
-    asprintf(&str, "pie %d %d %d\n", tile->x, tile->y, level);
+    asprintf(&str, "pie %ld %ld %d\n", tile->x, tile->y, level);
     while (client->prev)
         client = client->prev;
     for (client_t *c = client; c; c = c->next) {
@@ -67,7 +68,7 @@ void egg_layed(trantorians_t *t, egg_t *egg)
     client_t *client = t->client;
     char *str = NULL;
 
-    asprintf(&str, "enw %d %d %d %d\n", egg->number, t->client->socket
+    asprintf(&str, "enw %d %d %ld %ld\n", egg->number, t->client->socket
     , t->tile->x, t->tile->y);
     while (client->prev)
         client = client->prev;

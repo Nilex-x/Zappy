@@ -76,6 +76,8 @@ public class Main : MonoBehaviour
     public GameObject CameraRig;
     public GameObject time_unit_txt;
     public GameObject tab;
+    public GameObject MoutainSlopping;
+    public GameObject MountainTall;
     public static Map map = new Map();
     private string response;
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};

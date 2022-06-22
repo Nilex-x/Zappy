@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 static const int ejected_from[4][4] = {
     {5, 7, 1, 3},

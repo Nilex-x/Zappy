@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 void egg_hatching(egg_t *egg, tile_t *tile)
 {
