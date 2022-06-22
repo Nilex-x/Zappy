@@ -36,7 +36,6 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/zappy/gui_events3.c \
 						src_server/zappy/gui_events4.c \
 						src_server/zappy/handle_win.c \
-						src_server/zappy/handle_win.c \
 						src_server/zappy/manage_map_time.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
