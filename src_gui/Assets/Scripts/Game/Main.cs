@@ -32,9 +32,6 @@ public class Ressources {
 
 public class Player {
     public int playerTag;
-    public int x;
-    public int y;
-    public int player_nb;
     public int orientation;
     public int level;
     public Ressources content;
@@ -248,7 +245,7 @@ public class Main : MonoBehaviour
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             if (map.teams[i_team].name == content[6]) {
                 map.teams[i_team].players.Add(new Player());
-                map.teams[i_team].players[map.teams[i_team].nb_players].player_nb = int.Parse(playerTag[1]);
+                map.teams[i_team].players[map.teams[i_team].nb_players].playerTag = int.Parse(playerTag[1]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].orientation = int.Parse(content[4]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].level = int.Parse(content[5]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].content = new Ressources();
@@ -262,7 +259,6 @@ public class Main : MonoBehaviour
                 map.teams[i_team].playersObj[map.teams[i_team].nb_players].transform.eulerAngles =
                     new Vector3(0, 90 * (map.teams[i_team].players[map.teams[i_team].nb_players].orientation - 1), 0);
                 map.teams[i_team].nb_players++;
-                map.teams[i_team].nb_players++;
                 break;
             }
         }
@@ -273,8 +269,8 @@ public class Main : MonoBehaviour
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
                 if (map.teams[i_team].players[i_player].playerTag == int.Parse(content[1])) {
-                    map.teams[i_team].players[i_player].x = int.Parse(content[2]);
-                    map.teams[i_team].players[i_player].y = int.Parse(content[3]);
+                    map.teams[i_team].players[i_player].content.x = int.Parse(content[2]);
+                    map.teams[i_team].players[i_player].content.y = int.Parse(content[3]);
                     map.teams[i_team].players[i_player].orientation = int.Parse(content[4]);
                     map.teams[i_team].playersObj[i_player].transform.position =
                         new Vector3(map.teams[i_team].players[i_player].content.x * TileOffset,

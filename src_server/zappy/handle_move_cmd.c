@@ -32,26 +32,49 @@ void move_trantorian(map_t *map, trantorians_t *trant)
 
 int forward(client_t *client, char **arg, zappy_data_t *data)
 {
-    (void) arg;
+    client_t *temp = client;
+
     move_trantorian(data->map, client->trant);
     client->data_send = add_send(client->data_send, "ok\n");
+    while (temp->prev)
+        temp = temp->prev;
+    asprintf(&arg[1], "#%d", client->socket);
+    for (client_t *c = temp; c; c = c->next)
+        if (c->is_gui)
+            gui_player_pos(c, arg, data);
+    free(arg[1]);
+    arg[1] = NULL;
     return 0;
 }
 
 int left(client_t *client, char **arg, zappy_data_t *data)
 {
-    (void) arg;
+    client_t *temp = client;
+
     (void) data;
     client->trant->direction = (client->trant->direction + 3) % 4;
     client->data_send = add_send(client->data_send, "ok\n");
+    asprintf(&arg[1], "#%d", client->socket);
+    for (client_t *c = temp; c; c = c->next)
+        if (c->is_gui)
+            gui_player_pos(c, arg, data);
+    free(arg[1]);
+    arg[1] = NULL;
     return 0;
 }
 
 int right(client_t *client, char **arg, zappy_data_t *data)
 {
-    (void) arg;
+    client_t *temp = client;
+
     (void) data;
     client->trant->direction = (client->trant->direction + 1) % 4;
     client->data_send = add_send(client->data_send, "ok\n");
+    asprintf(&arg[1], "#%d", client->socket);
+    for (client_t *c = temp; c; c = c->next)
+        if (c->is_gui)
+            gui_player_pos(c, arg, data);
+    free(arg[1]);
+    arg[1] = NULL;
     return 0;
 }
