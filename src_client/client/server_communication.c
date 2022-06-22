@@ -21,7 +21,7 @@ char *read_server(int socket)
     valread = read(socket, buff, 512);
     if (valread <= 0) {
         free(buff);
-        return NULL;
+        return "end";
     }
     buff[valread] = '\0';
     return buff;

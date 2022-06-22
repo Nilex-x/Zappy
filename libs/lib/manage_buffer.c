@@ -8,6 +8,7 @@
 #include "lib.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 void init_buffer(buffer_t *buff, int length_command)
 {
@@ -22,16 +23,18 @@ int find_end_of_line(buffer_t *buff, char end_of_line, int length_max)
     int count = 0;
     char *temp = buff->rdonly;
 
+    if ((temp - buff->buffer) + 1 >= length_max)
+        temp = buff->buffer;
     while (temp[0] != '\0') {
         if (temp[0] == end_of_line)
             return (count);
         count++;
-        if (((temp - buff->buffer) + 1) == length_max)
+        if (((temp - buff->buffer) + 1) >= length_max)
             temp = buff->buffer;
         else
             temp++;
     }
-    return (-1);
+    return (0);
 }
 
 char *read_to_buffer(buffer_t *buff, char end_of_line, int length_max)
@@ -40,16 +43,15 @@ char *read_to_buffer(buffer_t *buff, char end_of_line, int length_max)
     char *value = NULL;
     int i = 0;
 
-    if (len == -1)
-        return NULL;
     value = malloc(sizeof(char) * (len + 2));
-    if (!value)
-        return (NULL);
+    if (len == 0 || !value)
+        return NULL;;
+    if ((buff->rdonly - buff->buffer) + 1 >= length_max)
+        buff->rdonly = buff->buffer;
     for (; buff->rdonly[0] != end_of_line && i < length_max; i++) {
         value[i] = buff->rdonly[0];
         buff->rdonly[0] = '\0';
-        value[i + 1] = '\0';
-        if (((buff->rdonly - buff->buffer) + 1) == length_max)
+        if (((buff->rdonly - buff->buffer) + 1) >= length_max)
             buff->rdonly = buff->buffer;
         else
             buff->rdonly++;
@@ -62,9 +64,13 @@ void add_to_write(buffer_t *buff, char *value, int length_max)
 {
     if (!value)
         return;
-    for (int i = 0; value[i]; i++, buff->wronly++) {
-        if ((buff->wronly - buff->buffer) == length_max)
-            buff->wronly = buff->buffer;
+    if ((buff->wronly - buff->buffer) + 1 >= length_max)
+        buff->wronly = buff->buffer;
+    for (int i = 0; value[i]; i++) {
         buff->wronly[0] = value[i];
+        if ((buff->wronly - buff->buffer) + 1 == length_max)
+            buff->wronly = buff->buffer;
+        else
+            buff->wronly++;
     }
 }

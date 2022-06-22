@@ -24,7 +24,8 @@ struct timespec sub_timespec(struct timespec ts1, struct timespec ts2)
     ts.tv_sec = ts1.tv_sec - ts2.tv_sec;
     ts.tv_nsec = ts1.tv_nsec - ts2.tv_nsec;
     if (ts.tv_nsec < 0) {
-        ts.tv_sec--;
+        if (ts.tv_sec > 0)
+            ts.tv_sec--;
         ts.tv_nsec += 1000000000;
     }
     return (ts);
@@ -43,7 +44,7 @@ void select_interupt(server_t *info)
 
 void get_shortest_time(server_t *info)
 {
-    struct timespec smallest = set_timespec(20, info->data->freq);
+    struct timespec smallest = set_timespec(900, 1);
 
     for (trantorians_t *t = info->data->trants; t; t = t->next) {
         if ((t->action && t->action->time_left.tv_sec < smallest.tv_sec)

@@ -132,15 +132,15 @@ static int append_action(trantorians_t *trant, char **args, int pos, zappy_data_
     action_t *curr = trant->action;
     action_t *new = malloc(sizeof(action_t));
 
-    if (trant->nb_action >= 10) {
-        trant->client->data_send = add_send(trant->client->data_send, "ko\n");
-        return (-1);
-    }
+    // if (trant->nb_action >= 10) {
+    //     trant->client->data_send = add_send(trant->client->data_send, "ko\n");
+    //     return (-1);
+    // }
     new->action = MY_CMDS[pos].fct;
     new->time_left = set_timespec(MY_CMDS[pos].time, data->freq);
     new->args = args;
     new->next = NULL;
-    trant->nb_action++;
+    // trant->nb_action++;
     while (curr && curr->next)
         curr = curr->next;
     if (curr)
@@ -208,12 +208,12 @@ void handle_command(server_t *info, client_t *cli)
 {
     char *value = NULL;
     value = read_to_buffer(cli->buff_read, '\n', LENGTH_COMMAND);
-    if (!value || value[0] == '\n') {
+    if (!value || value[0] == '\n' || value[0] == 0) {
         free(value);
         return;
     }
     printf("value client [%s]\n", value);
-    if (!strcasecmp(value, "gui\n") || !strcasecmp(value, "graphic\n")) {
+    if (!strcasecmp(value, "gui") || !strcasecmp(value, "graphic")) {
         connect_gui(cli, info->data);
         free(value);
         return;
