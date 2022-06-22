@@ -652,7 +652,7 @@ MonoBehaviour:
   mendianePrefab: {fileID: 919132149155446097, guid: 0d6b6b74adaac62b4b611158f9de573a, type: 3}
   phirasPrefab: {fileID: 919132149155446097, guid: 71fc78157858a66888581cb8af894d78, type: 3}
   thystamePrefab: {fileID: 919132149155446097, guid: 175d106559b4e5bee9365c0a7867faa4, type: 3}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 919132149155446097, guid: f2306e0d5373e664aa5e27a301771d16, type: 3}
   eggPrefab: {fileID: 0}
   tilePrefab: {fileID: 919132149155446097, guid: 8c507cf65e060caa88d4f20675f909f4, type: 3}
   tileParent: {fileID: 1257246384}
@@ -661,8 +661,6 @@ MonoBehaviour:
   CameraRig: {fileID: 1865095194}
   time_unit_txt: {fileID: 824345142}
   tab: {fileID: 1054305604}
-  MoutainSlopping: {fileID: 0}
-  MountainTall: {fileID: 0}
   tab_team1: {fileID: 7464870523374561669, guid: 19e0f83828207c655b67b41f5cd99c22, type: 3}
   tab_team2: {fileID: 4299024633364552845, guid: 616f3e7f5833bdcd58e90567a3dcbaca, type: 3}
   EnvironnementHandler: {fileID: 0}
