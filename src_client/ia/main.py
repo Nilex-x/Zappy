@@ -147,10 +147,9 @@ class clientIA:
                         continue
                     if (upLvl[lvl][r] > self.ressources[r]):
                         return r
-
         return (None)
+
     def findPathToTile(self, tile_needed):
-        print("TILE: ", tile_needed)
         if tile_needed == 0:
             return (1)
         left_tile = 1
@@ -159,7 +158,6 @@ class clientIA:
         action = "Forward"
         reset = 0
         for levels in range(1, self.lvl + 1):
-            print(tile_needed, left_tile, middle_tile, right_tile)
             if (tile_needed < middle_tile and tile_needed >= left_tile):
                 self.toSend.put("Forward")
                 self.toSend.put("Left")
@@ -235,10 +233,28 @@ class clientIA:
     #             if ressource != "food":
     #                 self.toSend.put("Broadcast inventory " + ressource)
     #     return 0
+    def setRessources(self, look_list, t):
+        tile = {
+        "linemate": 0,
+        "deraumere": 0,
+        "sibur": 0,
+        "mendiane": 0,
+        "phiras": 0,
+        "thystame": 0
+        }
+        ress = look_list[t].split()
+        for i in ress:
+            if i == "food" or i == "player":
+                continue
+            tile[i] += 1
+        for i in ressources:
+            if tile[i] < upLvl[self.lvl - 1][i]:
+                self.toSend.put("Set " + i)
 
-    def checkTile(self, ressource):
+    def checkTile(self, ressource, look_list, t):
         self.ressources[ressource] += 1
         if self.checkRessourceForLevel() == None:
+            self.setRessources(look_list, t)
             self.toSend.put("Incantation")
         else:
             self.toSend.put("Take " + ressource)
@@ -255,8 +271,7 @@ class clientIA:
         for x in look_list:
             if x.find(ressource) >= 0:
                 if self.findPathToTile(i):
-                    print("found path")
-                    self.checkTile(ressource)
+                    self.checkTile(ressource, look_list, i)
                     return 1
                 break
             i += 1
@@ -312,14 +327,7 @@ class clientIA:
         if srvMsg.find("message") >= 0:
             return self.handleMessage(srvMsg)
         curr = self.currentCmd.split()[0]
-        # if srvMsg == "ok" or srvMsg == "ko":
-        #     if self.cmds.empty():
-        #         self.currentCmd = "Nothing"
-        #     else:
-        #         self.currentCmd = self.cmds.get()
-        #     return 1
         if curr == "Look":
-            # self.look(srvMsg, self.drop)
             self.look(srvMsg)
         elif curr == "Inventory":
             self.inventory(srvMsg)
@@ -328,7 +336,7 @@ class clientIA:
         elif curr == "Incantation":
             if srvMsg == "Elevation underway":
                 return 1
-            elif srvMsg.find("Current level"):
+            elif srvMsg.find("Current level") >= 0:
                 self.lvl = self.lvl + 1
 
         if self.cmds.empty():
