@@ -7,6 +7,7 @@ public class SettingsOpener : MonoBehaviour
     public GameObject Settings;
     public GameObject SettingsButton;
     public GameObject GameName;
+    public GameObject InputMenu;
 
     public void OpenSettings()
     {
@@ -16,5 +17,7 @@ public class SettingsOpener : MonoBehaviour
             SettingsButton.SetActive(false);
         if (GameName != null)
             GameName.SetActive(false);
+        if (InputMenu != null)
+            InputMenu.SetActive(false);
     }
 }
