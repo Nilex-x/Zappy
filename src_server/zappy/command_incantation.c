@@ -44,10 +44,11 @@ static int check_incant_ressources(map_t *map, trantorians_t *trant)
     size_t x = trant->tile->x;
     size_t y = trant->tile->y;
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 6; i++)
         if (map->tiles[x][y]->ressources[i + 1] <
-            DATA_INCANT[trant->lvl - 1].ressources_required[i])
+        DATA_INCANT[trant->lvl - 1].ressources_required[i]) {
             return (-1);
+        }
     return (0);
 }
 
@@ -65,7 +66,7 @@ static int check_trant(map_t *map, trantorians_t *trant)
     return 0;
 }
 
-void start_incantation_for_everyone(trantorians_t *incanter)
+static void start_incantation_for_everyone(trantorians_t *incanter)
 {
     tile_t *tile = incanter->tile;
     trantorians_list_t *list = NULL;
@@ -81,23 +82,13 @@ void start_incantation_for_everyone(trantorians_t *incanter)
         }
 }
 
-int incantation(client_t *cli, char **arg, zappy_data_t *data)
+static int end_incantation(client_t *cli, zappy_data_t *data)
 {
     char *l = NULL;
 
-    (void) arg;
-    if (check_trant(data->map, cli->trant) == -1
-    || check_incant_ressources(data->map, cli->trant) == -1) {
-        cli->data_send = add_send(cli->data_send, "ko\n");
-        return (-1);
-    }
-    if (cli->trant->action->time_left.tv_sec > 0
-    && cli->trant->action->time_left.tv_nsec > 0) {
-        start_of_incantation(cli->trant->tile, cli->trant->lvl);
-        start_incantation_for_everyone(cli->trant);
-        cli->data_send = add_send(cli->data_send, "Elevation underway\n");
-        return (0);
-    }
+    for (int i = 1; i < 7; i++)
+        cli->trant->tile->ressources[i] -= 
+        DATA_INCANT[cli->trant->lvl - 1].ressources_required[i];
     cli->trant->lvl ++;
     asprintf(&l, "Current level: %d\n", cli->trant->lvl);
     end_of_incantation(cli->trant->tile, cli->trant->lvl);
@@ -108,5 +99,23 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data)
         t->trant->lvl++;
     }
     free(l);
-    return (1);
+    return 1;
+}
+
+int incantation(client_t *cli, char **arg, zappy_data_t *data)
+{
+    (void) arg;
+    if (check_trant(data->map, cli->trant) == -1
+    || check_incant_ressources(data->map, cli->trant) == -1) {
+        cli->data_send = add_send(cli->data_send, "ko\n");
+        return (-1);
+    }
+    if (cli->trant->action->time_left.tv_sec > 0
+    || cli->trant->action->time_left.tv_nsec > 0) {
+        start_of_incantation(cli->trant->tile, cli->trant->lvl);
+        start_incantation_for_everyone(cli->trant);
+        cli->data_send = add_send(cli->data_send, "Elevation underway\n");
+        return (0);
+    }
+    return end_incantation(cli, data);
 }
