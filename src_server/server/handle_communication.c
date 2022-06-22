@@ -86,6 +86,7 @@ void do_action(server_t *info)
             act->time_left = time;
             act->action(temp->client, act->args, info->data);
             temp->action = act->next;
+            temp->nb_action--;
             free_array(act->args);
             free(act);
         } else if (act != NULL)

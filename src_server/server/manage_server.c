@@ -24,8 +24,10 @@ static void find_socket(server_t *info)
 
     for (client_t *temp = info->list_client; temp; temp = next) {
         next = temp->next;
-        if (FD_ISSET(temp->socket, &info->efds))
+        if (FD_ISSET(temp->socket, &info->efds)) {
+            printf("ERROR\n");
             remove_client(info, temp->socket);
+        }
         if (FD_ISSET(temp->socket, &info->rfds))
             sort_client(temp, info);
         if (FD_ISSET(temp->socket, &info->wfds))
