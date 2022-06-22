@@ -145,9 +145,12 @@ static int append_action(trantorians_t *trant, char **args, int pos, zappy_data_
         curr = curr->next;
     if (curr)
         curr->next = new;
-    else
+    else {
         trant->action = new;
-    new->action == &incantation ? incantation(trant->client, args, data) : 0;
+        (new->action == &incantation) ? incantation(trant->client, args, data)
+        : 0;
+    }
+    
     return (0);
 }
 
