@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using System.Net.Sockets;
 
 public class Ressources {
@@ -76,6 +77,8 @@ public class Main : MonoBehaviour
     public GameObject playerModel;
     public GameObject playerParent;
     public GameObject CameraRig;
+    public GameObject time_unit_txt;
+    public GameObject tab;
     public static Map map = new Map();
     private string response;
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
@@ -284,6 +287,39 @@ public class Main : MonoBehaviour
         }
     }
 
+    private void change_time_unit()
+    {
+        time_unit_txt.GetComponent<TextMeshProUGUI>().text = "Time unit: " + map.time_unit;
+    }
+
+    private void ArrowsTimeUnit()
+    {
+        if (Input.GetKey(KeyCode.RightArrow)) {
+            NetworkManager.WriteServer("sst " + (map.time_unit + 1));
+        } else if (Input.GetKey(KeyCode.LeftArrow)) {
+            if (map.time_unit > 2) {
+                NetworkManager.WriteServer("sst " + (map.time_unit - 1));
+            }
+        }
+    }
+
+    private void UpdateTab()
+    {
+        Debug.Log("test");
+        // foreach(Team team in map.teams) {
+        //     Instantiate()
+        // }
+    }
+
+    private void TabShow()
+    {
+        if (Input.GetKey(KeyCode.Tab)) {
+            UpdateTab();
+            Debug.Log("tab");
+        }
+    }
+
+
     private void HandleCommand(string cmd)
     {
         Debug.Log("Command: " + cmd);
@@ -319,6 +355,7 @@ public class Main : MonoBehaviour
         }
         if (cmd.StartsWith("sgt ")) {
             map.time_unit = int.Parse(content[1]);
+            change_time_unit();
         }
         if (cmd.StartsWith("pnw "))
             GeneratePlayer(content);
@@ -342,9 +379,11 @@ public class Main : MonoBehaviour
             count++;
         }
         CamMovement();
+        ArrowsTimeUnit();
+        TabShow();
     }
 
-    void Start()
+void Start()
     {
         Cursor.visible = false;
         if (NetworkManager.connected) {
