@@ -18,5 +18,6 @@ char *strcatdup(char *src, char *to_add, char *between)
     if (between)
         strcat(new_str, between);
     strcat(new_str, to_add);
+    free(src);
     return (new_str);
 }

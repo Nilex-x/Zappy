@@ -17,6 +17,7 @@
     #define THYSTAME_DENSITY 0.05
 
     #include <stdlib.h>
+    #include "lib.h"
     #include "zappy.h"
 
     extern const float density[7];

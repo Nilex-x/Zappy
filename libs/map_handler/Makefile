@@ -11,7 +11,7 @@ SRC = $(shell find -name '*.c')
 
 OBJ = $(SRC:.c=.o)
 
-CFLAGS = -Wall -Wextra -I../../include -g3
+CFLAGS = -Wall -Wextra -I../../include
 
 $(NAME):	$(OBJ)
 	ar rc $(NAME) $(OBJ)

@@ -25,7 +25,7 @@ NAME_LIB	=		libzappy.a
 
 INCLUDE_PATH	=	../../include
 
-CFLAGS		=		-W -Wall -Wextra -I$(INCLUDE_PATH) -g3
+CFLAGS		=		-W -Wall -Wextra -I$(INCLUDE_PATH)
 
 all: create_lib
 
