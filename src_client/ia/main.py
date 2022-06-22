@@ -139,6 +139,8 @@ class clientIA:
             "thystame": 0
         }
 
+
+
     def checkRessourceForLevel(self):
         for lvl in range(0, 7):
             if (self.lvl == lvl+1):
@@ -146,6 +148,7 @@ class clientIA:
                     if (r == "food"):
                         continue
                     if (upLvl[lvl][r] > self.ressources[r]):
+                        print("need ",upLvl[lvl][r], self.ressources[r], r, self.lvl)
                         return r
 
         return (None)
@@ -252,6 +255,7 @@ class clientIA:
         ressource = self.checkRessourceForLevel()
         if (self.ressources["food"] < 8 or ressource == None):
             ressource = "food"
+        print("ressource = [" + ressource + "]")
         for x in look_list:
             if x.find(ressource) >= 0:
                 if self.findPathToTile(i):
@@ -328,7 +332,8 @@ class clientIA:
         elif curr == "Incantation":
             if srvMsg == "Elevation underway":
                 return 1
-            elif srvMsg.find("Current level"):
+            elif srvMsg.find("Current level") != -1:
+                print("LEVEL UP ëâëëäëäßëäëäëäëßäëäëäëßäëäëë", srvMsg)
                 self.lvl = self.lvl + 1
 
         if self.cmds.empty():
