@@ -2,7 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System.Net.Sockets;
+using System.Net.Sockets; 
+
+public static class RectMovement {
+    public static void SetLeft(this RectTransform rt, float left)
+    {
+        rt.offsetMin = new Vector2(left, rt.offsetMin.y);
+    }
+ 
+    public static void SetRight(this RectTransform rt, float right)
+    {
+        rt.offsetMax = new Vector2(-right, rt.offsetMax.y);
+    }
+ 
+    public static void SetTop(this RectTransform rt, float top)
+    {
+        rt.offsetMax = new Vector2(rt.offsetMax.x, -top);
+    }
+ 
+    public static void SetBottom(this RectTransform rt, float bottom)
+    {
+        rt.offsetMin = new Vector2(rt.offsetMin.x, bottom);
+    }
+}
 
 public class Ressources {
     public int food = 0;
@@ -78,21 +100,25 @@ public class Main : MonoBehaviour
     public GameObject tab;
     public GameObject MoutainSlopping;
     public GameObject MountainTall;
+    public GameObject tab_team1;
+    public GameObject tab_team2;
     public static Map map = new Map();
     private string response;
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
     enum Ressources_type { food, linemate, deraumere, sibur, mendiane, phiras, thystame };
-
     public int nb_teams = 0;
-
     float TileOffset = 5.73f;
-
     float mainSpeed = 50f;
     float shiftAdd = 75f;
     float maxShift = 175f;
     float camSens = 0.25f;
     private Vector3 lastMouse = new Vector3(255, 255, 255);
     private float totalRun= 1.0f;
+    private bool tab_show = false;
+    private int tab_page = 0;
+    private int page_nbr = 0;
+    private bool created_tab = false;
+    private bool switched_tab = false;
 
     private Vector3 GetBaseInput() {
         Vector3 p_Velocity = new Vector3();
@@ -243,6 +269,7 @@ public class Main : MonoBehaviour
     {
         string[] playerTag = content[1].Split("#");
 
+        tab_show = true;
         Debug.Log("New Player connected : Tag " + playerTag[1]);
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             if (map.teams[i_team].name == content[6]) {
@@ -292,9 +319,9 @@ public class Main : MonoBehaviour
 
     private void ArrowsTimeUnit()
     {
-        if (Input.GetKey(KeyCode.RightArrow)) {
+        if (Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.Tab)) {
             NetworkManager.WriteServer("sst " + (map.time_unit + 1));
-        } else if (Input.GetKey(KeyCode.LeftArrow)) {
+        } else if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.Tab)) {
             if (map.time_unit > 2) {
                 NetworkManager.WriteServer("sst " + (map.time_unit - 1));
             }
@@ -303,17 +330,86 @@ public class Main : MonoBehaviour
 
     private void UpdateTab()
     {
-        Debug.Log("test");
-        // foreach(Team team in map.teams) {
-        //     Instantiate()
-        // }
+        page_nbr = Mathf.CeilToInt(map.teams.Count / 2.0f);
+        Debug.Log(page_nbr);
+        int last_page_content = map.teams.Count % 2;
+        int offset = 0;
+        int team_name = 1;
+
+        if (created_tab)
+            return;
+        for (int i = 0; i < page_nbr; i++, offset++, team_name++) {
+            GameObject tab_1 = Instantiate(tab_team1) as GameObject;
+            tab_1.transform.SetParent(tab.transform, false);
+            tab_1.transform.position = new Vector3(
+                tab_1.transform.position.x + offset * Screen.width, 
+                tab_1.transform.position.y, 
+                tab_1.transform.position.z
+            );
+            tab_1.name = map.teams[team_name*2-2].name;
+            tab_1.transform.Find("team_name").GetComponent<TextMeshProUGUI>().text = tab_1.name;
+            GameObject tab_2;
+            if (i+1 != page_nbr) {
+                tab_2 = Instantiate(tab_team2) as GameObject;
+                tab_2.transform.SetParent(tab.transform, false);
+                tab_2.transform.position = new Vector3(
+                    tab_2.transform.position.x + offset * Screen.width, 
+                    tab_2.transform.position.y, 
+                    tab_2.transform.position.z
+                );
+                tab_2.name = map.teams[team_name*2-1].name;
+                tab_2.transform.Find("team_name").GetComponent<TextMeshProUGUI>().text = tab_2.name;
+            } else {
+                if (last_page_content != 1) {
+                    tab_2 = Instantiate(tab_team2) as GameObject;
+                    tab_2.transform.SetParent(tab.transform, false);
+                    tab_2.transform.position = new Vector3(
+                        tab_2.transform.position.x + offset * Screen.width, 
+                        tab_2.transform.position.y, 
+                        tab_2.transform.position.z
+                    );
+                    tab_2.name = map.teams[team_name*2-1].name;
+                    tab_2.transform.Find("team_name").GetComponent<TextMeshProUGUI>().text = tab_2.name;
+                }
+            }
+        }
+        created_tab = true;
+    }
+
+    private void UpdatePlayerInTabs()
+    {
+
+    }
+
+    private void switch_tab_page(int value)
+    {
+        if (tab_page + value < 0 || tab_page + value >= page_nbr)
+            return;
+        tab_page = tab_page + value;
+        Vector3 pos = new Vector3(tab_page * -Screen.width + 551, tab.transform.position.y, tab.transform.position.z);
+        Debug.Log(pos.x);
+        tab.transform.position = pos;
     }
 
     private void TabShow()
     {
         if (Input.GetKey(KeyCode.Tab)) {
+            if (Input.GetKey(KeyCode.RightArrow) && !switched_tab) {
+                switched_tab = true;
+                switch_tab_page(1);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) && !switched_tab) {
+                switched_tab = true;
+                switch_tab_page(-1);
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) {
+                switched_tab = false;
+            }
             UpdateTab();
-            Debug.Log("tab");
+            UpdatePlayerInTabs();
+            tab.SetActive(true);
+        } else {
+            tab.SetActive(false);
         }
     }
 
