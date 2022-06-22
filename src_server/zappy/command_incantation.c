@@ -104,9 +104,18 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
 
 int incantation(client_t *cli, char **arg, zappy_data_t *data)
 {
+    action_t *tmp = NULL;
+
     (void) arg;
     if (check_trant(data->map, cli->trant) == -1
     || check_incant_ressources(data->map, cli->trant) == -1) {
+        if (cli->trant->action->time_left.tv_sec > 0
+        || cli->trant->action->time_left.tv_nsec > 0) {
+            tmp = cli->trant->action->next;
+            free_array(cli->trant->action->args);
+            free(cli->trant->action);
+            cli->trant->action = tmp;
+        }
         cli->data_send = add_send(cli->data_send, "ko\n");
         return (-1);
     }
