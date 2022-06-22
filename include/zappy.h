@@ -39,11 +39,8 @@ typedef struct trantorians_s {
     bool is_alive;
     int inventory[8];
     char *team_name;
-<<<<<<< HEAD
     bool is_incanting;
-=======
     int nb_action;
->>>>>>> Server
     direction_t direction;
     client_t *client;
     struct timespec timeleft;
