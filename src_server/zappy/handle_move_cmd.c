@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 void move_trantorian(map_t *map, trantorians_t *trant)
 {

@@ -19,6 +19,18 @@ static int get_obj(char *arg)
     return i;
 }
 
+void gui_update_tile(client_t *client, zappy_data_t *data)
+{
+    char **tab = NULL;
+
+    tab = malloc(sizeof(char *) * 3);
+    asprintf(&tab[0], "%d", client->trant->tile->x);
+    asprintf(&tab[1], "%d", client->trant->tile->y);
+    tab[2] = NULL;
+    gui_tile_content(client, tab, data);
+    free_array(tab);
+}
+
 int pick_item(client_t *client, char **args, zappy_data_t *data)
 {
     int object = 0;
@@ -34,6 +46,7 @@ int pick_item(client_t *client, char **args, zappy_data_t *data)
         client->trant->inventory[object]++;
         client->data_send = add_send(client->data_send, "ok\n");
         ressource_collecting(client->trant, object);
+        gui_update_tile(client, data);
         return 1;
     }
     client->data_send = add_send(client->data_send, "ko\n");
@@ -55,6 +68,7 @@ int drop_item(client_t *client, char **args, zappy_data_t *data)
         client->trant->tile->ressources[object]++;
         client->trant->client->data_send = add_send(client->data_send, "ok\n");
         ressource_dropping(client->trant, object);
+        gui_update_tile(client, data);
         return 1;
     }
     client->data_send = add_send(client->data_send, "ko\n");

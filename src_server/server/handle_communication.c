@@ -30,7 +30,7 @@ int read_client(server_t *info, client_t *client)
         return (-1);
     }
     read_buffer[read_value] = '\0';
-    printf("READ CLIENT: [%s]\n", read_buffer);
+    // printf("READ CLIENT: [%s]\n", read_buffer);
     add_to_write(client->buff_read, read_buffer, LENGTH_COMMAND);
     free(read_buffer);
     return (0);
@@ -45,7 +45,7 @@ void write_client(server_t *info, int s_client)
     char *data = get_next_data_to_send(&client->data_send);
     int len = (data) ? strlen(data) : 0;
 
-    printf("WRITE TO CLIENT: %s\n", data);
+    // printf("WRITE TO CLIENT: %s\n", data);
     while (w_value < len && w_value > 0) {
         if (len < LENGTH_COMMAND)
             value_write = len;
@@ -83,14 +83,13 @@ void do_action(server_t *info)
         if (act)
             time = sub_timespec(info->time_ref, act->time_left);
         if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
+            act->time_left = time;
             act->action(temp->client, act->args, info->data);
             temp->action = act->next;
             free_array(act->args);
             free(act);
         } else if (act != NULL)
             act->time_left = time;
-        if (temp->action && temp->action->action == &incantation)
-            incantation(temp->client, temp->action->args, info->data);
     }
 }
 
