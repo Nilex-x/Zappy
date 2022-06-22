@@ -39,6 +39,7 @@ void init_trantoriant(client_t *cli, server_t *info, team_t *team)
     cli->trant->action = NULL;
     cli->trant->is_incanting = false;
     cli->trant->incanting_with = NULL;
+    cli->trant->nb_action = 0;
     for (int i = 1; i < 7; i++)
         cli->trant->inventory[i] = 0;
     trantorian_spawn(info->data->map, cli->trant);

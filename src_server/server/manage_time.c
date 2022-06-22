@@ -32,18 +32,18 @@ struct timespec sub_timespec(struct timespec ts1, struct timespec ts2)
 
 void select_interupt(server_t *info)
 {
-    struct timespec toSub = sub_timespec(info->time_ref, info->time_left);
+    struct timespec to_sub = sub_timespec(info->time_ref, info->time_left);
 
     for (trantorians_t *t = info->data->trants; t; t = t->next) {
         if (t->action)
-            t->action->time_left = sub_timespec(t->action->time_left, toSub);
-        t->timeleft = sub_timespec(t->timeleft, toSub);
+            t->action->time_left = sub_timespec(t->action->time_left, to_sub);
+        t->timeleft = sub_timespec(t->timeleft, to_sub);
     }
 }
 
 void get_shortest_time(server_t *info)
 {
-    struct timespec smallest = set_timespec(900, 1);
+    struct timespec smallest = set_timespec(20, info->data->freq);
 
     for (trantorians_t *t = info->data->trants; t; t = t->next) {
         if ((t->action && t->action->time_left.tv_sec < smallest.tv_sec)

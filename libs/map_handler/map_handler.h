@@ -35,6 +35,7 @@
     } tile_t;
 
     typedef struct map_s {
+        struct timespec timeleft;
         size_t width;
         size_t height;
         tile_t ***tiles;
@@ -42,7 +43,7 @@
 
     tile_t *init_tile(size_t x, size_t y);
     map_t *map_create(size_t width, size_t height);
-    
+
     void free_trantorians(trantorians_t *trantorians);
     void free_eggs(egg_t *egg);
     void free_tile(tile_t *tile);

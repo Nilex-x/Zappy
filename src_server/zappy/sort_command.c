@@ -127,24 +127,28 @@ static const cmd_t MY_CMDS[] = {
     }
 };
 
-static void append_action(trantorians_t *trant, char **args, int pos, zappy_data_t *data)
+static int append_action(trantorians_t *trant, char **args, int pos, zappy_data_t *data)
 {
     action_t *curr = trant->action;
     action_t *new = malloc(sizeof(action_t));
 
+    if (trant->nb_action >= 10) {
+        trant->client->data_send = add_send(trant->client->data_send, "ko\n");
+        return (-1);
+    }
     new->action = MY_CMDS[pos].fct;
     new->time_left = set_timespec(MY_CMDS[pos].time, data->freq);
     new->args = args;
     new->next = NULL;
+    trant->nb_action++;
     while (curr && curr->next)
         curr = curr->next;
     if (curr)
         curr->next = new;
-    else if (new->action == &incantation) {
+    else
         trant->action = new;
-        incantation(trant->client, args, data);
-    } else
-        trant->action = new;
+    new->action == &incantation ? incantation(trant->client, args, data) : 0;
+    return (0);
 }
 
 int sort_command(client_t *client, zappy_data_t *data, char *arg)
