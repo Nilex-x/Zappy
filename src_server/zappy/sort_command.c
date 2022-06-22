@@ -141,8 +141,8 @@ static void append_action(trantorians_t *trant, char **args, int pos, zappy_data
     if (curr)
         curr->next = new;
     else if (new->action == &incantation) {
-        incantation(trant->client, args, data);
         trant->action = new;
+        incantation(trant->client, args, data);
     } else
         trant->action = new;
 }
@@ -154,6 +154,7 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     for (int pos = 0; pos != (sizeof(MY_CMDS) / sizeof(*MY_CMDS)); pos++) {
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
             MY_CMDS[pos].gui && client->is_gui) {
+            printf("GUI command [%s] !\n", MY_CMDS[pos].cmd);
             MY_CMDS[pos].fct(client, args, data);
             free_array(args);
             return (0);
@@ -165,7 +166,10 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
             return (0);
         }
     }
+    if (client->is_gui)
+        unknown_gui_command(client);
     free_array(args);
+    printf("Not found command !");
     client->data_send = add_send(client->data_send, "ko\n");
     return (1);
 }
@@ -185,6 +189,7 @@ static void add_trantoriant(client_t *cli, server_t *info, char *cmd)
         cli->data_send = add_send(cli->data_send, line);
         free(line);
         init_trantoriant(cli, info, team);
+        new_player_connect(cli->trant);
         asprintf(&line, "%d %d\n", info->data->width, info->data->height);
         cli->data_send = add_send(cli->data_send, line);
         free(line);

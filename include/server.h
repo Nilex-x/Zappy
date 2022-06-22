@@ -59,8 +59,6 @@ typedef struct server_s
 struct data_incant {
     int ressources_required[6];
     int trant_nb_required;
-    int trant_min_lvl_required;
-    int trant_max_lvl_required;
 };
 
 typedef struct cmd_s {
@@ -94,6 +92,7 @@ size_t get_size_data_to_send(data_send_t *data_send);
 void free_data_send(data_send_t *data_send);
 
 void init_data_struct(server_t *info);
+void clear_list(server_t *info);
 
 struct timespec set_timespec(long long int time, long long int freq);
 struct timespec sub_timespec(struct timespec ts1, struct timespec ts2);
