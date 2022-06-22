@@ -153,7 +153,7 @@ static int append_action(trantorians_t *trant, char **args, int pos, zappy_data_
 
 int sort_command(client_t *client, zappy_data_t *data, char *arg)
 {
-    char **args = my_str_to_word_array(clear_str(arg));
+    char **args = my_str_to_word_array(arg);
 
     for (int pos = 0; pos != (sizeof(MY_CMDS) / sizeof(*MY_CMDS)); pos++) {
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
@@ -176,7 +176,7 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
 
 static void add_trantoriant(client_t *cli, server_t *info, char *cmd)
 {
-    team_t *team = get_team_by_name(clear_str(cmd), info->data);
+    team_t *team = get_team_by_name(cmd, info->data);
     char *line = NULL;
 
     if (!team || team->nb_player == team->player_max) {
