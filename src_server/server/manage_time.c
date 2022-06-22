@@ -23,6 +23,8 @@ struct timespec sub_timespec(struct timespec ts1, struct timespec ts2)
 
     ts.tv_sec = ts1.tv_sec - ts2.tv_sec;
     ts.tv_nsec = ts1.tv_nsec - ts2.tv_nsec;
+    if (ts.tv_sec < 0)
+        ts.tv_sec = 0;
     if (ts.tv_nsec < 0) {
         if (ts.tv_sec > 0)
             ts.tv_sec--;
@@ -35,6 +37,8 @@ void select_interupt(server_t *info)
 {
     struct timespec to_sub = sub_timespec(info->time_ref, info->time_left);
 
+    info->data->map->timeleft = sub_timespec(info->data->map->timeleft,
+        to_sub);
     for (trantorians_t *t = info->data->trants; t; t = t->next) {
         if (t->action)
             t->action->time_left = sub_timespec(t->action->time_left, to_sub);
@@ -42,48 +46,27 @@ void select_interupt(server_t *info)
     }
 }
 
+void find_time(struct timespec *small, struct timespec value)
+{
+    if ((value.tv_sec < small->tv_sec) ||
+    (value.tv_sec == small->tv_sec && value.tv_nsec < small->tv_nsec)) {
+        small->tv_sec = value.tv_sec;
+        small->tv_nsec = value.tv_nsec;
+    }
+}
+
 void get_shortest_time(server_t *info)
 {
-    struct timespec smallest = set_timespec(900, 1);
+    struct timespec smallest = set_timespec(900, info->data->freq);
 
     for (trantorians_t *t = info->data->trants; t; t = t->next) {
-        if ((t->action && t->action->time_left.tv_sec < smallest.tv_sec)
-        || ((t->action && t->action->time_left.tv_sec == smallest.tv_sec
-        && t->action->time_left.tv_nsec < smallest.tv_nsec))) {
-            smallest.tv_sec = t->action->time_left.tv_sec;
-            smallest.tv_nsec = t->action->time_left.tv_nsec;
-        }
-        if ((t->timeleft.tv_sec < smallest.tv_sec) ||
-        (t->timeleft.tv_sec == smallest.tv_sec &&
-        t->timeleft.tv_nsec < smallest.tv_nsec)) {
-            smallest.tv_sec = t->timeleft.tv_sec;
-            smallest.tv_nsec = t->timeleft.tv_nsec;
-        }
+        if (t->action)
+            find_time(&smallest, t->action->time_left);
+        find_time(&smallest, t->timeleft);
     }
-    // printf("sec: %ld | nsec: %ld\n", smallest.tv_sec, smallest.tv_nsec);
+    find_time(&smallest, info->data->map->timeleft);
     if (smallest.tv_sec < 0)
         smallest.tv_sec = 0;
     info->time_left = smallest;
     info->time_ref = smallest;
-}
-
-void verif_life(server_t *info)
-{
-    trantorians_t *temp = info->data->trants;
-
-    while (temp) {
-        if (temp->inventory[0] <= 0) {
-            // printf("kill trantoriant client: %d\n", temp->client->socket);
-            temp->client->is_quit = true;
-            temp->client->data_send = add_send(temp->client->data_send,
-            "dead\n");
-            death_of_a_player(temp);
-        } else if (temp->timeleft.tv_sec <= 0 && temp->timeleft.tv_nsec <= 0) {
-            // printf("remove food client: %d - food: %d\n", temp->client->socket, temp->inventory[0]);
-            temp->inventory[0]--;
-            temp->timeleft = set_timespec(126, info->data->freq);
-        }
-        temp = temp->next;
-    }
-    get_shortest_time(info);
 }
