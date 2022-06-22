@@ -17,5 +17,6 @@ int team_unused_slot(client_t *client, char **args, zappy_data_t *data)
     (void) data;
 	asprintf(&buff, "%d\n", unused_slot);
 	client->data_send = add_send(client->data_send, buff);
+	free(buff);
 	return 0;
 }

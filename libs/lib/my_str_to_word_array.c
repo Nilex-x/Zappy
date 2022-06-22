@@ -46,6 +46,8 @@ int verif_space(char *str)
 {
     int count = 0;
 
+    if (!str)
+        return (count);
     for (int i = 0; str[i]; i++) {
         if (str[i] == ' ' || str[i] == '\t')
             count++;
@@ -67,7 +69,8 @@ char **my_str_to_word_array(char *str)
         word_length = count_word_length(str, i);
         array[j] = malloc(sizeof(char) * (word_length + 1));
         array[j] = my_strncpy_n(array[j], str, i, word_length);
-        word_length += verif_space(&str[i + word_length + 1]);
+        if ((int) strlen(str) > (i + word_length + 1))
+            word_length += verif_space(&str[i + word_length + 1]);
     }
     array[j - 1][strlen(array[j - 1])] = '\0';
     array[j] = NULL;
