@@ -54,10 +54,9 @@ static int check_incant_ressources(map_t *map, trantorians_t *trant)
 
 static int check_trant(map_t *map, trantorians_t *trant)
 {
-    size_t x = trant->tile->x;
-    size_t y = trant->tile->y;
     int nb_trant = 0;
 
+    (void) map;
     for (trantorians_t *t = trant->tile->trantorians; t; t = t->next)
         if (t->lvl == trant->lvl)
             nb_trant++;
@@ -86,8 +85,9 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
 {
     char *l = NULL;
 
+    (void) data;
     for (int i = 1; i < 7; i++)
-        cli->trant->tile->ressources[i] -= 
+        cli->trant->tile->ressources[i] -=
         DATA_INCANT[cli->trant->lvl - 1].ressources_required[i];
     cli->trant->lvl ++;
     asprintf(&l, "Current level: %d\n", cli->trant->lvl);

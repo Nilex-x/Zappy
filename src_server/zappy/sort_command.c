@@ -132,15 +132,15 @@ static int append_action(trantorians_t *trant, char **args, int pos, zappy_data_
     action_t *curr = trant->action;
     action_t *new = malloc(sizeof(action_t));
 
-    if (trant->nb_action >= 10) {
-        trant->client->data_send = add_send(trant->client->data_send, "ko\n");
-        return (-1);
-    }
+    // if (trant->nb_action >= 10) {
+    //     trant->client->data_send = add_send(trant->client->data_send, "ko\n");
+    //     return (-1);
+    // }
     new->action = MY_CMDS[pos].fct;
     new->time_left = set_timespec(MY_CMDS[pos].time, data->freq);
     new->args = args;
     new->next = NULL;
-    trant->nb_action++;
+    // trant->nb_action++;
     while (curr && curr->next)
         curr = curr->next;
     if (curr)
@@ -153,7 +153,7 @@ static int append_action(trantorians_t *trant, char **args, int pos, zappy_data_
 
 int sort_command(client_t *client, zappy_data_t *data, char *arg)
 {
-    char **args = my_str_to_word_array(clear_str(arg));
+    char **args = my_str_to_word_array(arg);
 
     for (int pos = 0; pos != (sizeof(MY_CMDS) / sizeof(*MY_CMDS)); pos++) {
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
@@ -180,7 +180,7 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
 
 static void add_trantoriant(client_t *cli, server_t *info, char *cmd)
 {
-    team_t *team = get_team_by_name(clear_str(cmd), info->data);
+    team_t *team = get_team_by_name(cmd, info->data);
     char *line = NULL;
 
     if (!team || team->nb_player == team->player_max) {
@@ -218,7 +218,7 @@ void handle_command(server_t *info, client_t *cli)
         return;
     }
     printf("value client [%s]\n", value);
-    if (!strcasecmp(value, "gui\n") || !strcasecmp(value, "graphic\n")) {
+    if (!strcasecmp(value, "gui") || !strcasecmp(value, "graphic")) {
         connect_gui(cli, info->data);
         free(value);
         return;

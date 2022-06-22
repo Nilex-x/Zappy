@@ -60,8 +60,8 @@ void handler_connection(server_t *info)
                         &info->efds, &time);
         TIMEVAL_TO_TIMESPEC(&time, &info->time_left);
         sort_select_return(retsel, info);
+        // refill_map(info);
         verif_life(info);
         find_win(info->data);
-        refill_map(info);
     }
 }

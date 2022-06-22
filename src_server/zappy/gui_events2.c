@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 void ressource_collecting(trantorians_t *t, int obj)
 {
