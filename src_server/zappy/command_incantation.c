@@ -88,7 +88,7 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
     (void) data;
     for (int i = 1; i < 7; i++)
         cli->trant->tile->ressources[i] -=
-        DATA_INCANT[cli->trant->lvl - 1].ressources_required[i];
+        DATA_INCANT[cli->trant->lvl - 1].ressources_required[i - 1];
     cli->trant->lvl ++;
     asprintf(&l, "Current level: %d\n", cli->trant->lvl);
     end_of_incantation(cli->trant->tile, cli->trant->lvl);
