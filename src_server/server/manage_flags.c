@@ -12,7 +12,6 @@
 static int get_name_team(server_t *info, char **name_list, int index)
 {
     while (name_list[index] && name_list[index][0] != '-') {
-        printf("%d\n", info->data->max_teams_player);
         create_team(name_list[index], info->data);
         index++;
     }

@@ -18,6 +18,7 @@
 typedef struct map_s map_t;
 typedef struct client_s client_t;
 typedef struct tile_s tile_t;
+typedef struct server_s server_t;
 
 typedef enum direction_s {
     NORTH,
@@ -82,6 +83,7 @@ typedef struct zappy_data_s {
     trantorians_t *trants;
     egg_t *eggs;
     map_t *map;
+    struct server_s *server;
 } zappy_data_t;
 
 typedef struct action_s {
@@ -91,7 +93,6 @@ typedef struct action_s {
     struct action_s *next;
 } action_t;
 
-typedef struct server_s server_t;
 
 /*
 ** @brief Manage flags of prog

@@ -53,11 +53,15 @@ map_t *map_create(size_t width, size_t height)
 
 void free_trantorians(trantorians_t *trantorians)
 {
-    if (trantorians == NULL)
-        return;
-    free_trantorians(trantorians->next);
-    free(trantorians->team_name);
-    free(trantorians);
+    trantorians_t *next = NULL;
+
+    while (trantorians) {
+        next = trantorians->next;
+        if (trantorians->team_name)
+            free(trantorians->team_name);
+        free(trantorians);
+        trantorians = next;
+    }
 }
 
 void free_tile(tile_t *tile)

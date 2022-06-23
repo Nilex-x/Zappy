@@ -35,15 +35,14 @@ void update_map_ressources(map_t *map)
     * nb_tiles, PHIRAS_DENSITY * nb_tiles, THYSTAME_DENSITY * nb_tiles};
 
     for (size_t i = 0; i < nb_tiles; i++) {
-        for (int k = 0; k < 7; k++) {
-            missing[k] -= map->tiles[i / map->width][i % map->height]->ressources[k];
-        }
+        for (int k = 0; k < 7; k++)
+            missing[k] -= ((size_t) map->tiles[i / map->height][i % map->height
+            ]->ressources[k] > missing[k]) ? missing[k] : (size_t) 
+            map->tiles[i / map->height][i % map->height]->ressources[k];
     }
-    srand(time(NULL));
     for (size_t i = 0; i < 7; i++) {
-        for (size_t j = 0; j < missing[i]; j++) {
+        for (size_t j = 0; j < missing[i]; j++)
             map->tiles[rand() % map->width][rand() % map->height]->ressources[i]++;
-        }
     }
 }
 
