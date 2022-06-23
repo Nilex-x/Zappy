@@ -65,15 +65,17 @@ client_t *find_client(server_t *info, int client)
 
 void remove_client(server_t *info, int client)
 {
+    client_t *cli = find_client(info, client);
+
+    if (info->list_client->socket == client) {
+        info->list_client = info->list_client->next;
+        remove_trantoriant(info->data, cli->trant);
+        free(cli->buff_read);
+        free_data_send(cli->data_send);
+        free(cli);
+        return;
+    }
     for (client_t *temp = info->list_client; temp; temp = temp->next) {
-        if (temp->socket == client && info->list_client->socket == client) {
-            info->list_client = info->list_client->next;
-            remove_trantoriant(info->data, temp->trant);
-            free(temp->buff_read);
-            free_data_send(temp->data_send);
-            free(temp);
-            return;
-        }
         if (temp->socket == client) {
             temp->prev->next = temp->next;
             (temp->next) ? (temp->next->prev = temp->prev) : 0;
