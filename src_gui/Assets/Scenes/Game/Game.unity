@@ -656,15 +656,16 @@ MonoBehaviour:
   eggPrefab: {fileID: 0}
   tilePrefab: {fileID: 919132149155446097, guid: 8c507cf65e060caa88d4f20675f909f4, type: 3}
   tileParent: {fileID: 1257246384}
-  playerModel: {fileID: 919132149155446097, guid: e080f40406a318b49a187d5c7bff5777, type: 3}
+  playerModel: {fileID: 919132149155446097, guid: f2306e0d5373e664aa5e27a301771d16, type: 3}
   playerParent: {fileID: 1261170350}
   CameraRig: {fileID: 1865095194}
   time_unit_txt: {fileID: 824345142}
   tab: {fileID: 1054305604}
-  tab_team1: {fileID: 7464870523374561669, guid: 19e0f83828207c655b67b41f5cd99c22, type: 3}
-  tab_team2: {fileID: 4299024633364552845, guid: 616f3e7f5833bdcd58e90567a3dcbaca, type: 3}
+  tab_team1: {fileID: 7412160291589466568, guid: 26dbc8e7a1ea41a178ffb08a506bb7ec, type: 3}
+  tab_team2: {fileID: 8202453197488391374, guid: 500653f8bed2e520298138b9b2e5bbc7, type: 3}
   EnvironnementHandler: {fileID: 0}
   MainIsland: {fileID: 1040810095833473419, guid: 37531ae0dbc74c6179dd9e9fae4f2646, type: 3}
+  tab_player: {fileID: 6516424919470432922, guid: d1c58aa2f53164d6aaa330bc39187f9e, type: 3}
   nb_teams: 0
 --- !u!1 &1054305604
 GameObject:
