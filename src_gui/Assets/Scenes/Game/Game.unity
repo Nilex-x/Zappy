@@ -656,7 +656,7 @@ MonoBehaviour:
   eggPrefab: {fileID: 0}
   tilePrefab: {fileID: 919132149155446097, guid: 8c507cf65e060caa88d4f20675f909f4, type: 3}
   tileParent: {fileID: 1257246384}
-  playerModel: {fileID: 919132149155446097, guid: e080f40406a318b49a187d5c7bff5777, type: 3}
+  playerModel: {fileID: 919132149155446097, guid: f2306e0d5373e664aa5e27a301771d16, type: 3}
   playerParent: {fileID: 1261170350}
   CameraRig: {fileID: 1865095194}
   time_unit_txt: {fileID: 824345142}

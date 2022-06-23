@@ -312,6 +312,10 @@ public class Main : MonoBehaviour
                 map.teams[i_team].players.Add(new Player());
                 map.teams[i_team].players[map.teams[i_team].nb_players].playerTag = int.Parse(playerTag[1]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].orientation = int.Parse(content[4]);
+                if (int.Parse(content[4]) == 2)
+                    map.teams[i_team].players[map.teams[i_team].nb_players].orientation = 4;
+                if (int.Parse(content[4]) == 4)
+                    map.teams[i_team].players[map.teams[i_team].nb_players].orientation = 2;
                 map.teams[i_team].players[map.teams[i_team].nb_players].level = int.Parse(content[5]);
                 map.teams[i_team].players[map.teams[i_team].nb_players].content = new Ressources();
                 map.teams[i_team].players[map.teams[i_team].nb_players].content.x = int.Parse(content[2]);
@@ -320,7 +324,7 @@ public class Main : MonoBehaviour
                 SetPlayerInfo(map.teams[i_team].playersObj[map.teams[i_team].nb_players], content[6], playerTag[1]);
                 map.teams[i_team].playersObj[map.teams[i_team].nb_players].transform.position =
                     new Vector3(map.teams[i_team].players[map.teams[i_team].nb_players].content.x * TileOffset,
-                        1.9f, map.teams[i_team].players[map.teams[i_team].nb_players].content.y * TileOffset);
+                        0.6f, map.teams[i_team].players[map.teams[i_team].nb_players].content.y * TileOffset);
                 map.teams[i_team].playersObj[map.teams[i_team].nb_players].transform.eulerAngles =
                     new Vector3(0, 90 * (map.teams[i_team].players[map.teams[i_team].nb_players].orientation - 1), 0);
                 map.teams[i_team].nb_players++;
@@ -337,9 +341,13 @@ public class Main : MonoBehaviour
                     map.teams[i_team].players[i_player].content.x = int.Parse(content[2]);
                     map.teams[i_team].players[i_player].content.y = int.Parse(content[3]);
                     map.teams[i_team].players[i_player].orientation = int.Parse(content[4]);
+                    if (int.Parse(content[4]) == 2)
+                        map.teams[i_team].players[map.teams[i_team].nb_players].orientation = 4;
+                    if (int.Parse(content[4]) == 4)
+                        map.teams[i_team].players[map.teams[i_team].nb_players].orientation = 2;
                     map.teams[i_team].playersObj[i_player].transform.position =
                         new Vector3(map.teams[i_team].players[i_player].content.x * TileOffset,
-                            1.9f, map.teams[i_team].players[i_player].content.y * TileOffset);
+                            0.6f, map.teams[i_team].players[i_player].content.y * TileOffset);
                     map.teams[i_team].playersObj[i_player].transform.eulerAngles =
                         new Vector3(0, 90 * (map.teams[i_team].players[i_player].orientation - 1), 0);
                     break;
