@@ -37,3 +37,15 @@ void verif_life(server_t *info)
     }
     get_shortest_time(info);
 }
+
+void verif_egg_life(server_t *info)
+{
+    egg_t *temp = info->data->eggs;
+
+    while (temp) {
+        if (temp->time_until_hatch.tv_sec <= 0
+        && temp->time_until_hatch.tv_nsec <= 0) {
+            
+        }
+    }
+}

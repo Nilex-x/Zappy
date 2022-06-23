@@ -30,3 +30,17 @@ void free_eggs_list(egg_list_t **egg_list)
     }
 }
 
+void egg_hatching_with_player(egg_t *egg, zappy_data_t *data)
+{
+    char *line = NULL;
+
+    add_trantoriant_to_team(egg->trant, egg->trant->team, true);
+    trantorian_spawn_from_tile(egg->trant, egg->tile);
+    new_player_connect(egg->trant);
+    asprintf(&line, "%d\n", (egg->team->player_max - egg->team->nb_player));
+    egg->trant->cli->data_send = add_send(egg->trant->cli->data_send, line);
+    free(line);
+    asprintf(&line, "%d %d\n", info->data->width, info->data->height);
+    cli->data_send = add_send(cli->data_send, line);
+    free(line);
+}

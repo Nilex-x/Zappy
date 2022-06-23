@@ -35,6 +35,9 @@ egg_t *init_egg(trantorians_t *trant, int nb_eggs, int freq)
 int fork_command(client_t *client, char **args, zappy_data_t *data)
 {
     trantorians_t *trant = client->trant;
+    team_t *team = trant->team;
+    egg_list_t *list = team->eggs;
+    egg_list_t *temp = NULL;
     egg_t *tmp = data->eggs;
     int nb_eggs = 0;
 
@@ -42,10 +45,18 @@ int fork_command(client_t *client, char **args, zappy_data_t *data)
         nb_eggs ++;
         tmp = tmp->next;
     }
-    if (tmp)
+    if (tmp) {
         tmp->next = init_egg(trant, nb_eggs + 1, data->freq);
-    else
+        temp = malloc(sizeof(egg_list_t));
+        temp->egg = tmp->next;
+        temp->next = list;
+        team->eggs = temp;
+    } else {
         data->eggs = init_egg(trant, nb_eggs + 1, data->freq);
+        team->eggs = malloc(sizeof(egg_list_t));
+        team->eggs->egg = data->eggs;
+        team->eggs->next = NULL;
+    }
     return (0);
 }
 
@@ -74,15 +85,6 @@ bool player_spawn_for_egg(client_t *cli, server_t *info, team_t *team)
         cli->trant = NULL;
         return (false);    
     }
-    add_trantoriant_to_team(cli->trant, team, true);
-    trantorian_spawn_from_tile(cli->trant, cli->trant->egg_born->tile);
-    new_player_connect(cli->trant);
-    asprintf(&line, "%d\n", (team->player_max - team->nb_player));
-    cli->data_send = add_send(cli->data_send, line);
-    free(line);
-    asprintf(&line, "%d %d\n", info->data->width, info->data->height);
-    cli->data_send = add_send(cli->data_send, line);
-    free(line);
     return (true);
 }
 
@@ -120,5 +122,3 @@ void kill_egg(egg_t *egg, zappy_data_t *data)
     tmp->next = egg->next;
     free(egg);
 }
-
-
