@@ -175,13 +175,8 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     free_array(args);
     if (client->is_gui)
         unknown_gui_command(client);
-<<<<<<< HEAD
-    else
-        client->data_send = add_send(client->data_send, "ko\n");
-=======
     free_array(args);
     client->data_send = add_send(client->data_send, "ko\n");
->>>>>>> Server
     return (1);
 }
 
