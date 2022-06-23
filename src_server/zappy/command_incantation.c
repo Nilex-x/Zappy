@@ -105,6 +105,7 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
 int incantation(client_t *cli, char **arg, zappy_data_t *data)
 {
     action_t *tmp = NULL;
+    printf("INCANT\n");
 
     (void) arg;
     if (check_trant(data->map, cli->trant) == -1

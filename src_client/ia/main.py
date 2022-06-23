@@ -166,6 +166,7 @@ class clientIA:
         action = "Forward"
         reset = 0
         for levels in range(1, self.lvl + 1):
+            print("+++++tiles ==", tile_needed, left_tile, middle_tile, right_tile)
             if (tile_needed < middle_tile and tile_needed >= left_tile):
                 self.toSend.put("Forward")
                 self.toSend.put("Left")
@@ -247,7 +248,7 @@ class clientIA:
             self.setRessources(look_list, t)
             self.isMeeting = True
             self.hasArrived = True
-            self.toSend.put("Broadcast meeting-" + str(self.lvl))
+            self.toSend.put("Broadcast meeting")
         else:
             self.toSend.put("Take " + ressource)
             if (ressource != "food"):
@@ -286,8 +287,6 @@ class clientIA:
             self.commonInventory[res] += 1
 
         if (message.find("meeting") != -1):
-            if (int(message.split(",")[1].split("-")[1]) != self.lvl):
-                return 0
             direction = int(message.split(",")[0].split(" ")[1])
             self.isMeeting = True
             if (direction != 0):
@@ -389,7 +388,7 @@ class clientIA:
             self.hasArrived = False
             self.nbMeeting = 1
             action = "Broadcast cancel " + str(self.lvl)
-            self.toSend.put("Fork")
+            #self.toSend.put("Fork")
             
         if (self.isMeeting and not self.hasArrived and self.ressources["food"] <= 5):
             self.isMeeting = False
