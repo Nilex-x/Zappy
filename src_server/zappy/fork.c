@@ -46,7 +46,7 @@ int fork_command(client_t *client, char **args, zappy_data_t *data)
         tmp->next = init_egg(trant, nb_eggs + 1, data->freq);
     else
         data->eggs = init_egg(trant, nb_eggs + 1, data->freq);
-    return (0);    
+    return (0);
 }
 
 bool player_spawn_for_egg(client_t *cli, server_t *info, team_t *team)

@@ -46,7 +46,7 @@ void init_trantoriant(client_t *cli, server_t *info, team_t *team, bool fr_egg)
         cli->trant->inventory[i] = 0;
     if (!fr_egg) {
         trantorian_spawn(info->data->map, cli->trant);
-        add_trantoriant_to_team(cli->trant, team);
+        add_trantoriant_to_team(cli->trant, team, fr_egg);
     }
 }
 

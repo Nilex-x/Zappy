@@ -56,4 +56,7 @@
 
     char *get_items_on_tile(map_t *map, size_t x, size_t y);
 
+    void free_eggs(egg_t **egg);
+    void free_eggs_list(egg_list_t **egg_list);
+
 #endif /* !MAP_HANDLER_H_ */

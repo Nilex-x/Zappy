@@ -500,4 +500,8 @@ void remove_trant_in_team(team_t *team, trantorians_t *torm, bool is_egg);
 */
 void refill_map(server_t *info);
 
+bool player_spawn_for_egg(client_t *cli, server_t *info, team_t *team);
+void delete_egg_in_team(egg_t *egg, team_t *team);
+void kill_egg(egg_t *egg, zappy_data_t *data);
+
 #endif /* !ZAPPY_H_ */

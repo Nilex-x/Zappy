@@ -65,7 +65,7 @@ static void free_data(zappy_data_t *data)
 {
     free_teams(data->teams);
     free_trantorians(data->trants);
-    free_eggs(data->eggs);
+    free_eggs(&data->eggs);
     free_map(data->map);
     free(data);
 }
