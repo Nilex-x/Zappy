@@ -326,7 +326,7 @@ class clientIA:
                 findPathToTileFromBroadcast(self, direction)
             else:
                 self.hasArrived = True
-                self.toSend.put("Broadcast arrived")
+                self.toSend.put("Broadcast arrived " + str(self.lvl))
                 self.drop = 1
 
         if (message.find("commonInventory") != -1):
@@ -338,7 +338,8 @@ class clientIA:
             self.nbMeeting = 1
 
         if(message.find("arrived") != -1 and int(message.split(",")[0].split(" ")[1]) == 0):
-            self.nbMeeting += 1
+            if (message.split(",")[1].split(" ")[1] == self.lvl):
+                self.nbMeeting += 1
             if (self.nbMeeting == upLvl[self.lvl-1]["player"]):
                 self.toSend.put("Incantation")
                 self.nbMeeting = 1
@@ -358,10 +359,12 @@ class clientIA:
         if srvMsg.find("message") >= 0:
             return self.handleMessage(srvMsg)
         curr = self.currentCmd.split()[0]
+        print("########SRVMSG: [" + srvMsg + " " + curr + "]#########")
         if curr == "Look":
             self.look(srvMsg)
         elif curr == "Inventory":
             self.inventory(srvMsg)
+            print(self.commonInventory)
         elif curr == "Connect_nbr":
             self.nbPlayers = int(srvMsg)
         elif curr == "Incantation":
@@ -405,11 +408,13 @@ class clientIA:
         self.toSend.put("Inventory")
         action = "Look"
         
-        if (self.isMeeting and self.hasArrived and self.ressources["food"] <= 4):
+        if (self.isMeeting and self.hasArrived and self.ressources["food"] <= 5):
             self.isMeeting = False
             self.hasArrived = False
             self.nbMeeting = 1
             action = "Broadcast cancel " + str(self.lvl)
+            self.toSend.put("Fork")
+            
         
         if (self.isMeeting and self.hasArrived):
             action = "Broadcast meeting " + str(self.lvl)
