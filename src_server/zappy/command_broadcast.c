@@ -82,6 +82,7 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
     while (current != NULL) {
         printf("client\n");
         if (current->client->socket == client->socket) {
+            current->client->data_send = add_send(current->client->data_send, "ok\n");
             current = current->next;
             continue;
         }

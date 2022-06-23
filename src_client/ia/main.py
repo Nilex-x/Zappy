@@ -137,6 +137,15 @@ class clientIA:
 
 
 
+    def checkCommonRessourceForLevel(self):
+        for lvl in range(0, 7):
+            if (self.lvl == lvl+1):
+                for r in self.commonInventory:
+                    if (upLvl[lvl][r] > self.commonInventory[r]):
+                        print("need ",upLvl[lvl][r], self.commonInventory[r], r, self.lvl)
+                        return r
+        return (None)
+
     def checkRessourceForLevel(self):
         for lvl in range(0, 7):
             if (self.lvl == lvl+1):
@@ -231,7 +240,7 @@ class clientIA:
         self.ressources[ressource] += 1
         if (ressource != "food"):
             self.commonInventory[ressource] += 1
-        if self.checkRessourceForLevel() == None:
+        if self.checkCommonRessourceForLevel() == None:
             self.ressources[ressource] -= 1
             if (ressource != "food"):
                 self.commonInventory[ressource] -= 1
@@ -400,7 +409,7 @@ class clientIA:
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
                 action = self.checkAction()
-                # action = input("> ")
+                #action = input("> ")
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
