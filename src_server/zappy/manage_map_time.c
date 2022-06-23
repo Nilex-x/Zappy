@@ -10,22 +10,30 @@
 
 void refill_map(server_t *info)
 {
-    struct timespec tosub = sub_timespec(info->time_ref, info->time_left);
-
-    if (info->time_left.tv_sec <= 0 && info->time_left.tv_nsec <= 0) {
-        printf("remove all\n");
-        info->data->map->timeleft = sub_timespec(info->data->map->timeleft, info->time_ref);
-    } else {
-        printf("remove not\n");
-        info->data->map->timeleft = sub_timespec(info->data->map->timeleft, tosub);
-    }
-
     if (info->data->map->timeleft.tv_sec <= 0 &&
         info->data->map->timeleft.tv_nsec <= 0) {
         update_map_ressources(info->data->map);
         info->data->map->timeleft = set_timespec(20, info->data->freq);
-        printf("Refill map\n");
-    } else {
-
     }
+}
+
+void verif_life(server_t *info)
+{
+    trantorians_t *temp = info->data->trants;
+
+    while (temp) {
+        if (temp->inventory[0] <= 0) {
+            printf("kill trantoriant client: %d\n", temp->client->socket);
+            temp->client->is_quit = true;
+            temp->client->data_send = add_send(temp->client->data_send,
+            "dead\n");
+            death_of_a_player(temp);
+        } else if (temp->timeleft.tv_sec <= 0 && temp->timeleft.tv_nsec <= 0) {
+            printf("remove food client: %d - food: %d\n", temp->client->socket, temp->inventory[0]);
+            temp->inventory[0]--;
+            temp->timeleft = set_timespec(126, info->data->freq);
+        }
+        temp = temp->next;
+    }
+    get_shortest_time(info);
 }

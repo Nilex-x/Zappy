@@ -40,7 +40,6 @@ int display_inventory(client_t *client, char **args, zappy_data_t *data)
     }
     strcat(new_line, "]\n\0");
     client->data_send = add_send(client->data_send, new_line);
-    printf("inventory = %s", new_line);
     free(new_line);
     return 0;
 }

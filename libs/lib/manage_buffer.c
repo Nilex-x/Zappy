@@ -69,7 +69,7 @@ void add_to_write(buffer_t *buff, char *value, int length_max)
         buff->wronly = buff->buffer;
     for (int i = 0; value[i]; i++) {
         buff->wronly[0] = value[i];
-        if ((buff->wronly - buff->buffer) + 1 == length_max)
+        if ((buff->wronly - buff->buffer) + 1 >= length_max)
             buff->wronly = buff->buffer;
         else
             buff->wronly++;

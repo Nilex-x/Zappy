@@ -29,22 +29,19 @@ char *get_items_on_tile(map_t *map, size_t x, size_t y)
 
 void update_map_ressources(map_t *map)
 {
-    size_t h = map->height;
-    size_t w = map->width;
-    size_t nb_tiles = w * h;
+    size_t nb_tiles = map->width * map->height;
     size_t missing[7] = {FOOD_DENSITY * nb_tiles, LINEMATE_DENSITY * nb_tiles
     , DERAUMERE_DENSITY * nb_tiles, SIBUR_DENSITY * nb_tiles, MENDIANE_DENSITY
     * nb_tiles, PHIRAS_DENSITY * nb_tiles, THYSTAME_DENSITY * nb_tiles};
 
-    for (size_t i = 0; i < h * w; i++) {
+    for (size_t i = 0; i < nb_tiles; i++) {
         for (int k = 0; k < 7; k++) {
-            missing[k] -= map->tiles[i / w][i % h]->ressources[k];
+            missing[k] -= map->tiles[i / map->width][i % map->height]->ressources[k];
         }
     }
-    srand(time(NULL));
     for (size_t i = 0; i < 7; i++) {
         for (size_t j = 0; j < missing[i]; j++) {
-            map->tiles[rand() % w][rand() % h]->ressources[i]++;
+            map->tiles[rand() % map->width][rand() % map->height]->ressources[i]++;
         }
     }
 }

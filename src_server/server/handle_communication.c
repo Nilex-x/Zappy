@@ -80,7 +80,7 @@ void do_action(server_t *info)
         temp->timeleft = sub_timespec(temp->timeleft, info->time_ref);
         if (temp->is_incanting)
             continue;
-        time = (act) ? sub_timespec(info->time_ref, act->time_left) : time;
+        time = (act) ? sub_timespec(act->time_left, info->time_ref) : time;
         if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
             act->time_left = time;
             act->action(temp->client, act->args, info->data);
