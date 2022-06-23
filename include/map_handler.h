@@ -30,7 +30,7 @@
         size_t y;
         int *ressources;
         int nb_player;
-        trantorians_t *trantorians;
+        trantorians_list_t *trantorians;
         egg_t *eggs;
     } tile_t;
 
