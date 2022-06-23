@@ -14,12 +14,12 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  m_FogMode: 3
+  m_Fog: 1
+  m_FogColor: {r: 0.25467247, g: 0.7233588, b: 0.9150943, a: 1}
+  m_FogMode: 1
   m_FogDensity: 0.01
   m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_LinearFogEnd: 1000
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.53683, g: 0.7819761, b: 0.9450248, a: 1}
+  m_IndirectSpecularColor: {r: 0.53681797, g: 0.78196424, b: 0.94381815, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 8cc4f66a12ea69610a82f5860846b4f0, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -666,6 +666,12 @@ MonoBehaviour:
   EnvironnementHandler: {fileID: 595082541}
   MainIsland: {fileID: 1040810095833473419, guid: 37531ae0dbc74c6179dd9e9fae4f2646, type: 3}
   MainIslandGround: {fileID: 5848245379368639313, guid: 79b88f9944f8b312caf148c4b725488a, type: 3}
+  Rock1: {fileID: 919132149155446097, guid: 11e7c5b2c58774246a6c5b5559000fa3, type: 3}
+  Rock2: {fileID: 919132149155446097, guid: 22ba9a14a448b454b987f731428e70a9, type: 3}
+  Rock3: {fileID: 919132149155446097, guid: cd555ef96cc4e814c9c2c01ba168eafb, type: 3}
+  RockLarge: {fileID: 919132149155446097, guid: 8d21ab1765a1fbc429ccab70d892d4e0, type: 3}
+  SmallRock: {fileID: 919132149155446097, guid: bbb4c72b869f964478b086074dfda1f9, type: 3}
+  MountainTall: {fileID: 919132149155446097, guid: 9d36372202a3ed14cb8ea05d8dca4da2, type: 3}
   nb_teams: 0
 --- !u!1 &1054305604
 GameObject:
