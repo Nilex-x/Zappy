@@ -414,7 +414,9 @@ public class Main : MonoBehaviour
 
     private void UpdatePlayerInTabs()
     {
-
+        foreach (Transform trans in tab.GetComponentsInChildren<Transform>()) {
+            Debug.Log(trans.name);
+        }
     }
 
     private void switch_tab_page(int value)
@@ -422,7 +424,7 @@ public class Main : MonoBehaviour
         if (tab_page + value < 0 || tab_page + value >= page_nbr)
             return;
         tab_page = tab_page + value;
-        Vector3 pos = new Vector3(tab_page * -Screen.width + 551, tab.transform.position.y, tab.transform.position.z);
+        Vector3 pos = new Vector3(tab_page * -Screen.width + Screen.width/2, tab.transform.position.y, tab.transform.position.z);
         Debug.Log(pos.x);
         tab.transform.position = pos;
     }
