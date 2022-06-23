@@ -107,6 +107,7 @@ public class Main : MonoBehaviour
     public GameObject tab_team2;
     public GameObject EnvironnementHandler;
     public GameObject MainIsland;
+    public GameObject MainIslandGround;
     public static Map map = new Map();
     public static Environnement environnement = new Environnement();
     private string response;
@@ -256,6 +257,18 @@ public class Main : MonoBehaviour
             maxMapTiles = map.tiles[0].Count;
         environnement.details[environnement.nb_details].transform.localScale =
             new Vector3(maxMapTiles * 0.35f, maxMapTiles * 0.35f, maxMapTiles * 0.35f);
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(MainIslandGround));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(map.tiles.Count * TileOffset)/2, 0.1f, (float)(map.tiles[0].Count * TileOffset)/2);
+        if (map.tiles.Count > map.tiles[0].Count)
+            maxMapTiles = map.tiles.Count;
+        else
+            maxMapTiles = map.tiles[0].Count;
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(maxMapTiles * 0.35f, maxMapTiles * 0.35f, maxMapTiles * 0.35f);
+        environnement.nb_details++;
     }
 
     private void generateEnvironnement()
