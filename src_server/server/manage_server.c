@@ -18,29 +18,29 @@ static void sort_client(client_t *client, server_t *info)
         handle_command(info, client);
 }
 
-static void find_socket(server_t *info)
+static void find_socket(server_t *info, client_t *cli)
 {
-    client_t *next = NULL;
-
-    for (client_t *temp = info->list_client; temp; temp = next) {
-        next = temp->next;
-        if (FD_ISSET(temp->socket, &info->efds)) {
-            printf("ERROR\n");
-            remove_client(info, temp->socket);
-        }
-        if (FD_ISSET(temp->socket, &info->rfds))
-            sort_client(temp, info);
-        if (FD_ISSET(temp->socket, &info->wfds))
-            write_client(info, temp->socket);
+    if (FD_ISSET(cli->socket, &info->efds)) {
+        remove_client(info, cli->socket);
+        return;
+    }
+    if (FD_ISSET(cli->socket, &info->rfds)) {
+        sort_client(cli, info);
+        return;
+    }
+    if (FD_ISSET(cli->socket, &info->wfds)) {
+        write_client(info, cli->socket);
+        return;
     }
     return;
 }
 
 static void sort_select_return(int ret, server_t *info)
 {
+    client_t *next = NULL;
+
     if (ret < 0) {
         perror("select()");
-        exit(84);
     }
     if (ret == 0) {
         do_action(info);
@@ -49,7 +49,10 @@ static void sort_select_return(int ret, server_t *info)
     }
     if (ret > 0) {
         select_interupt(info);
-        find_socket(info);
+        for (client_t *temp = info->list_client; temp; temp = next) {
+            next = temp->next;
+            find_socket(info, temp);
+        }
     }
 }
 

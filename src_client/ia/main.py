@@ -291,7 +291,7 @@ class clientIA:
             self.isMeeting = True
             if (direction != 0):
                 findPathToTileFromBroadcast(self, direction)
-            else:
+            elif (not self.hasArrived):
                 self.hasArrived = True
                 self.toSend.put("Broadcast arrived-" + str(self.lvl))
                 self.drop = 1
@@ -305,9 +305,9 @@ class clientIA:
             self.nbMeeting = 1
 
         if(message.find("arrived") != -1 and int(message.split(",")[0].split(" ")[1]) == 0):
-            if (message.split(",")[1].split("-")[1] == self.lvl):
+            if (int(message.split(",")[1].split("-")[1]) == self.lvl):
                 self.nbMeeting += 1
-            if (self.nbMeeting == upLvl[self.lvl-1]["player"]):
+            if (self.nbMeeting >= upLvl[self.lvl-1]["player"]):
                 self.toSend.put("Incantation")
                 self.nbMeeting = 1
                 self.hasArrived = False

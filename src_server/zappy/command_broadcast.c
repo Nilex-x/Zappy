@@ -21,7 +21,6 @@ static int get_pos(int a, int b, int map_size)
 
 static int check_sides(int x_dest, int y_dest, float c_dir)
 {
-    printf("C_DIR: %f\n", c_dir);
     if (y_dest > 0) {
         if (c_dir > 1)
             return 1;
@@ -47,7 +46,6 @@ static int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data
     int y_dest = get_pos(src->tile->y, dest->tile->y, data->map->height);
     float c_dir;
 
-    printf("x_dest: %d, y_dest: %d\n", x_dest, y_dest);
     if (x_dest == 0)
         return (y_dest > 0) ? 5 : (y_dest == 0) ? 0 : 1;
     if (y_dest == 0)

@@ -27,6 +27,7 @@ void init_data_struct(server_t *info)
     info->data->eggs = NULL;
     info->data->teams = NULL;
     info->data->trants = NULL;
+    info->data->server = info;
     return;
 }
 
@@ -78,7 +79,7 @@ int create_socket(server_t *info)
         perror("Bind()");
         return -1;
     }
-    if (listen(info->fd_server, NB_LISTEN) == -1)
+    if (listen(info->fd_server, SOMAXCONN) == -1)
         return -1;
     info->max_fd = info->fd_server;
     FD_ZERO(&info->rfds);
