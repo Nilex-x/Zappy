@@ -26,14 +26,6 @@ typedef enum direction_s {
     WEST
 } direction_t;
 
-typedef struct egg_s {
-    int number;
-    char *team_name;
-    int time_until_hatch;
-    struct tile_s *tile;
-    struct egg_s *next;
-} egg_t;
-
 typedef struct trantorians_s {
     int lvl;
     bool is_alive;
@@ -49,6 +41,7 @@ typedef struct trantorians_s {
     struct team_s *team;
     struct trantorians_s *next;
     struct trantorians_list_s *incanting_with;
+    struct egg_s *egg_born;
 } trantorians_t;
 
 typedef struct trantorians_list_s {
@@ -60,9 +53,25 @@ typedef struct team_s {
     char *name;
     int player_max;
     int nb_player;
+    int egg_players;
     trantorians_list_t *list;
+    struct egg_list_s *eggs;
     struct team_s *next;
 } team_t;
+
+typedef struct egg_s {
+    int number;
+    team_t *team;
+    struct timespec time_until_hatch;
+    struct tile_s *tile;
+    struct egg_s *next;
+    trantorians_t *trant;
+} egg_t;
+
+typedef struct egg_list_s {
+    egg_t *egg;
+    struct egg_list_s *next;
+} egg_list_t;
 
 typedef struct zappy_data_s {
     int width;
@@ -129,7 +138,7 @@ team_t *get_team_by_name(char *name, zappy_data_t *data);
 ** @param info Server struct data
 ** @param team Team of trantorian
 */
-void init_trantoriant(client_t *cli, server_t *info, team_t *team);
+void init_trantoriant(client_t *cli, server_t *info, team_t *team, bool is_egg);
 
 /*
 ** @brief Add trantorians in team
@@ -138,7 +147,7 @@ void init_trantoriant(client_t *cli, server_t *info, team_t *team);
 ** @param team Team added trantorians
 ** @return team_t*
 */
-team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team);
+team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team, bool is_egg);
 
 /*
 ** @brief Create a team struct
@@ -482,7 +491,7 @@ int find_win(zappy_data_t *data);
 ** @param team Team to remove client
 ** @param torm Client to remove
 */
-void remove_trant_in_team(team_t *team, trantorians_t *torm);
+void remove_trant_in_team(team_t *team, trantorians_t *torm, bool is_egg);
 
 /*
 ** @brief Refill Map

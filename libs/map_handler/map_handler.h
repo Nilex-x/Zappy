@@ -45,7 +45,6 @@
     map_t *map_create(size_t width, size_t height);
 
     void free_trantorians(trantorians_t *trantorians);
-    void free_eggs(egg_t *egg);
     void free_tile(tile_t *tile);
     void free_map(map_t *map);
 
@@ -54,8 +53,6 @@
 
     void trantorian_spawn(map_t *map, trantorians_t *trant);
     void trantorian_spawn_from_tile(trantorians_t *trant, tile_t *tile);
-    void spawn_egg(trantorians_t *trant);
-    void remove_egg_from_tile(egg_t *egg);
 
     char *get_items_on_tile(map_t *map, size_t x, size_t y);
 
