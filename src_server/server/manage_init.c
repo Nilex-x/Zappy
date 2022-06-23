@@ -27,6 +27,7 @@ void init_data_struct(server_t *info)
     info->data->eggs = NULL;
     info->data->teams = NULL;
     info->data->trants = NULL;
+    info->data->server = info;
     return;
 }
 

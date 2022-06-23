@@ -57,7 +57,6 @@ void handler_connection(server_t *info)
     struct timeval time;
 
     while (1) {
-        printf("\n");
         clear_list(info);
         TIMESPEC_TO_TIMEVAL(&time, &info->time_left);
         retsel = select(info->max_fd + 1, &info->rfds, &info->wfds,
@@ -67,6 +66,5 @@ void handler_connection(server_t *info)
         refill_map(info);
         verif_life(info);
         find_win(info->data);
-        printf("\n");
     }
 }

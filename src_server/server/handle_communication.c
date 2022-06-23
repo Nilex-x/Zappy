@@ -76,7 +76,7 @@ void do_action(server_t *info)
     for (trantorians_t *temp = info->data->trants; temp; temp = temp->next) {
         printf("\033[0;34mINFO Trantorians %d\033[0m\n", temp->client->socket);
         act = temp->action;
-        if (act->action)
+        if (act)
             printf("\033[0;35mACTION\033[0m\n");
         temp->timeleft = sub_timespec(temp->timeleft, info->time_ref);
         if (temp->is_incanting)
