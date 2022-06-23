@@ -74,16 +74,12 @@ void do_action(server_t *info)
     struct timespec time;
 
     for (trantorians_t *temp = info->data->trants; temp; temp = temp->next) {
-        printf("\033[0;34mINFO Trantorians %d\033[0m\n", temp->client->socket);
         act = temp->action;
-        if (act)
-            printf("\033[0;35mACTION\033[0m\n");
         temp->timeleft = sub_timespec(temp->timeleft, info->time_ref);
         if (temp->is_incanting)
-            continue;
+            act = NULL;
         time = (act) ? sub_timespec(act->time_left, info->time_ref) : time;
         if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
-            act->time_left = time;
             act->action(temp->client, act->args, info->data);
             temp->action = act->next;
             (temp->action) ? (temp->action->action == &incantation) ? incantation(temp->client,
