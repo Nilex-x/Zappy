@@ -57,8 +57,8 @@ static int check_trant(map_t *map, trantorians_t *trant)
     int nb_trant = 0;
 
     (void) map;
-    for (trantorians_t *t = trant->tile->trantorians; t; t = t->next)
-        if (t->lvl == trant->lvl)
+    for (trantorians_list_t *t = trant->tile->trantorians; t; t = t->next)
+        if (t->trant->lvl == trant->lvl)
             nb_trant++;
     if (nb_trant < DATA_INCANT[trant->lvl - 1].trant_nb_required)
         return (-1);
@@ -70,14 +70,14 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
     tile_t *tile = incanter->tile;
     trantorians_list_t *list = NULL;
 
-    for (trantorians_t *t = tile->trantorians; t; t = t->next)
-        if (t->lvl == incanter->lvl && t != incanter) {
+    for (trantorians_list_t *t = tile->trantorians; t; t = t->next)
+        if (t->trant->lvl == incanter->lvl && t->trant != incanter) {
             list = malloc(sizeof(trantorians_list_t));
-            list->trant = t;
+            list->trant = t->trant;
             list->next = incanter->incanting_with;
             incanter->incanting_with = list;
             list = NULL;
-            t->is_incanting = true;
+            t->trant->is_incanting = true;
         }
 }
 
