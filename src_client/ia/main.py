@@ -360,8 +360,8 @@ class clientIA:
         action = "wait"
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
-                # action = self.checkAction()
-                action = input("> ")
+                action = self.checkAction()
+                # action = input("> ")
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
