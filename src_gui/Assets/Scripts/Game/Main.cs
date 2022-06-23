@@ -143,6 +143,7 @@ public class Main : MonoBehaviour
         }
         return p_Velocity;
     }
+
     private void CamMovement()
     {
         lastMouse = Input.mousePosition - lastMouse ;
@@ -260,7 +261,6 @@ public class Main : MonoBehaviour
     private void generateEnvironnement()
     {
         generateMainIsland();
-        
     }
 
     private void setRigPosition()
