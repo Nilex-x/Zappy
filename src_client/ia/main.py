@@ -241,7 +241,7 @@ class clientIA:
         self.ressources[ressource] += 1
         if (ressource != "food"):
             self.commonInventory[ressource] += 1
-        if self.checkCommonRessourceForLevel() == None:
+        if self.checkRessourceForLevel() == None:
             self.ressources[ressource] -= 1
             if (ressource != "food"):
                 self.commonInventory[ressource] -= 1
@@ -390,10 +390,13 @@ class clientIA:
             action = "Broadcast cancel " + str(self.lvl)
             #self.toSend.put("Fork")
             
-        if (self.isMeeting and not self.hasArrived and self.ressources["food"] <= 5):
-            self.isMeeting = False
-            self.hasArrived = False
-            self.nbMeeting = 1
+        if (self.isMeeting and not self.hasArrived):
+            if (self.ressources["food"] <= 5):
+                self.isMeeting = False
+                self.hasArrived = False
+                self.nbMeeting = 1
+            else:
+                action = "wait"
         
         if (self.isMeeting and self.hasArrived):
             action = "Broadcast meeting " + str(self.lvl)
