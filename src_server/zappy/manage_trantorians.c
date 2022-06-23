@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *team_name)
 {
@@ -30,13 +31,15 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
 
 void free_trantoriant(trantorians_t *trant)
 {
-    printf("REMOVE Trant\n");
+    action_t *temp = NULL;
+
     remove_trant_in_team(trant->team, trant);
     free(trant->team_name);
     while (trant->action) {
-        free_array(trant->action->args);
-        free(trant->action);
+        temp = trant->action;
         trant->action = trant->action->next;
+        free_array(temp->args);
+        free(temp);
     }
     free(trant);
 }

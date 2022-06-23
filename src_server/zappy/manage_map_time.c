@@ -23,13 +23,13 @@ void verif_life(server_t *info)
 
     while (temp) {
         if (temp->inventory[0] <= 0) {
-            printf("kill trantoriant client: %d\n", temp->client->socket);
+            printf("\033[0;31mWARNING kill trantoriant client: %d\033[0m\n", temp->client->socket);
             temp->client->is_quit = true;
             temp->client->data_send = add_send(temp->client->data_send,
             "dead\n");
             death_of_a_player(temp);
         } else if (temp->timeleft.tv_sec <= 0 && temp->timeleft.tv_nsec <= 0) {
-            printf("remove food client: %d - food: %d\n", temp->client->socket, temp->inventory[0]);
+            printf("\033[0;32mINFO remove food client: %d - food: %d\033[0m\n", temp->client->socket, temp->inventory[0]);
             temp->inventory[0]--;
             temp->timeleft = set_timespec(126, info->data->freq);
         }
