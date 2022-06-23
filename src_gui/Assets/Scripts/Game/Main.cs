@@ -110,8 +110,6 @@ public class Main : MonoBehaviour
     public GameObject tab;
     public GameObject tab_team1;
     public GameObject tab_team2;
-    public GameObject EnvironnementHandler;
-    public GameObject MainIsland;
     public GameObject tab_player;
     public static Map map = new Map();
     private string response;
