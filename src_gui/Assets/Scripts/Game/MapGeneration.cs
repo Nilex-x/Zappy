@@ -9,19 +9,19 @@ public class Environnement {
 
 public class MapGeneration : MonoBehaviour
 {
-    public GameObject EnvironnementHandler;
-    public GameObject MainIsland;
-    public GameObject MainIslandGround;
-    public GameObject Rock1;
-    public GameObject Rock2;
-    public GameObject Rock3;
-    public GameObject RockLarge;
-    public GameObject SmallRock;
-    public GameObject MountainTall;
+    public static GameObject EnvironnementHandler;
+    public static GameObject MainIsland;
+    public static GameObject MainIslandGround;
+    public static GameObject Rock1;
+    public static GameObject Rock2;
+    public static GameObject Rock3;
+    public static GameObject RockLarge;
+    public static GameObject SmallRock;
+    public static GameObject MountainTall;
 
     public static Environnement environnement = new Environnement();
 
-    private void generateMainIsland(int maxMapTiles, float TileOffset, int mapTilesX, int mapTilesY)
+    private static void generateMainIsland(int maxMapTiles, float TileOffset, int mapTilesX, int mapTilesY)
     {
         environnement.details = new List<GameObject>();
         environnement.details.Add(Instantiate(MainIsland));
@@ -42,7 +42,7 @@ public class MapGeneration : MonoBehaviour
         environnement.nb_details++;
     }
 
-    public void generateEnvironnement(int mapTilesX, int mapTilesY, float TileOffset)
+    public static void generateEnvironnement(int mapTilesX, int mapTilesY, float TileOffset)
     {
         int maxMapTiles = 0;
         float scaleModify = 1;
@@ -110,7 +110,9 @@ public class MapGeneration : MonoBehaviour
 
         environnement.details.Add(Instantiate(MountainTall));
         environnement.details[environnement.nb_details].transform.position =
-            new Vector3((float)(mapTilesX * TileOffset)/2 - (80 * scaleModify), -25, (float)(mapTilesY * TileOffset)/2 - (460 * scaleModify));
+            new Vector3((float)(mapTilesX * TileOffset)/2 - (30 * scaleModify), -25, (float)(mapTilesY * TileOffset)/2 - (500 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(2, 2, 2);
         environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
         environnement.details[environnement.nb_details].name = "Mountain";
         environnement.nb_details++;

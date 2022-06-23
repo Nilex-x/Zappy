@@ -81,6 +81,16 @@ public class Map {
 
 public class Main : MonoBehaviour
 {
+    public GameObject EnvironnementHandler;
+    public GameObject MainIsland;
+    public GameObject MainIslandGround;
+    public GameObject Rock1;
+    public GameObject Rock2;
+    public GameObject Rock3;
+    public GameObject RockLarge;
+    public GameObject SmallRock;
+    public GameObject MountainTall;
+
     private int count = 0;
     public GameObject foodPrefab;
     public GameObject linematePrefab;
@@ -257,6 +267,15 @@ public class Main : MonoBehaviour
             }
         }
         setRigPosition();
+        MapGeneration.EnvironnementHandler = EnvironnementHandler;
+        MapGeneration.MainIsland = MainIsland;
+        MapGeneration.MainIslandGround = MainIslandGround;
+        MapGeneration.Rock1= Rock1;
+        MapGeneration.Rock2 = Rock2;
+        MapGeneration.Rock3 = Rock3;
+        MapGeneration.RockLarge = RockLarge;
+        MapGeneration.SmallRock = SmallRock;
+        MapGeneration.MountainTall = MountainTall;
         MapGeneration.generateEnvironnement(map.tiles.Count, map.tiles[0].Count, TileOffset);
     }
 
