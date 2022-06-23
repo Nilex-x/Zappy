@@ -161,14 +161,12 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     for (int pos = 0; pos != (sizeof(MY_CMDS) / sizeof(*MY_CMDS)); pos++) {
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
             MY_CMDS[pos].gui && client->is_gui) {
-            printf("\033[0;34mINFO GUI command [%s] ! client: %d\033[0m\n", MY_CMDS[pos].cmd, client->socket);
             MY_CMDS[pos].fct(client, args, data);
             free_array(args);
             return (0);
         }
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
             !MY_CMDS[pos].gui && !client->is_gui) {
-            printf("\033[0;34mINFO nice command [%s] client: %d\033[0m\n", MY_CMDS[pos].cmd, client->socket);
             append_action(client->trant, args, pos, data);
             return (0);
         }
@@ -176,7 +174,6 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     if (client->is_gui)
         unknown_gui_command(client);
     free_array(args);
-    printf("\033[0;35mINFO Not found command !\033[0m\n");
     client->data_send = add_send(client->data_send, "ko\n");
     return (1);
 }
@@ -220,7 +217,6 @@ void handle_command(server_t *info, client_t *cli)
         free(value);
         return;
     }
-    // printf("value client [%s]\n", value);
     if (!strcasecmp(value, "gui") || !strcasecmp(value, "graphic")) {
         connect_gui(cli, info->data);
         free(value);
