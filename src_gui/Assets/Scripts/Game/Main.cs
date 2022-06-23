@@ -110,6 +110,9 @@ public class Main : MonoBehaviour
     public GameObject tab;
     public GameObject tab_team1;
     public GameObject tab_team2;
+    public GameObject EnvironnementHandler;
+    public GameObject MainIsland;
+    public GameObject tab_player;
     public static Map map = new Map();
     private string response;
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
@@ -128,7 +131,6 @@ public class Main : MonoBehaviour
     private int page_nbr = 0;
     private bool created_tab = false;
     private bool switched_tab = false;
-
     private Vector3 GetBaseInput() {
         Vector3 p_Velocity = new Vector3();
         if (Input.GetKey (KeyCode.Z)){
@@ -346,6 +348,25 @@ public class Main : MonoBehaviour
         }
     }
 
+    private void UpdatePlayerInventory(string[] content) {
+         for (int i_team = 0; i_team < nb_teams; i_team++) {
+            for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
+                if (map.teams[i_team].players[i_player].playerTag == int.Parse(content[1])) {
+                    map.teams[i_team].players[i_player].content.x = int.Parse(content[2]);
+                    map.teams[i_team].players[i_player].content.y = int.Parse(content[3]);
+                    map.teams[i_team].players[i_player].content.food = int.Parse(content[4]);
+                    map.teams[i_team].players[i_player].content.linemate = int.Parse(content[5]);
+                    map.teams[i_team].players[i_player].content.deraumere = int.Parse(content[6]);
+                    map.teams[i_team].players[i_player].content.sibur = int.Parse(content[7]);
+                    map.teams[i_team].players[i_player].content.mendiane = int.Parse(content[8]);
+                    map.teams[i_team].players[i_player].content.phiras = int.Parse(content[9]);
+                    map.teams[i_team].players[i_player].content.thystame = int.Parse(content[10]);
+                    break;
+                }
+            }
+        }
+    }
+
     private void change_time_unit()
     {
         time_unit_txt.GetComponent<TextMeshProUGUI>().text = "Time unit: " + map.time_unit;
@@ -410,10 +431,40 @@ public class Main : MonoBehaviour
         created_tab = true;
     }
 
+    private bool player_already_exist(Player player, Transform child) {
+        Debug.Log(child.name == player.playerTag.ToString());
+        return child.name == player.playerTag.ToString();
+    }
+    private GameObject getTabPlayer(Player player, Transform child) {
+        foreach (Transform nig in child) {
+            if (nig.name == player.playerTag.ToString())
+                return nig.gameObject;
+        }
+        return new GameObject();
+    }
     private void UpdatePlayerInTabs()
     {
-        foreach (Transform trans in tab.GetComponentsInChildren<Transform>()) {
-            Debug.Log(trans.name);
+        foreach (Team team in map.teams) {
+            foreach (Transform child in tab.GetComponentsInChildren<Transform>()) {
+                if (child.name == team.name) {
+                    if (team.nb_players < 0)
+                        return;
+                    for (int i = 0; i < team.nb_players; i++) {
+                        GameObject player = (!player_already_exist(team.players[i], child)) ? Instantiate(tab_player) as GameObject : getTabPlayer(team.players[i], child);
+                        player.name = team.players[i].playerTag.ToString();
+                        player.transform.SetParent(child, false);
+                        player.transform.Find("player_id").GetComponent<TextMeshProUGUI>().text = team.players[i].playerTag.ToString();
+                        player.transform.Find("player_lvl").GetComponent<TextMeshProUGUI>().text = team.players[i].level.ToString();
+                        player.transform.Find("food").GetComponent<TextMeshProUGUI>().text = team.players[i].content.food.ToString();
+                        player.transform.Find("linemate").GetComponent<TextMeshProUGUI>().text = team.players[i].content.linemate.ToString();
+                        player.transform.Find("deraumere").GetComponent<TextMeshProUGUI>().text = team.players[i].content.deraumere.ToString();
+                        player.transform.Find("sibur").GetComponent<TextMeshProUGUI>().text = team.players[i].content.sibur.ToString();
+                        player.transform.Find("mendiane").GetComponent<TextMeshProUGUI>().text = team.players[i].content.mendiane.ToString();
+                        player.transform.Find("phiras").GetComponent<TextMeshProUGUI>().text = team.players[i].content.phiras.ToString();
+                        player.transform.Find("thystame").GetComponent<TextMeshProUGUI>().text = team.players[i].content.thystame.ToString();
+                    }
+                }
+            }
         }
     }
 
@@ -491,6 +542,8 @@ public class Main : MonoBehaviour
             GeneratePlayer(content);
         if (cmd.StartsWith("ppo "))
             UpdatePlayer(content);
+        if (cmd.StartsWith("ppi "))
+            UpdatePlayerInventory(content);
     }
 
     private void Update() {
