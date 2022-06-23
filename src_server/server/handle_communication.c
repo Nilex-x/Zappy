@@ -82,6 +82,7 @@ void do_action(server_t *info)
             act = NULL;
         time = (act) ? sub_timespec(act->time_left, info->time_ref) : time;
         if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
+            act->time_left = sub_timespec(act->time_left, info->time_ref);
             act->action(temp->client, act->args, info->data);
             temp->action = act->next;
             (temp->action) ? (temp->action->action == &incantation) ? incantation(temp->client,
