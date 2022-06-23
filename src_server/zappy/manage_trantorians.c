@@ -30,6 +30,7 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
 
 void free_trantoriant(trantorians_t *trant)
 {
+    printf("REMOVE Trant\n");
     remove_trant_in_team(trant->team, trant);
     free(trant->team_name);
     while (trant->action) {

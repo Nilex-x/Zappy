@@ -168,7 +168,7 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
         }
         if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
             !MY_CMDS[pos].gui && !client->is_gui) {
-            printf("nice command [%s]\n", MY_CMDS[pos].cmd);
+            printf("nice command [%s] client: %d\n", MY_CMDS[pos].cmd, client->socket);
             append_action(client->trant, args, pos, data);
             return (0);
         }
@@ -220,7 +220,7 @@ void handle_command(server_t *info, client_t *cli)
         free(value);
         return;
     }
-    printf("value client [%s]\n", value);
+    printf("value client %d [%s]\n", cli->socket, value);
     if (!strcasecmp(value, "gui") || !strcasecmp(value, "graphic")) {
         connect_gui(cli, info->data);
         free(value);

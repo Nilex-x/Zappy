@@ -30,7 +30,7 @@ int read_client(server_t *info, client_t *client)
         return (-1);
     }
     read_buffer[read_value] = '\0';
-    printf("READ CLIENT: [%s]\n", read_buffer);
+    // printf("READ CLIENT: [%s]\n", read_buffer);
     add_to_write(client->buff_read, read_buffer, LENGTH_COMMAND);
     free(read_buffer);
     return (0);
@@ -45,7 +45,7 @@ void write_client(server_t *info, int s_client)
     char *data = get_next_data_to_send(&client->data_send);
     int len = (data) ? strlen(data) : 0;
 
-    printf("WRITE TO CLIENT: %s\n", data);
+    // printf("WRITE TO CLIENT: %s\n", data);
     while (w_value < len && w_value > 0) {
         if (len < LENGTH_COMMAND)
             value_write = len;
@@ -74,8 +74,10 @@ void do_action(server_t *info)
 {
     action_t *act = NULL;
     struct timespec time;
+    int i = 0;
 
-    for (trantorians_t *temp = info->data->trants; temp; temp = temp->next) {
+    for (trantorians_t *temp = info->data->trants; temp; temp = temp->next, i++) {
+        printf("trant => index: %d socket: %d\n", i, temp->client->socket);
         act = temp->action;
         temp->timeleft = sub_timespec(temp->timeleft, info->time_ref);
         if (temp->is_incanting)
@@ -84,6 +86,7 @@ void do_action(server_t *info)
         if (act && time.tv_nsec <= 0 && time.tv_sec <= 0) {
             act->time_left = time;
             act->action(temp->client, act->args, info->data);
+
             temp->action = act->next;
             (temp->action) ? (temp->action->action == &incantation) ? incantation(temp->client,
             temp->action->args, info->data) : 0 : 0;
