@@ -14,7 +14,6 @@ void trantorian_spawn(map_t *map, trantorians_t *trant)
     tile_t *rand_tile = NULL;
     trantorians_t *list = NULL;
 
-    srand(time(NULL));
     rand_tile_line = map->tiles[rand() % map->width];
     rand_tile = rand_tile_line[rand() % map->height];
     list = rand_tile->trantorians;
@@ -22,7 +21,6 @@ void trantorian_spawn(map_t *map, trantorians_t *trant)
     rand_tile->nb_player ++;
     trant->next = list;
     trant->tile = rand_tile;
-    srand(time(NULL));
     trant->direction = rand() % 4;
 }
 
@@ -34,6 +32,5 @@ void trantorian_spawn_from_tile(trantorians_t *trant, tile_t *tile)
     trant->next = list;
     trant->tile = tile;
     tile->nb_player ++;
-    srand(time(NULL));
     trant->direction = rand() % 4;
 }
