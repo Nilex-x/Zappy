@@ -211,7 +211,7 @@ class clientIA:
             reset +=1
         for i in range (0, reset):
             print("remove =", self.toSend.get())
-        
+
         return (0)
 
     def inventory(self, srvMsg):
@@ -394,12 +394,12 @@ class clientInfo:
             self.readBuff = result.value.decode('utf-8')
             print("[" + self.readBuff + "]")
             if self.readBuff == "end":
-                print("error")
+                print("dead")
                 return -1
             self.readBuff = self.readBuff[:-1]
             for x in self.readBuff.split("\n"):
                 if self.ai.serverResponse(x) < 0:
-                    print("dead")
+                    print("error")
                     return -1
         return 0
 
@@ -419,6 +419,8 @@ class clientInfo:
 
     def getPosnTeam(self):
         servMsg = self.readBuff.split("\n")
+        if self.readBuff.find("ko") != -1 and self.readBuff.find("unknown team") != -1:
+            exit(84)
         for i in servMsg:
             splited = i.split()
             if ((len(splited) == 1) and (splited[0].isdigit())):

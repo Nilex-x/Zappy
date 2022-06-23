@@ -83,9 +83,10 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
                 dir = (dir + cdir * 2) % (8 + (dir + cdir * 2 == 8));
             asprintf(&buff, "message %d, %s\n", dir, args[1]);
             current->client->data_send = add_send(current->client->data_send, buff);
-            current = current->next;
             free(buff);
         }
+        current = current->next;
     }
+    client->data_send = add_send(client->data_send, "ok\n");
     return 0;
 }

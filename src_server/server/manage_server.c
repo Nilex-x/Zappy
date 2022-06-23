@@ -42,8 +42,11 @@ static void sort_select_return(int ret, server_t *info)
         perror("select()");
         exit(84);
     }
-    if (ret == 0)
+    if (ret == 0) {
         do_action(info);
+        info->data->map->timeleft = sub_timespec(info->data->map->timeleft,
+        info->time_ref);
+    }
     if (ret > 0) {
         select_interupt(info);
         find_socket(info);
@@ -62,7 +65,7 @@ void handler_connection(server_t *info)
                         &info->efds, &time);
         TIMEVAL_TO_TIMESPEC(&time, &info->time_left);
         sort_select_return(retsel, info);
-        // refill_map(info);
+        refill_map(info);
         verif_life(info);
         find_win(info->data);
     }

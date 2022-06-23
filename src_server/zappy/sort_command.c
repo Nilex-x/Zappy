@@ -147,6 +147,7 @@ static int append_action(trantorians_t *trant, char **args, int pos, zappy_data_
         curr->next = new;
     else {
         trant->action = new;
+        (new->action == &incantation) ? printf("New action is incantation !\n") : 0;
         (new->action == &incantation) ? incantation(trant->client, args, data)
         : 0;
     }
