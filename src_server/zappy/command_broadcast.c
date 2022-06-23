@@ -73,12 +73,18 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
     int dir = 0;
     int cdir = 0;
 
-    if (len_array(args) != 2) {
+    if (len_array(args) < 2) {
         client->data_send = add_send(client->data_send, "ko\n");
         return 0;
     }
     broadcast_message(current, args);
+        printf("before\n");
     while (current != NULL) {
+        printf("client\n");
+        if (current->client->socket == client->socket) {
+            current = current->next;
+            continue;
+        }
         dir = find_path(client->trant, current, data);
         cdir = current->direction;
         printf("DIR: %d\n", dir);
@@ -89,5 +95,6 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
         current = current->next;
         free(buff);
     }
+        printf("after\n");
     return 0;
 }
