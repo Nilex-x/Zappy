@@ -85,13 +85,13 @@ upLvl = [
 
 directions = {
     1 : "Forward",
-    2 : "Forward\nLeft\nForward",
-    3 : "Left\nForward",
-    4 : "Left\nForward\nLeft\nForward",
-    5 : "Left\nLeft\nForward",
-    6 : "Right\nForward\nRight\nForward",
-    7 : "Right\nForward",
-    8 : "Forward\nRight\nForward",
+    2 : "Forward",
+    3 : "Left",
+    4 : "Left",
+    5 : "Left",
+    6 : "Right",
+    7 : "Right",
+    8 : "Forward",
 }
 
 
@@ -142,6 +142,8 @@ class clientIA:
         msg = servMsg.split(",")
         content = msg[1].split(":")
         direction = int(msg[0].split()[1])
+        print("CONTENT: ", content)
+        print("DIRECTION: ", direction)
         print("MY_LVL: ", self.lvl)
         if int(content[1]) != self.lvl or int(content[1]) == 1:
             return 0
@@ -239,7 +241,7 @@ class clientIA:
             if tile[i] < upLvl[self.lvl - 1][i]:
                 self.toSend.put("Set " + i)
 
-    def checkTile(self, ressource, look_list, t):
+    def checkTile(self, ressource):
         self.toSend.put("Take " + ressource)
         self.ressources[ressource] += 1
         if self.checkRessourceForLevel() == None:
@@ -282,7 +284,7 @@ class clientIA:
         for x in look_list:
             if x.find(ressource) >= 0:
                 if self.findPathToTile(i):
-                    self.checkTile(ressource, look_list, i)
+                    self.checkTile(ressource)
                     return 1
                 break
             i += 1
@@ -358,8 +360,8 @@ class clientIA:
         action = "wait"
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
-                action = self.checkAction()
-                # action = input("> ")
+                # action = self.checkAction()
+                action = input("> ")
                 if (action == "wait"):  #temp
                     return action       #temp
                 self.toSend.put(action)
@@ -394,12 +396,12 @@ class clientInfo:
             self.readBuff = result.value.decode('utf-8')
             print("[" + self.readBuff + "]")
             if self.readBuff == "end":
-                print("dead")
+                print("error")
                 return -1
             self.readBuff = self.readBuff[:-1]
             for x in self.readBuff.split("\n"):
                 if self.ai.serverResponse(x) < 0:
-                    print("error")
+                    print("dead")
                     return -1
         return 0
 
