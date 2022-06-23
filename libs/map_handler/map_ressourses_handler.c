@@ -39,7 +39,6 @@ void update_map_ressources(map_t *map)
             missing[k] -= map->tiles[i / map->width][i % map->height]->ressources[k];
         }
     }
-    srand(time(NULL));
     for (size_t i = 0; i < 7; i++) {
         for (size_t j = 0; j < missing[i]; j++) {
             map->tiles[rand() % map->width][rand() % map->height]->ressources[i]++;
