@@ -79,7 +79,7 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
             list = NULL;
             t->trant->is_incanting = true;
             t->trant->client->data_send =
-            add_send(t->trant->client->data_send, "incantation underway\n");
+            add_send(t->trant->client->data_send, "Elevation underway\n");
         }
     }
 }

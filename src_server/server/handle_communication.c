@@ -16,6 +16,8 @@ int read_client(server_t *info, client_t *client)
     char *read_buffer = NULL;
     int read_value = -1;
 
+    if (client->trant)
+        printf("%d: [%d][%d]\n", client->socket, client->trant->tile->x, client->trant->tile->y);
     read_buffer = malloc(sizeof(char) * LENGTH_COMMAND);
     if (!read_buffer)
         return (-1);

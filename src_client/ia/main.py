@@ -7,8 +7,6 @@
 ##
 
 
-import time
-
 import ctypes
 import pathlib
 import getopt
@@ -42,7 +40,7 @@ upLvl = [
     "player": 2,
     "linemate": 2,
     "sibur": 1,
-    "phiras": 1,
+    "phiras": 2,
     "deraumere": 0,
     "mendiane": 0,
     "thystame": 0
@@ -162,8 +160,9 @@ class clientIA:
                     return 0
                 self.toSend.put(directions[direction])
             else:
-                self.isCalled = True
-                self.toSend.put("Broadcast coming:" + str(self.lvl))
+                if self.ressources["food"] >= 8:
+                    self.isCalled = True
+                    self.toSend.put("Broadcast coming:" + str(self.lvl))
 
         elif msg[1].find("cancel:") >= 0 and self.isCalled:
             self.isCalled = False
@@ -283,12 +282,24 @@ class clientIA:
     #         else:
     #             i += 1
 
+
+    def rmRedundantChar(self, srvMsg):
+        x = 'x'
+        res = ""
+        for i in srvMsg:
+            if not (i == ',' and x == ','):
+                res += i
+            x = i
+        return res
+
     def look(self, srvMsg):
+        print("SRVMSG IN LOOK", srvMsg)
         i = 0
         srvMsg = srvMsg[1:-1]
+        srvMsg = self.rmRedundantChar(srvMsg)
         look_list = srvMsg.split(",")
         ressource = self.checkRessourceForLevel()
-        if (self.ressources["food"] < 8 or ressource == None):
+        if (self.ressources["food"] < 10):
             ressource = "food"
         for x in look_list:
             if x.find(ressource) >= 0:
@@ -352,19 +363,17 @@ class clientIA:
         return 1
 
     def checkAction(self):
-        print(self.nbArrived, " == ", self.nbMeeting, " and ", self.nbMeeting, " >= ", upLvl[self.lvl]["player"])
-        if self.nbArrived >= self.nbMeeting and self.isCalling and self.nbMeeting >= upLvl[self.lvl]["player"]:
+        if self.nbArrived >= self.nbMeeting and self.isCalling and self.nbMeeting >= upLvl[self.lvl - 1]["player"]:
             self.setRessources()
             self.toSend.put("Incantation")
             return "wait"
         if self.isCalling:
             self.toSend.put("Inventory")
             self.toSend.put("Right")
-            self.toSend.put("Right")
-            self.toSend.put("Right")
-            self.toSend.put("Right")
-            return ("Broadcast here:" + str(self.lvl))
-            sleep(3)
+            self.toSend.put("Left")
+            action = ("Broadcast here:" + str(self.lvl))
+            print("nb arrived: ", self.nbArrived, ", nbMetting ", self.nbMeeting, ", needed: ", upLvl[self.lvl - 1]["player"])
+            return action
         if self.hasArrived or self.isCalled:
             return "wait"
         self.toSend.put("Inventory")
