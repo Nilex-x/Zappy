@@ -552,7 +552,7 @@ public class Main : MonoBehaviour
             GeneratePlayer(content);
         if (cmd.StartsWith("ppo "))
             UpdatePlayer(content);
-        if (cmd.StartsWith("ppi "))
+        if (cmd.StartsWith("pin "))
             UpdatePlayerInventory(content);
     }
 
