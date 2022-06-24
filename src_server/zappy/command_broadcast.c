@@ -44,6 +44,7 @@ static int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data
 {
     int x_dest = get_pos(src->tile->x, dest->tile->x, data->map->width);
     int y_dest = get_pos(src->tile->y, dest->tile->y, data->map->height);
+    printf("X: %d, Y: %d\n", x_dest, y_dest);
     float c_dir;
 
     if (x_dest == 0)
@@ -71,20 +72,22 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
     int dir = 0;
     int cdir = 0;
 
-    if (len_array(args) < 2) {
-        client->data_send = add_send(client->data_send, "ko\n");
-        return 0;
-    }
     broadcast_message(current, args);
+    printf("----------------------------------FROM [%d][%d]\n", client->trant->tile->x, client->trant->tile->y);
     while (current != NULL) {
-        dir = find_path(client->trant, current, data);
-        cdir = current->direction;
-        if (dir)
-            dir = (dir + cdir * 2) % (8 + (dir + cdir * 2 == 8));
-        asprintf(&buff, "message %d, %s\n", dir, args[1]);
-        current->client->data_send = add_send(current->client->data_send, buff);
+        if (current->client->socket != client->socket) {
+            printf("----------------------------------to [%d][%d]\n", current->tile->x, current->tile->y);
+            dir = find_path(client->trant, current, data);
+            cdir = current->direction;
+            printf("DIR: %d\n", dir);
+            if (dir)
+                dir = (dir + cdir * 2) % (8 + (dir + cdir * 2 == 8));
+            asprintf(&buff, "message %d, %s\n", dir, args[1]);
+            current->client->data_send = add_send(current->client->data_send, buff);
+            free(buff);
+        }
         current = current->next;
-        free(buff);
     }
+    client->data_send = add_send(client->data_send, "ok\n");
     return 0;
 }
