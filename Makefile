@@ -19,6 +19,7 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/server/manage_time.c \
 						src_server/zappy/inventory.c \
 						src_server/zappy/fork.c \
+						src_server/zappy/manage_eggs.c \
 						src_server/zappy/manage_team.c \
 						src_server/zappy/manage_trantorians.c \
 						src_server/zappy/sort_command.c \

@@ -33,6 +33,7 @@ typedef struct trantorians_s {
     int inventory[8];
     char *team_name;
     bool is_incanting;
+    bool egg_born;
     int nb_action;
     direction_t direction;
     client_t *client;
@@ -42,7 +43,6 @@ typedef struct trantorians_s {
     struct team_s *team;
     struct trantorians_s *next;
     struct trantorians_list_s *incanting_with;
-    struct egg_s *egg_born;
 } trantorians_t;
 
 typedef struct trantorians_list_s {
@@ -66,7 +66,7 @@ typedef struct egg_s {
     struct timespec time_until_hatch;
     struct tile_s *tile;
     struct egg_s *next;
-    trantorians_t *trant;
+    client_t *cli;
 } egg_t;
 
 typedef struct egg_list_s {
@@ -501,8 +501,11 @@ void remove_trant_in_team(team_t *team, trantorians_t *torm, bool is_egg);
 */
 void refill_map(server_t *info);
 
-bool player_spawn_for_egg(client_t *cli, server_t *info, team_t *team);
+bool added_in_egg(client_t *cli, server_t *info, team_t *team);
 void delete_egg_in_team(egg_t *egg, team_t *team);
 void kill_egg(egg_t *egg, zappy_data_t *data);
+void egg_hatching_with_player(egg_t *egg, zappy_data_t *data);
+void free_eggs(egg_t **egg);
+void free_eggs_list(egg_list_t **egg_list);
 
 #endif /* !ZAPPY_H_ */
