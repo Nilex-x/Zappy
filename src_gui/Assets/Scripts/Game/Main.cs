@@ -392,7 +392,7 @@ public class Main : MonoBehaviour
     }
 
     private void UpdatePlayerInventory(string[] content) {
-         for (int i_team = 0; i_team < nb_teams; i_team++) {
+        for (int i_team = 0; i_team < nb_teams; i_team++) {
             for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
                 if (map.teams[i_team].players[i_player].playerTag == int.Parse(content[1])) {
                     map.teams[i_team].players[i_player].content.x = int.Parse(content[2]);
@@ -549,6 +549,22 @@ public class Main : MonoBehaviour
         }
     }
 
+    private void KillPlayer(string playerTag)
+    {
+        GameObject Temp;
+
+        for (int i_team = 0; i_team < nb_teams; i_team++) {
+            for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
+                if (map.teams[i_team].players[i_player].playerTag == int.Parse(playerTag)) {
+                    map.teams[i_team].players.RemoveAt(i_player);
+                    Temp = map.teams[i_team].playersObj[i_player];
+                    map.teams[i_team].playersObj.Remove(Temp);
+                    Destroy(Temp);
+                    map.teams[i_team].nb_players--;
+                }
+            }
+        }
+    }
 
     private void HandleCommand(string cmd)
     {
@@ -595,6 +611,8 @@ public class Main : MonoBehaviour
             UpdatePlayerInventory(content);
         if (cmd.StartsWith("plv "))
             UpdatePlayerLevel(content);
+        if (cmd.StartsWith("pdi "))
+            KillPlayer(content[1]);
     }
 
     private void Update() {
