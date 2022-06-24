@@ -673,9 +673,6 @@ MonoBehaviour:
   tab_team1: {fileID: 7412160291589466568, guid: 26dbc8e7a1ea41a178ffb08a506bb7ec, type: 3}
   tab_team2: {fileID: 8202453197488391374, guid: 500653f8bed2e520298138b9b2e5bbc7, type: 3}
   tab_player: {fileID: 6516424919470432922, guid: d1c58aa2f53164d6aaa330bc39187f9e, type: 3}
-  EnvironnementHandler: {fileID: 595082541}
-  MainIsland: {fileID: 1040810095833473419, guid: 37531ae0dbc74c6179dd9e9fae4f2646, type: 3}
-  MainIslandGround: {fileID: 5848245379368639313, guid: 79b88f9944f8b312caf148c4b725488a, type: 3}
   nb_teams: 0
 --- !u!1 &1054305604
 GameObject:
