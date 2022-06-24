@@ -18,6 +18,8 @@ public class MapGeneration : MonoBehaviour
     public static GameObject RockLarge;
     public static GameObject SmallRock;
     public static GameObject MountainTall;
+    public static GameObject Temple;
+    public static GameObject Drake;
 
     public static Environnement environnement = new Environnement();
 
@@ -90,6 +92,16 @@ public class MapGeneration : MonoBehaviour
         environnement.details[environnement.nb_details].name = "Mountain";
         environnement.nb_details++;
 
+        environnement.details.Add(Instantiate(Temple));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 - (50 * scaleModify), 110, (float)(mapTilesY * TileOffset)/2 - (210 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(5, 5, 5);
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 180, 0);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Temple";
+        environnement.nb_details++;
+
         environnement.details.Add(Instantiate(RockLarge));
         environnement.details[environnement.nb_details].transform.position =
             new Vector3((float)(mapTilesX * TileOffset)/2 - (60 * scaleModify), 109, (float)(mapTilesY * TileOffset)/2 - (210 * scaleModify));
@@ -134,6 +146,16 @@ public class MapGeneration : MonoBehaviour
         environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, -45, 0);
         environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
         environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(Drake));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 + (220 * scaleModify), 110, (float)(mapTilesY * TileOffset)/2 - (480 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(0.5f, 0.5f, 0.5f);
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 80, 0);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Drake";
         environnement.nb_details++;
     }
 }

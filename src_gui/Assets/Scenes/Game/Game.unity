@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.53683, g: 0.7819761, b: 0.9450248, a: 1}
+  m_IndirectSpecularColor: {r: 0.53681797, g: 0.78196424, b: 0.94381815, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -645,6 +645,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c2de9ea7e55dbb892e477954fb8400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnvironnementHandler: {fileID: 595082541}
+  MainIsland: {fileID: 1040810095833473419, guid: 37531ae0dbc74c6179dd9e9fae4f2646, type: 3}
+  MainIslandGround: {fileID: 5848245379368639313, guid: 79b88f9944f8b312caf148c4b725488a, type: 3}
+  Rock1: {fileID: 919132149155446097, guid: 11e7c5b2c58774246a6c5b5559000fa3, type: 3}
+  Rock2: {fileID: 919132149155446097, guid: 22ba9a14a448b454b987f731428e70a9, type: 3}
+  Rock3: {fileID: 919132149155446097, guid: cd555ef96cc4e814c9c2c01ba168eafb, type: 3}
+  RockLarge: {fileID: 919132149155446097, guid: 8d21ab1765a1fbc429ccab70d892d4e0, type: 3}
+  SmallRock: {fileID: 919132149155446097, guid: bbb4c72b869f964478b086074dfda1f9, type: 3}
+  MountainTall: {fileID: 919132149155446097, guid: 9d36372202a3ed14cb8ea05d8dca4da2, type: 3}
+  Temple: {fileID: 6906897992437674347, guid: c8fc6f1cc0a2e464cb3f0934507e7fdd, type: 3}
+  Drake: {fileID: 5620240504676976029, guid: 80496966de353f74fb22f4e20c749401, type: 3}
   foodPrefab: {fileID: 919132149155446097, guid: 9b5c812b7e5f69c2aa6af448233aab60, type: 3}
   linematePrefab: {fileID: 919132149155446097, guid: 0510994e7c3013d7388fe804069a90b6, type: 3}
   deraumerePrefab: {fileID: 919132149155446097, guid: e00cd99cb2e616598b7e84fe3baf2a59, type: 3}
@@ -663,15 +674,7 @@ MonoBehaviour:
   tab: {fileID: 1054305604}
   tab_team1: {fileID: 7464870523374561669, guid: 19e0f83828207c655b67b41f5cd99c22, type: 3}
   tab_team2: {fileID: 4299024633364552845, guid: 616f3e7f5833bdcd58e90567a3dcbaca, type: 3}
-  EnvironnementHandler: {fileID: 595082541}
-  MainIsland: {fileID: 1040810095833473419, guid: 37531ae0dbc74c6179dd9e9fae4f2646, type: 3}
-  MainIslandGround: {fileID: 5848245379368639313, guid: 79b88f9944f8b312caf148c4b725488a, type: 3}
-  Rock1: {fileID: 919132149155446097, guid: 11e7c5b2c58774246a6c5b5559000fa3, type: 3}
-  Rock2: {fileID: 919132149155446097, guid: 22ba9a14a448b454b987f731428e70a9, type: 3}
-  Rock3: {fileID: 919132149155446097, guid: cd555ef96cc4e814c9c2c01ba168eafb, type: 3}
-  RockLarge: {fileID: 919132149155446097, guid: 8d21ab1765a1fbc429ccab70d892d4e0, type: 3}
-  SmallRock: {fileID: 919132149155446097, guid: bbb4c72b869f964478b086074dfda1f9, type: 3}
-  MountainTall: {fileID: 919132149155446097, guid: 9d36372202a3ed14cb8ea05d8dca4da2, type: 3}
+  tab_player: {fileID: 0}
   nb_teams: 0
 --- !u!1 &1054305604
 GameObject:

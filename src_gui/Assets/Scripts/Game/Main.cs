@@ -90,6 +90,8 @@ public class Main : MonoBehaviour
     public GameObject RockLarge;
     public GameObject SmallRock;
     public GameObject MountainTall;
+    public GameObject Temple;
+    public GameObject Drake;
 
     private int count = 0;
     public GameObject foodPrefab;
@@ -276,6 +278,8 @@ public class Main : MonoBehaviour
         MapGeneration.RockLarge = RockLarge;
         MapGeneration.SmallRock = SmallRock;
         MapGeneration.MountainTall = MountainTall;
+        MapGeneration.Temple = Temple;
+        MapGeneration.Drake = Drake;
         MapGeneration.generateEnvironnement(map.tiles.Count, map.tiles[0].Count, TileOffset);
     }
 
