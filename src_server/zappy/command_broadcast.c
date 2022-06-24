@@ -44,6 +44,7 @@ static int find_path(trantorians_t *src, trantorians_t *dest, zappy_data_t *data
 {
     int x_dest = get_pos(src->tile->x, dest->tile->x, data->map->width);
     int y_dest = get_pos(src->tile->y, dest->tile->y, data->map->height);
+    printf("X: %d, Y: %d\n", x_dest, y_dest);
     float c_dir;
 
     if (x_dest == 0)
@@ -72,8 +73,10 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
     int cdir = 0;
 
     broadcast_message(current, args);
+    printf("FROM [%d][%d]\n", client->trant->tile->x, client->trant->tile->y);
     while (current != NULL) {
         if (current->client->socket != client->socket) {
+            printf("to [%d][%d]\n", current->tile->x, current->tile->y);
             dir = find_path(client->trant, current, data);
             cdir = current->direction;
             printf("DIR: %d\n", dir);
