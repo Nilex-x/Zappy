@@ -18,8 +18,11 @@ public class MapGeneration : MonoBehaviour
     public static GameObject RockLarge;
     public static GameObject SmallRock;
     public static GameObject MountainTall;
-    public static GameObject Temple;
     public static GameObject Drake;
+    public static GameObject GodRock;
+    public static GameObject RockTall;
+    public static GameObject RockMedium;
+    public static GameObject MountainSlopping;
 
     public static Environnement environnement = new Environnement();
 
@@ -47,14 +50,14 @@ public class MapGeneration : MonoBehaviour
     public static void generateEnvironnement(int mapTilesX, int mapTilesY, float TileOffset)
     {
         int maxMapTiles = 0;
-        float scaleModify = 1;
+        float scaleModify = 1.25f;
     
         if (mapTilesX > mapTilesY)
             maxMapTiles = mapTilesX;
         else
             maxMapTiles = mapTilesY;
         if (maxMapTiles >= 20)
-            scaleModify += (maxMapTiles/10) * 0.25f;
+            scaleModify = 1 + (maxMapTiles/10) * 0.25f;
         generateMainIsland(maxMapTiles, TileOffset, mapTilesX, mapTilesY);
         environnement.details.Add(Instantiate(Rock1));
         environnement.details[environnement.nb_details].transform.position =
@@ -92,22 +95,12 @@ public class MapGeneration : MonoBehaviour
         environnement.details[environnement.nb_details].name = "Mountain";
         environnement.nb_details++;
 
-        environnement.details.Add(Instantiate(Temple));
-        environnement.details[environnement.nb_details].transform.position =
-            new Vector3((float)(mapTilesX * TileOffset)/2 - (50 * scaleModify), 110, (float)(mapTilesY * TileOffset)/2 - (210 * scaleModify));
-        environnement.details[environnement.nb_details].transform.localScale =
-            new Vector3(5, 5, 5);
-        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 180, 0);
-        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
-        environnement.details[environnement.nb_details].name = "Temple";
-        environnement.nb_details++;
-
-        environnement.details.Add(Instantiate(RockLarge));
+        environnement.details.Add(Instantiate(GodRock));
         environnement.details[environnement.nb_details].transform.position =
             new Vector3((float)(mapTilesX * TileOffset)/2 - (60 * scaleModify), 109, (float)(mapTilesY * TileOffset)/2 - (210 * scaleModify));
         environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, -20, 0);
         environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
-        environnement.details[environnement.nb_details].name = "Island Mountain";
+        environnement.details[environnement.nb_details].name = "God Mountain";
         environnement.nb_details++;
 
         environnement.details.Add(Instantiate(Rock2));
@@ -156,6 +149,94 @@ public class MapGeneration : MonoBehaviour
         environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 80, 0);
         environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
         environnement.details[environnement.nb_details].name = "Drake";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(Rock3));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2, -10, (float)(mapTilesY * TileOffset)/2 + (200 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(150, 50, 90);
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 0, 10);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(Rock1));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 + (140 * scaleModify), 0, (float)(mapTilesY * TileOffset)/2 + (70 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(35, 35, 35);
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 0, 0);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(MountainSlopping));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 - (290 * scaleModify), -49, (float)(mapTilesY * TileOffset)/2 + (100 * scaleModify));
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(Rock2));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 - (280 * scaleModify), 80, (float)(mapTilesY * TileOffset)/2 + (460 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(75, 75, 75);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(RockLarge));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 - (330 * scaleModify), -40, (float)(mapTilesY * TileOffset)/2 - (55 * scaleModify));
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(Rock2));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 + (550 * scaleModify), 0, (float)(mapTilesY * TileOffset)/2 + (70 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(75, 75, 75);
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(30, 0, 0);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(MountainTall));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 + (460 * scaleModify), -322, (float)(mapTilesY * TileOffset)/2 + (450 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(3, 3, 3);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(Rock2));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 - (90 * scaleModify), 0, (float)(mapTilesY * TileOffset)/2 + (500 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(75, 75, 75);
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 180, 40);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(RockMedium));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 - (200 * scaleModify), -30, (float)(mapTilesY * TileOffset)/2 - (140 * scaleModify));
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 0, 180);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(RockTall));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 + (190 * scaleModify), -18, (float)(mapTilesY * TileOffset)/2 - (80 * scaleModify));
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 0, 190);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "Mountain";
         environnement.nb_details++;
     }
 }
