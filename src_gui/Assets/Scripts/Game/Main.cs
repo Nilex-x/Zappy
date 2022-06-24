@@ -449,8 +449,11 @@ public class Main : MonoBehaviour
 
     private GameObject player_already_exist(Player player, Transform[] child) {
         foreach (Transform obj in child) {
-            if (obj.name == player.playerTag.ToString()) {
-                return obj.gameObject;
+            foreach (Transform obj_child in obj.GetComponentsInChildren<Transform>()) {
+                Debug.Log("Niglo dses mor " + obj_child.name + " nigga " + player.playerTag);
+                if (obj_child.name == player.playerTag.ToString()) {
+                    return obj_child.gameObject;
+                }
             }
         }
         return Instantiate(tab_player) as GameObject;
