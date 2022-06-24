@@ -565,6 +565,9 @@ public class Main : MonoBehaviour
     }
 
     private void Update() {
+        CamMovement();
+        ArrowsTimeUnit();
+        TabShow();
         if (count > 1) {
             if (!NetworkManager.connected)
                 throw new System.Exception("Error disconnected");
@@ -579,9 +582,6 @@ public class Main : MonoBehaviour
         } else {
             count++;
         }
-        CamMovement();
-        ArrowsTimeUnit();
-        TabShow();
     }
 
 void Start()
