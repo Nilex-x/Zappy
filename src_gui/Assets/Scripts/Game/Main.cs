@@ -95,6 +95,7 @@ public class Main : MonoBehaviour
     public GameObject RockTall;
     public GameObject RockMedium;
     public GameObject MountainSlopping;
+    public GameObject FlyingShip;
 
     private int count = 0;
     public GameObject foodPrefab;
@@ -286,6 +287,7 @@ public class Main : MonoBehaviour
         MapGeneration.RockTall = RockTall;
         MapGeneration.RockMedium = RockMedium;
         MapGeneration.MountainSlopping = MountainSlopping;
+        MapGeneration.FlyingShip = FlyingShip;
         MapGeneration.generateEnvironnement(map.tiles.Count, map.tiles[0].Count, TileOffset);
     }
 

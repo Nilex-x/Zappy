@@ -23,6 +23,7 @@ public class MapGeneration : MonoBehaviour
     public static GameObject RockTall;
     public static GameObject RockMedium;
     public static GameObject MountainSlopping;
+    public static GameObject FlyingShip;
 
     public static Environnement environnement = new Environnement();
 
@@ -169,6 +170,16 @@ public class MapGeneration : MonoBehaviour
         environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 0, 0);
         environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
         environnement.details[environnement.nb_details].name = "Mountain";
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(FlyingShip));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(mapTilesX * TileOffset)/2 + (140 * scaleModify), 250, (float)(mapTilesY * TileOffset)/2 + (70 * scaleModify));
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(0.3f, 0.3f, 0.3f);
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, -30, 0);
+        environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
+        environnement.details[environnement.nb_details].name = "FlyingShip";
         environnement.nb_details++;
 
         environnement.details.Add(Instantiate(MountainSlopping));
