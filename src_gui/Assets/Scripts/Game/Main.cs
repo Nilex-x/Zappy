@@ -474,15 +474,20 @@ public class Main : MonoBehaviour
         created_tab = true;
     }
 
-    private GameObject player_already_exist(Player player, Transform[] child) {
+    private GameObject player_already_exist(Player player, Transform[] child, Transform reference, int pos) {
         foreach (Transform obj in child) {
             foreach (Transform obj_child in obj.GetComponentsInChildren<Transform>()) {
+                Debug.Log("Niggers + " + obj_child.name);
                 if (obj_child.name == player.playerTag.ToString()) {
                     return obj_child.gameObject;
                 }
             }
         }
-        return Instantiate(tab_player) as GameObject;
+        GameObject new_obj = Instantiate(tab_player) as GameObject;
+        new_obj.name = player.playerTag.ToString();
+        new_obj.transform.SetParent(reference, false);
+        new_obj.transform.localPosition = new Vector3(new_obj.transform.localPosition.x, new_obj.transform.localPosition.y - pos*100, new_obj.transform.localPosition.z);
+        return new_obj;
     }
 
     private void UpdatePlayerInTabs()
@@ -493,10 +498,10 @@ public class Main : MonoBehaviour
                     if (team.nb_players < 0)
                         return;
                     for (int i = 0; i < team.nb_players; i++) {
-                        GameObject player = player_already_exist(team.players[i], tab.GetComponents<Transform>());
-                        player.name = team.players[i].playerTag.ToString();
-                        player.transform.SetParent(child, false);
-                        player.transform.localPosition = new Vector3(player.transform.localPosition.x, player.transform.localPosition.y - i*100, player.transform.localPosition.z);
+                        GameObject player = player_already_exist(team.players[i], tab.GetComponents<Transform>(), child, i);
+                        // player.name = team.players[i].playerTag.ToString();
+                        // player.transform.SetParent(child, false);
+                        // player.transform.localPosition = new Vector3(player.transform.localPosition.x, -(3+i)*100, player.transform.localPosition.z);
                         player.transform.Find("player_id").GetComponent<TextMeshProUGUI>().text = team.players[i].playerTag.ToString();
                         player.transform.Find("player_lvl").GetComponent<TextMeshProUGUI>().text = team.players[i].level.ToString();
                         player.transform.Find("food").GetComponent<TextMeshProUGUI>().text = team.players[i].content.food.ToString();
