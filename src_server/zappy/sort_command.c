@@ -160,24 +160,24 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     char **args = my_str_to_word_array(arg);
 
     for (int pos = 0; pos != (sizeof(MY_CMDS) / sizeof(*MY_CMDS)); pos++) {
-        if (strstr(arg, &MY_CMDS[pos].cmd[1]) &&
+        if (strstr(args[0], &MY_CMDS[pos].cmd[1]) &&
             MY_CMDS[pos].gui && client->is_gui) {
             MY_CMDS[pos].fct(client, args, data);
             free_array(args);
             return (0);
         }
-        if (strstr(arg, &MY_CMDS[pos].cmd[1]) &&
+        if (strstr(args[0], &MY_CMDS[pos].cmd[1]) &&
             !MY_CMDS[pos].gui && !client->is_gui) {
+            printf("Nice command [%s] cmd [%s]\n", arg, MY_CMDS[pos].cmd);
             append_action(client->trant, args, pos, data);
             return (0);
         }
     }
-    free_array(args);
     if (client->is_gui)
         unknown_gui_command(client);
+    else
+        client->data_send = add_send(client->data_send, "ko\n");
     free_array(args);
-    client->data_send = add_send(client->data_send, "ko\n");
-    fprintf(stderr, "unknown command: [%s] (%d)\n", arg, (client->buff_read->rdonly - client->buff_read->buffer));
     return (1);
 }
 

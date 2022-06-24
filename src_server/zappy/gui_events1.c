@@ -51,20 +51,15 @@ void expulsion_message(trantorians_t *t)
     free(str);
 }
 
-void broadcast_message(trantorians_t *t, char **args)
+void broadcast_message(trantorians_t *t, char **args, zappy_data_t *data)
 {
-    client_t *client = t->client;
     char *str = NULL;
+    char *message = array_to_str(&args[1]);
 
-    asprintf(&str, "pbc %d", t->client->socket);
-    for (int i = 1; args[i]; i++)
-        asprintf(&str, "%s %s", str, args[i]);
-    asprintf(&str, "%s\n", str);
-    while (client->prev)
-        client = client->prev;
-    for (client_t *c = client; c; c = c->next) {
-        if (c->is_gui)
-            c->data_send = add_send(c->data_send, str);
+    for (client_t *c = data->server->list_client; c; c = c->next) {
+        if (c->is_gui) {
+            c->data_send = add_send(c->data_send, message);
+        }
     }
     free(str);
 }

@@ -439,7 +439,7 @@ void gui_connect_new_player(client_t *gui, zappy_data_t *data);
 
 void expulsion_message(trantorians_t *t);
 
-void broadcast_message(trantorians_t *t, char **args);
+void broadcast_message(trantorians_t *t, char **args, zappy_data_t *data);
 
 void ressource_dropping(trantorians_t *t, int obj);
 
