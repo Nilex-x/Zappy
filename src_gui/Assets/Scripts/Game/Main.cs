@@ -248,7 +248,6 @@ public class Main : MonoBehaviour
     private void UpdateTiles(int x, int y, int food, int linemate, int deraumere, 
     int sibur, int mendiane, int phiras, int thystame)
     {
-        Debug.Log("Updating tile : " + x + "," + y);
         UpdateRessources(x, y, foodPrefab, food, Ressources_type.food);
         UpdateRessources(x, y, linematePrefab, linemate, Ressources_type.linemate);
         UpdateRessources(x, y, deraumerePrefab, deraumere, Ressources_type.deraumere);
@@ -429,7 +428,6 @@ public class Main : MonoBehaviour
     private void UpdateTab()
     {
         page_nbr = Mathf.CeilToInt(map.teams.Count / 2.0f);
-        Debug.Log(page_nbr);
         int last_page_content = map.teams.Count % 2;
         int offset = 0;
         int team_name = 1;
@@ -477,7 +475,6 @@ public class Main : MonoBehaviour
     private GameObject player_already_exist(Player player, Transform[] child, Transform reference, int pos) {
         foreach (Transform obj in child) {
             foreach (Transform obj_child in obj.GetComponentsInChildren<Transform>()) {
-                Debug.Log("Niggers + " + obj_child.name);
                 if (obj_child.name == player.playerTag.ToString()) {
                     return obj_child.gameObject;
                 }
@@ -523,7 +520,6 @@ public class Main : MonoBehaviour
             return;
         tab_page = tab_page + value;
         Vector3 pos = new Vector3(tab_page * -Screen.width + Screen.width/2, tab.transform.position.y, tab.transform.position.z);
-        Debug.Log(pos.x);
         tab.transform.position = pos;
     }
 
