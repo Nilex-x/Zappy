@@ -458,13 +458,7 @@ public class Main : MonoBehaviour
         }
         return Instantiate(tab_player) as GameObject;
     }
-    private GameObject getTabPlayer(Player player, Transform child) {
-        foreach (Transform nig in child) {
-            if (nig.name == player.playerTag.ToString())
-                return nig.gameObject;
-        }
-        return new GameObject();
-    }
+
     private void UpdatePlayerInTabs()
     {
         foreach (Team team in map.teams) {
@@ -575,10 +569,10 @@ public class Main : MonoBehaviour
             if (!NetworkManager.connected)
                 throw new System.Exception("Error disconnected");
             try {
-            if (NetworkManager.stream.DataAvailable) {
-                    string cmd = NetworkManager.ReadServer();
-                    HandleCommand(cmd);
-                }
+                if (!NetworkManager.stream.DataAvailable)
+                    return;
+                string cmd = NetworkManager.ReadServer();
+                HandleCommand(cmd);
             } catch (System.Exception e) {
                 Debug.Log("Exception : " + e.Message);
             }
