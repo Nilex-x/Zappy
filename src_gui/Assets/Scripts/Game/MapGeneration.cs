@@ -144,7 +144,7 @@ public class MapGeneration : MonoBehaviour
 
         environnement.details.Add(Instantiate(Drake));
         environnement.details[environnement.nb_details].transform.position =
-            new Vector3((float)(mapTilesX * TileOffset)/2 + (220 * scaleModify), 110, (float)(mapTilesY * TileOffset)/2 - (480 * scaleModify));
+            new Vector3((float)(mapTilesX * TileOffset)/2 + (220 * scaleModify), 110, (float)(mapTilesY * TileOffset)/2 - (520 * scaleModify));
         environnement.details[environnement.nb_details].transform.localScale =
             new Vector3(0.5f, 0.5f, 0.5f);
         environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 80, 0);
