@@ -24,8 +24,8 @@ int gui_player_pos(client_t *cli, char **args, zappy_data_t *data)
             curr = c->trant;
             asprintf(&line, "ppo %d %ld %ld %d\n", player_nb, curr->tile->x
             , curr->tile->y, curr->direction + 1);
-            free(line);
             cli->data_send = add_send(cli->data_send, line);
+            free(line);
             return 0;
         }
     }
