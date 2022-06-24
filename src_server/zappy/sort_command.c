@@ -160,13 +160,13 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
     char **args = my_str_to_word_array(arg);
 
     for (int pos = 0; pos != (sizeof(MY_CMDS) / sizeof(*MY_CMDS)); pos++) {
-        if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
+        if (strstr(arg, &MY_CMDS[pos].cmd[1]) &&
             MY_CMDS[pos].gui && client->is_gui) {
             MY_CMDS[pos].fct(client, args, data);
             free_array(args);
             return (0);
         }
-        if (!strncmp(arg, MY_CMDS[pos].cmd, strlen(MY_CMDS[pos].cmd)) &&
+        if (strstr(arg, &MY_CMDS[pos].cmd[1]) &&
             !MY_CMDS[pos].gui && !client->is_gui) {
             append_action(client->trant, args, pos, data);
             return (0);
@@ -177,6 +177,7 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
         unknown_gui_command(client);
     free_array(args);
     client->data_send = add_send(client->data_send, "ko\n");
+    fprintf(stderr, "unknown command: [%s] (%d)\n", arg, (client->buff_read->rdonly - client->buff_read->buffer));
     return (1);
 }
 
@@ -209,6 +210,7 @@ static void connect_gui(client_t *cli, zappy_data_t *data)
     gui_time_unit_request(cli, NULL, data);
     gui_map_content(cli, NULL, data);
     gui_teams_name(cli, NULL, data);
+    gui_connect_new_player(cli, data);
 }
 
 void handle_command(server_t *info, client_t *cli)
@@ -221,6 +223,7 @@ void handle_command(server_t *info, client_t *cli)
         free(value);
         return;
     }
+    printf("buffer value: [%s]\n", value);
     if (!strcasecmp(value, "gui") || !strcasecmp(value, "graphic")) {
         connect_gui(cli, info->data);
         free(value);

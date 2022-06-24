@@ -52,3 +52,17 @@ void death_hatched_egg(egg_t *egg, zappy_data_t *data)
     }
     free(str);
 }
+
+void gui_player_level(client_t *client, server_t *info)
+{
+    char *line = NULL;
+
+    asprintf(&line, "plv %d %d\n", client->socket, client->trant->lvl);
+    for (client_t *c = info->list_client; c; c = c->next) {
+        if (c->is_gui) {
+            c->data_send = add_send(c->data_send, line);
+        }
+    }
+    free(line);
+    return;
+}
