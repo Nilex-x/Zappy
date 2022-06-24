@@ -18,14 +18,14 @@ int gui_player_pos(client_t *cli, char **args, zappy_data_t *data)
         cli->data_send = add_send(cli->data_send, "ko\n");
         return 1;
     }
-    player_nb = atoi(args[1] + 1);
-    for (client_t *c = data->trants->client; c; c = c->next) {
+    player_nb = atoi(args[1]);
+    for (client_t *c = data->server->list_client; c; c = c->next) {
         if (c->socket == player_nb) {
             curr = c->trant;
             asprintf(&line, "ppo %d %ld %ld %d\n", player_nb, curr->tile->x
             , curr->tile->y, curr->direction + 1);
-            cli->data_send = add_send(cli->data_send, line);
             free(line);
+            cli->data_send = add_send(cli->data_send, line);
             return 0;
         }
     }
