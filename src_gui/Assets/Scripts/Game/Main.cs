@@ -97,6 +97,14 @@ public class Main : MonoBehaviour
     public GameObject MountainSlopping;
     public GameObject FlyingShip;
 
+    public GameObject level1;
+    public GameObject level2;
+    public GameObject level3;
+    public GameObject level4;
+    public GameObject level5;
+    public GameObject level6;
+    public GameObject level7;
+
     private int count = 0;
     public GameObject foodPrefab;
     public GameObject linematePrefab;
@@ -364,6 +372,25 @@ public class Main : MonoBehaviour
         }
     }
 
+
+    private void UpdatePlayerLevel(string[] content)
+    {
+        for (int i_team = 0; i_team < nb_teams; i_team++) {
+            for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
+                if (map.teams[i_team].players[i_player].playerTag == int.Parse(content[1])) {
+                    map.teams[i_team].players[i_player].level += 1;
+                    foreach (Transform player in playerParent.GetComponentsInChildren<Transform>()) {
+                        int team = int.Parse(player.name.Split(",")[0]);
+                        int tag = int.Parse(player.name.Split(",")[1]);
+                        if (team == i_team && tag == i_player) {
+                            Debug.Log("Nice cock");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void UpdatePlayerInventory(string[] content) {
          for (int i_team = 0; i_team < nb_teams; i_team++) {
             for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
@@ -450,7 +477,6 @@ public class Main : MonoBehaviour
     private GameObject player_already_exist(Player player, Transform[] child) {
         foreach (Transform obj in child) {
             foreach (Transform obj_child in obj.GetComponentsInChildren<Transform>()) {
-                Debug.Log("Niglo dses mor " + obj_child.name + " nigga " + player.playerTag);
                 if (obj_child.name == player.playerTag.ToString()) {
                     return obj_child.gameObject;
                 }
@@ -562,6 +588,8 @@ public class Main : MonoBehaviour
             UpdatePlayer(content);
         if (cmd.StartsWith("pin "))
             UpdatePlayerInventory(content);
+        if (cmd.StartsWith("plv "))
+            UpdatePlayerLevel(content);
     }
 
     private void Update() {
