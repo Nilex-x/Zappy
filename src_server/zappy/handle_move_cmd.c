@@ -55,8 +55,7 @@ void move_trantorian(map_t *map, trantorians_t *trant)
 
 int forward(client_t *client, char **arg, zappy_data_t *data)
 {
-    client_t *temp = client;
-
+    (void) arg;
     move_trantorian(data->map, client->trant);
     client->data_send = add_send(client->data_send, "ok\n");
     send_notif_gui_pos(client, data);
@@ -64,6 +63,15 @@ int forward(client_t *client, char **arg, zappy_data_t *data)
 }
 
 int left(client_t *client, char **arg, zappy_data_t *data)
+{
+    (void) arg;
+    client->trant->direction = (client->trant->direction + 3) % 4;
+    client->data_send = add_send(client->data_send, "ok\n");
+    send_notif_gui_pos(client, data);
+    return 0;
+}
+
+int right(client_t *client, char **arg, zappy_data_t *data)
 {
     (void) arg;
     client->trant->direction = (client->trant->direction + 1) % 4;
