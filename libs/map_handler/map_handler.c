@@ -74,8 +74,14 @@ void free_tile(tile_t *tile)
 
 void free_map(map_t *map)
 {
+    trantorians_list_t * next = NULL;
+
     for (size_t i = 0; i < map->width; i++) {
         for (size_t j = 0; j < map->height; j++) {
+            for (trantorians_list_t *temp = map->tiles[i][j]->trantorians; temp; temp = next) {
+                next = temp->next;
+                free(temp);
+            }
             free_tile(map->tiles[i][j]);
         }
         free(map->tiles[i]);

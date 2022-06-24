@@ -73,7 +73,7 @@ int drop_item(client_t *client, char **args, zappy_data_t *data)
         client->trant->inventory[object]--;
         client->trant->tile->ressources[object]++;
         client->trant->client->data_send = add_send(client->data_send, "ok\n");
-        ressource_dropping(client->trant, object);
+        ressource_dropping(client->trant, object, data);
         notif_inventory(client, data->server);
         return 1;
     }

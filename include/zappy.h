@@ -441,7 +441,7 @@ void expulsion_message(trantorians_t *t);
 
 void broadcast_message(trantorians_t *t, char **args);
 
-void ressource_dropping(trantorians_t *t, int obj);
+void ressource_dropping(trantorians_t *t, int obj, zappy_data_t *data);
 
 void ressource_collecting(trantorians_t *t, int obj);
 
@@ -470,6 +470,8 @@ void player_connexion_for_egg(trantorians_t *t, egg_t *egg);
 void death_hatched_egg(egg_t *egg, zappy_data_t *data);
 
 void gui_player_level(client_t *client, server_t *info);
+
+char *get_content(int new_x, int new_y, map_t *map, char *line);
 
 /*
 ** @brief Find if a team win a game
