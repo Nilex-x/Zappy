@@ -447,9 +447,13 @@ public class Main : MonoBehaviour
         created_tab = true;
     }
 
-    private bool player_already_exist(Player player, Transform child) {
-        Debug.Log(child.name == player.playerTag.ToString());
-        return child.name == player.playerTag.ToString();
+    private GameObject player_already_exist(Player player, Transform[] child) {
+        foreach (Transform obj in child) {
+            if (obj.name == player.playerTag.ToString()) {
+                return obj.gameObject;
+            }
+        }
+        return Instantiate(tab_player) as GameObject;
     }
     private GameObject getTabPlayer(Player player, Transform child) {
         foreach (Transform nig in child) {
@@ -466,9 +470,10 @@ public class Main : MonoBehaviour
                     if (team.nb_players < 0)
                         return;
                     for (int i = 0; i < team.nb_players; i++) {
-                        GameObject player = (!player_already_exist(team.players[i], child)) ? Instantiate(tab_player) as GameObject : getTabPlayer(team.players[i], child);
+                        GameObject player = player_already_exist(team.players[i], tab.GetComponents<Transform>());
                         player.name = team.players[i].playerTag.ToString();
                         player.transform.SetParent(child, false);
+                        player.transform.localPosition = new Vector3(player.transform.localPosition.x, player.transform.localPosition.y - i*100, player.transform.localPosition.z);
                         player.transform.Find("player_id").GetComponent<TextMeshProUGUI>().text = team.players[i].playerTag.ToString();
                         player.transform.Find("player_lvl").GetComponent<TextMeshProUGUI>().text = team.players[i].level.ToString();
                         player.transform.Find("food").GetComponent<TextMeshProUGUI>().text = team.players[i].content.food.ToString();
