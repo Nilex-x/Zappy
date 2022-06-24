@@ -79,18 +79,13 @@ public class Map {
     public int time_unit;
 }
 
+public class Environnement {
+    public List<GameObject> details;
+    public int nb_details = 0;
+}
+
 public class Main : MonoBehaviour
 {
-    public GameObject EnvironnementHandler;
-    public GameObject MainIsland;
-    public GameObject MainIslandGround;
-    public GameObject Rock1;
-    public GameObject Rock2;
-    public GameObject Rock3;
-    public GameObject RockLarge;
-    public GameObject SmallRock;
-    public GameObject MountainTall;
-
     private int count = 0;
     public GameObject foodPrefab;
     public GameObject linematePrefab;
@@ -110,8 +105,11 @@ public class Main : MonoBehaviour
     public GameObject tab;
     public GameObject tab_team1;
     public GameObject tab_team2;
-    public GameObject tab_player;
+    public GameObject EnvironnementHandler;
+    public GameObject MainIsland;
+    public GameObject MainIslandGround;
     public static Map map = new Map();
+    public static Environnement environnement = new Environnement();
     private string response;
     private static List<string> ressources_name = new List<string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
     enum Ressources_type { food, linemate, deraumere, sibur, mendiane, phiras, thystame };
@@ -129,6 +127,7 @@ public class Main : MonoBehaviour
     private int page_nbr = 0;
     private bool created_tab = false;
     private bool switched_tab = false;
+
     private Vector3 GetBaseInput() {
         Vector3 p_Velocity = new Vector3();
         if (Input.GetKey (KeyCode.Z)){
@@ -244,6 +243,39 @@ public class Main : MonoBehaviour
         UpdateRessources(x, y, thystamePrefab, thystame, Ressources_type.thystame);
     }
 
+    private void generateMainIsland()
+    {
+        int maxMapTiles = 0;
+    
+        environnement.details = new List<GameObject>();
+        environnement.details.Add(Instantiate(MainIsland));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(map.tiles.Count * TileOffset)/2, 0, (float)(map.tiles[0].Count * TileOffset)/2);
+        if (map.tiles.Count > map.tiles[0].Count)
+            maxMapTiles = map.tiles.Count;
+        else
+            maxMapTiles = map.tiles[0].Count;
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(maxMapTiles * 0.35f, maxMapTiles * 0.35f, maxMapTiles * 0.35f);
+        environnement.nb_details++;
+
+        environnement.details.Add(Instantiate(MainIslandGround));
+        environnement.details[environnement.nb_details].transform.position =
+            new Vector3((float)(map.tiles.Count * TileOffset)/2, 0.1f, (float)(map.tiles[0].Count * TileOffset)/2);
+        if (map.tiles.Count > map.tiles[0].Count)
+            maxMapTiles = map.tiles.Count;
+        else
+            maxMapTiles = map.tiles[0].Count;
+        environnement.details[environnement.nb_details].transform.localScale =
+            new Vector3(maxMapTiles * 0.35f, maxMapTiles * 0.35f, maxMapTiles * 0.35f);
+        environnement.nb_details++;
+    }
+
+    private void generateEnvironnement()
+    {
+        generateMainIsland();
+    }
+
     private void setRigPosition()
     {
         CameraRig.transform.position = new Vector3((float)(map.tiles.Count * TileOffset)/2, 0, -TileOffset);
@@ -267,16 +299,7 @@ public class Main : MonoBehaviour
             }
         }
         setRigPosition();
-        MapGeneration.EnvironnementHandler = EnvironnementHandler;
-        MapGeneration.MainIsland = MainIsland;
-        MapGeneration.MainIslandGround = MainIslandGround;
-        MapGeneration.Rock1= Rock1;
-        MapGeneration.Rock2 = Rock2;
-        MapGeneration.Rock3 = Rock3;
-        MapGeneration.RockLarge = RockLarge;
-        MapGeneration.SmallRock = SmallRock;
-        MapGeneration.MountainTall = MountainTall;
-        MapGeneration.generateEnvironnement(map.tiles.Count, map.tiles[0].Count, TileOffset);
+        generateEnvironnement();
     }
 
     private void SetTileInfo(GameObject Temp, int x, int z)
@@ -340,25 +363,6 @@ public class Main : MonoBehaviour
                             0.6f, map.teams[i_team].players[i_player].content.y * TileOffset);
                     map.teams[i_team].playersObj[i_player].transform.eulerAngles =
                         new Vector3(0, 90 * (map.teams[i_team].players[i_player].orientation - 1), 0);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void UpdatePlayerInventory(string[] content) {
-         for (int i_team = 0; i_team < nb_teams; i_team++) {
-            for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
-                if (map.teams[i_team].players[i_player].playerTag == int.Parse(content[1])) {
-                    map.teams[i_team].players[i_player].content.x = int.Parse(content[2]);
-                    map.teams[i_team].players[i_player].content.y = int.Parse(content[3]);
-                    map.teams[i_team].players[i_player].content.food = int.Parse(content[4]);
-                    map.teams[i_team].players[i_player].content.linemate = int.Parse(content[5]);
-                    map.teams[i_team].players[i_player].content.deraumere = int.Parse(content[6]);
-                    map.teams[i_team].players[i_player].content.sibur = int.Parse(content[7]);
-                    map.teams[i_team].players[i_player].content.mendiane = int.Parse(content[8]);
-                    map.teams[i_team].players[i_player].content.phiras = int.Parse(content[9]);
-                    map.teams[i_team].players[i_player].content.thystame = int.Parse(content[10]);
                     break;
                 }
             }
@@ -429,40 +433,10 @@ public class Main : MonoBehaviour
         created_tab = true;
     }
 
-    private bool player_already_exist(Player player, Transform child) {
-        Debug.Log(child.name == player.playerTag.ToString());
-        return child.name == player.playerTag.ToString();
-    }
-    private GameObject getTabPlayer(Player player, Transform child) {
-        foreach (Transform nig in child) {
-            if (nig.name == player.playerTag.ToString())
-                return nig.gameObject;
-        }
-        return new GameObject();
-    }
     private void UpdatePlayerInTabs()
     {
-        foreach (Team team in map.teams) {
-            foreach (Transform child in tab.GetComponentsInChildren<Transform>()) {
-                if (child.name == team.name) {
-                    if (team.nb_players < 0)
-                        return;
-                    for (int i = 0; i < team.nb_players; i++) {
-                        GameObject player = (!player_already_exist(team.players[i], child)) ? Instantiate(tab_player) as GameObject : getTabPlayer(team.players[i], child);
-                        player.name = team.players[i].playerTag.ToString();
-                        player.transform.SetParent(child, false);
-                        player.transform.Find("player_id").GetComponent<TextMeshProUGUI>().text = team.players[i].playerTag.ToString();
-                        player.transform.Find("player_lvl").GetComponent<TextMeshProUGUI>().text = team.players[i].level.ToString();
-                        player.transform.Find("food").GetComponent<TextMeshProUGUI>().text = team.players[i].content.food.ToString();
-                        player.transform.Find("linemate").GetComponent<TextMeshProUGUI>().text = team.players[i].content.linemate.ToString();
-                        player.transform.Find("deraumere").GetComponent<TextMeshProUGUI>().text = team.players[i].content.deraumere.ToString();
-                        player.transform.Find("sibur").GetComponent<TextMeshProUGUI>().text = team.players[i].content.sibur.ToString();
-                        player.transform.Find("mendiane").GetComponent<TextMeshProUGUI>().text = team.players[i].content.mendiane.ToString();
-                        player.transform.Find("phiras").GetComponent<TextMeshProUGUI>().text = team.players[i].content.phiras.ToString();
-                        player.transform.Find("thystame").GetComponent<TextMeshProUGUI>().text = team.players[i].content.thystame.ToString();
-                    }
-                }
-            }
+        foreach (Transform trans in tab.GetComponentsInChildren<Transform>()) {
+            Debug.Log(trans.name);
         }
     }
 
@@ -540,8 +514,6 @@ public class Main : MonoBehaviour
             GeneratePlayer(content);
         if (cmd.StartsWith("ppo "))
             UpdatePlayer(content);
-        if (cmd.StartsWith("ppi "))
-            UpdatePlayerInventory(content);
     }
 
     private void Update() {

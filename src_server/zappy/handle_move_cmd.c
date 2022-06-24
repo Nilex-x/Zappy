@@ -46,6 +46,8 @@ int forward(client_t *client, char **arg, zappy_data_t *data)
     while (temp->prev)
         temp = temp->prev;
     asprintf(&arg[1], "#%d", client->socket);
+    for (int i = 0; arg[i]; i++)
+        printf("%d: %s\n", arg[i]);
     for (client_t *c = temp; c; c = c->next)
         if (c->is_gui)
             gui_player_pos(c, arg, data);
