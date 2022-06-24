@@ -210,6 +210,7 @@ static void connect_gui(client_t *cli, zappy_data_t *data)
     gui_time_unit_request(cli, NULL, data);
     gui_map_content(cli, NULL, data);
     gui_teams_name(cli, NULL, data);
+    gui_connect_new_player(cli, data);
 }
 
 void handle_command(server_t *info, client_t *cli)
