@@ -70,7 +70,7 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
     tile_t *tile = incanter->tile;
     trantorians_list_t *list = NULL;
 
-    for (trantorians_list_t *t = tile->trantorians; t; t = t->next)
+    for (trantorians_list_t *t = tile->trantorians; t; t = t->next) {
         if (t->trant->lvl == incanter->lvl && t->trant != incanter) {
             list = malloc(sizeof(trantorians_list_t));
             list->trant = t->trant;
@@ -78,7 +78,10 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
             incanter->incanting_with = list;
             list = NULL;
             t->trant->is_incanting = true;
+            t->trant->client->data_send =
+            add_send(t->trant->client->data_send, "incantation underway\n");
         }
+    }
 }
 
 static int end_incantation(client_t *cli, zappy_data_t *data)

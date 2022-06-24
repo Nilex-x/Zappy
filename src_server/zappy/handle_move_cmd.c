@@ -8,6 +8,22 @@
 #include "server.h"
 #include <stdio.h>
 
+static void send_notif_gui_pos(client_t *client, zappy_data_t *data)
+{
+    char **tab = NULL;
+
+    tab = malloc(sizeof(char *) * 3);
+    asprintf(&tab[0], "bct");
+    asprintf(&tab[1], "%d", client->socket);
+    tab[2] = NULL;
+    for (client_t *c = data->server->list_client; c; c = c->next) {
+        if (c->is_gui) {
+            gui_player_pos(c, tab, data);
+        }
+    }
+    free_array(tab);
+}
+
 void move_trantorian(map_t *map, trantorians_t *trant)
 {
     size_t x = trant->tile->x;
@@ -43,47 +59,15 @@ int forward(client_t *client, char **arg, zappy_data_t *data)
 
     move_trantorian(data->map, client->trant);
     client->data_send = add_send(client->data_send, "ok\n");
-    while (temp->prev)
-        temp = temp->prev;
-    asprintf(&arg[1], "#%d", client->socket);
-    for (int i = 0; arg[i]; i++)
-        printf("%d: %s\n", arg[i]);
-    for (client_t *c = temp; c; c = c->next)
-        if (c->is_gui)
-            gui_player_pos(c, arg, data);
-    free(arg[1]);
-    arg[1] = NULL;
+    send_notif_gui_pos(client, data);
     return 0;
 }
 
 int left(client_t *client, char **arg, zappy_data_t *data)
 {
-    client_t *temp = client;
-
-    (void) data;
-    client->trant->direction = (client->trant->direction + 3) % 4;
-    client->data_send = add_send(client->data_send, "ok\n");
-    asprintf(&arg[1], "#%d", client->socket);
-    for (client_t *c = temp; c; c = c->next)
-        if (c->is_gui)
-            gui_player_pos(c, arg, data);
-    free(arg[1]);
-    arg[1] = NULL;
-    return 0;
-}
-
-int right(client_t *client, char **arg, zappy_data_t *data)
-{
-    client_t *temp = client;
-
-    (void) data;
+    (void) arg;
     client->trant->direction = (client->trant->direction + 1) % 4;
     client->data_send = add_send(client->data_send, "ok\n");
-    asprintf(&arg[1], "#%d", client->socket);
-    for (client_t *c = temp; c; c = c->next)
-        if (c->is_gui)
-            gui_player_pos(c, arg, data);
-    free(arg[1]);
-    arg[1] = NULL;
+    send_notif_gui_pos(client, data);
     return 0;
 }
