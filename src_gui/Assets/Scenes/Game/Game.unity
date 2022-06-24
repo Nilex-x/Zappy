@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.53683, g: 0.7819761, b: 0.9450248, a: 1}
+  m_IndirectSpecularColor: {r: 0.53681797, g: 0.78196424, b: 0.94381815, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -645,24 +645,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c2de9ea7e55dbb892e477954fb8400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  foodPrefab: {fileID: 919132149155446097, guid: 9b5c812b7e5f69c2aa6af448233aab60, type: 3}
-  linematePrefab: {fileID: 919132149155446097, guid: 0510994e7c3013d7388fe804069a90b6, type: 3}
-  deraumerePrefab: {fileID: 919132149155446097, guid: e00cd99cb2e616598b7e84fe3baf2a59, type: 3}
-  siburPrefab: {fileID: 919132149155446097, guid: 0600448e256e0da358dcebdb0c18e8e9, type: 3}
-  mendianePrefab: {fileID: 919132149155446097, guid: 0d6b6b74adaac62b4b611158f9de573a, type: 3}
-  phirasPrefab: {fileID: 919132149155446097, guid: 71fc78157858a66888581cb8af894d78, type: 3}
-  thystamePrefab: {fileID: 919132149155446097, guid: 175d106559b4e5bee9365c0a7867faa4, type: 3}
-  playerPrefab: {fileID: 1329802915595066745, guid: 71a14ce621a2be54e8e06f7722df3fef, type: 3}
-  eggPrefab: {fileID: 0}
-  tilePrefab: {fileID: 919132149155446097, guid: 8c507cf65e060caa88d4f20675f909f4, type: 3}
-  tileParent: {fileID: 1257246384}
-  playerModel: {fileID: 919132149155446097, guid: f2306e0d5373e664aa5e27a301771d16, type: 3}
-  playerParent: {fileID: 1261170350}
-  CameraRig: {fileID: 1865095194}
-  time_unit_txt: {fileID: 824345142}
-  tab: {fileID: 1054305604}
-  tab_team1: {fileID: 7464870523374561669, guid: 19e0f83828207c655b67b41f5cd99c22, type: 3}
-  tab_team2: {fileID: 4299024633364552845, guid: 616f3e7f5833bdcd58e90567a3dcbaca, type: 3}
   EnvironnementHandler: {fileID: 595082541}
   MainIsland: {fileID: 1040810095833473419, guid: 37531ae0dbc74c6179dd9e9fae4f2646, type: 3}
   MainIslandGround: {fileID: 5848245379368639313, guid: 79b88f9944f8b312caf148c4b725488a, type: 3}
@@ -671,7 +653,26 @@ MonoBehaviour:
   Rock3: {fileID: 919132149155446097, guid: cd555ef96cc4e814c9c2c01ba168eafb, type: 3}
   RockLarge: {fileID: 919132149155446097, guid: 8d21ab1765a1fbc429ccab70d892d4e0, type: 3}
   SmallRock: {fileID: 919132149155446097, guid: bbb4c72b869f964478b086074dfda1f9, type: 3}
-  MountainTall: {fileID: 919132149155446097, guid: 9d36372202a3ed14cb8ea05d8dca4da2, type: 3}
+  MountainTall: {fileID: 919132149155446097, guid: e08657eca3c1a3642b80c5dce760940f, type: 3}
+  foodPrefab: {fileID: 919132149155446097, guid: 9b5c812b7e5f69c2aa6af448233aab60, type: 3}
+  linematePrefab: {fileID: 919132149155446097, guid: 0510994e7c3013d7388fe804069a90b6, type: 3}
+  deraumerePrefab: {fileID: 919132149155446097, guid: e00cd99cb2e616598b7e84fe3baf2a59, type: 3}
+  siburPrefab: {fileID: 919132149155446097, guid: 0600448e256e0da358dcebdb0c18e8e9, type: 3}
+  mendianePrefab: {fileID: 919132149155446097, guid: 0d6b6b74adaac62b4b611158f9de573a, type: 3}
+  phirasPrefab: {fileID: 919132149155446097, guid: 71fc78157858a66888581cb8af894d78, type: 3}
+  thystamePrefab: {fileID: 919132149155446097, guid: 175d106559b4e5bee9365c0a7867faa4, type: 3}
+  playerPrefab: {fileID: 919132149155446097, guid: f2306e0d5373e664aa5e27a301771d16, type: 3}
+  eggPrefab: {fileID: 0}
+  tilePrefab: {fileID: 919132149155446097, guid: 8c507cf65e060caa88d4f20675f909f4, type: 3}
+  tileParent: {fileID: 1257246384}
+  playerModel: {fileID: 919132149155446097, guid: f2306e0d5373e664aa5e27a301771d16, type: 3}
+  playerParent: {fileID: 1261170350}
+  CameraRig: {fileID: 1865095194}
+  time_unit_txt: {fileID: 824345142}
+  tab: {fileID: 1054305604}
+  tab_team1: {fileID: 7412160291589466568, guid: 26dbc8e7a1ea41a178ffb08a506bb7ec, type: 3}
+  tab_team2: {fileID: 8202453197488391374, guid: 500653f8bed2e520298138b9b2e5bbc7, type: 3}
+  tab_player: {fileID: 6516424919470432922, guid: d1c58aa2f53164d6aaa330bc39187f9e, type: 3}
   nb_teams: 0
 --- !u!1 &1054305604
 GameObject:
