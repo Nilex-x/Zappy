@@ -84,7 +84,6 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
     }
 }
 
-
 static int end_incantation(client_t *cli, zappy_data_t *data)
 {
     char *l = NULL;
