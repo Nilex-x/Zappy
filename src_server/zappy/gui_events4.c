@@ -10,7 +10,7 @@
 
 void egg_hatching(egg_t *egg, tile_t *tile)
 {
-    client_t *client = tile->trantorians->client;
+    client_t *client = tile->trantorians->trant->client;
     char *str = NULL;
 
     asprintf(&str, "eht %d\n", egg->number);

@@ -15,13 +15,13 @@ void command_parameter(client_t *cli)
 
 void start_of_incantation(tile_t *tile, int level)
 {
-    client_t *client = tile->trantorians->client;
+    client_t *client = tile->trantorians->trant->client;
     char *str = NULL;
 
     asprintf(&str, "pic %ld %ld %d", tile->x, tile->y, level);
-    for (trantorians_t *t = tile->trantorians; t; t = t->next) {
-        if (t->lvl == level)
-            asprintf(&str, "%s %d", str, t->client->socket);
+    for (trantorians_list_t *t = tile->trantorians; t; t = t->next) {
+        if (t->trant->lvl == level)
+            asprintf(&str, "%s %d", str, t->trant->client->socket);
     }
     asprintf(&str, "%s\n", str);
     while (client->prev)
@@ -35,7 +35,7 @@ void start_of_incantation(tile_t *tile, int level)
 
 void end_of_incantation(tile_t *tile, int level)
 {
-    client_t *client = tile->trantorians->client;
+    client_t *client = tile->trantorians->trant->client;
     char *str = NULL;
 
     asprintf(&str, "pie %ld %ld %d\n", tile->x, tile->y, level);

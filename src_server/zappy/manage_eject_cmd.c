@@ -32,15 +32,15 @@ int eject(client_t *client, char **arg, zappy_data_t *data)
     int dir;
 
     (void) arg;
-    for (trantorians_t *c = trant->tile->trantorians; c; c = c->next)
-        if (trant != c) {
-            dir = c->direction;
-            c->direction = trant->direction;
-            move_trantorian(data->map, c);
-            c->direction = dir;
+    for (trantorians_list_t *c = trant->tile->trantorians; c; c = c->next)
+        if (trant != c->trant) {
+            dir = c->trant->direction;
+            c->trant->direction = trant->direction;
+            move_trantorian(data->map, c->trant);
+            c->trant->direction = dir;
             ejected = true;
-            expulsion_message(c);
-            send_ejected_message(trant, c);
+            expulsion_message(c->trant);
+            send_ejected_message(trant, c->trant);
         }
     if (ejected)
         client->data_send = add_send(client->data_send, "ok\n");

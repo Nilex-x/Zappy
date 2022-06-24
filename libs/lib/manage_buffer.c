@@ -46,9 +46,11 @@ char *read_to_buffer(buffer_t *buff, char end_of_line, int length_max)
     value = malloc(sizeof(char) * (len + 2));
     if (len == 0 || !value)
         return NULL;
-    if ((buff->rdonly - buff->buffer) + 1 >= length_max)
+    if ((buff->rdonly - buff->buffer) + 1 >= length_max) {
+        fprintf(stderr, "ZEBI\n");
         buff->rdonly = buff->buffer;
-    for (; buff->rdonly[0] != end_of_line && i < length_max; i++) {
+    }
+    for (; buff->rdonly[0] != end_of_line && i <= length_max; i++) {
         value[i] = buff->rdonly[0];
         value[i + 1] = '\0';
         buff->rdonly[0] = '\0';
