@@ -469,6 +469,8 @@ void player_connexion_for_egg(trantorians_t *t, egg_t *egg);
 
 void death_hatched_egg(egg_t *egg, zappy_data_t *data);
 
+void gui_player_level(client_t *client, server_t *info);
+
 /*
 ** @brief Find if a team win a game
 **
