@@ -30,7 +30,6 @@ int read_client(server_t *info, client_t *client)
         return (-1);
     }
     read_buffer[read_value] = '\0';
-    printf("READ value: [%s]\n", read_buffer);
     add_to_write(client->buff_read, read_buffer, LENGTH_COMMAND);
     free(read_buffer);
     return (0);
@@ -45,8 +44,9 @@ void write_client(server_t *info, int s_client)
     char *data = get_next_data_to_send(&client->data_send);
     int len = (data) ? strlen(data) : 0;
 
-    printf("WRITE value: [%s]\n", data);
     while (w_value < len && w_value > 0) {
+        if (len < LENGTH_COMMAND)
+            value_write = len;
         w_value += write(s_client, data + start, value_write);
         len -= value_write;
         start += w_value;
