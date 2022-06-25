@@ -44,6 +44,9 @@ void select_interupt(server_t *info)
             t->action->time_left = sub_timespec(t->action->time_left, to_sub);
         t->timeleft = sub_timespec(t->timeleft, to_sub);
     }
+    for (egg_t *egg = info->data->eggs; egg; egg = egg->next) {
+        egg->time_until_hatch = sub_timespec(egg->time_until_hatch, to_sub);
+    }
 }
 
 void find_time(struct timespec *small, struct timespec value)

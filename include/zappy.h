@@ -526,4 +526,6 @@ void free_eggs(egg_t **egg);
 
 void free_eggs_list(egg_list_t **egg_list);
 
+void verif_egg_life(server_t *info);
+
 #endif /* !ZAPPY_H_ */

@@ -79,7 +79,7 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
             list = NULL;
             t->trant->is_incanting = true;
             t->trant->client->data_send =
-            add_send(t->trant->client->data_send, "incantation underway\n");
+            add_send(t->trant->client->data_send, "Elevation underway\n");
         }
     }
 }
@@ -92,7 +92,7 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
     for (int i = 1; i < 7; i++)
         cli->trant->tile->ressources[i] -=
         DATA_INCANT[cli->trant->lvl - 1].ressources_required[i - 1];
-    cli->trant->lvl ++;
+    cli->trant->lvl++;
     asprintf(&l, "Current level: %d\n", cli->trant->lvl);
     printf("\033[0;32mTrantorian Level up lvl %d\033[0m\n", cli->trant->lvl);
     end_of_incantation(cli->trant->tile, cli->trant->lvl, data);

@@ -185,7 +185,7 @@ static void add_trantoriant(client_t *cli, server_t *info, char *cmd)
     char *line = NULL;
 
     if (!team || team->nb_player >= team->player_max) {
-        if (team->nb_player >= team->player_max && added_in_egg(cli, info, team))
+        if (team && team->nb_player >= team->player_max && added_in_egg(cli, info, team))
             return;
         cli->data_send = add_send(cli->data_send, (!team) ? "unknow team\n" :
         "team is already full please wait until a client disconnect " \

@@ -17,6 +17,7 @@ egg_t *init_egg(trantorians_t *trant, int nb_eggs, int freq)
 
     if (!egg || !egg_list) {
         (egg) ? free(egg) : 0;
+        (egg_list) ? free(egg_list) : 0;
         return (NULL);
     }
     egg->cli = NULL;
@@ -27,50 +28,50 @@ egg_t *init_egg(trantorians_t *trant, int nb_eggs, int freq)
     egg->time_until_hatch = set_timespec(600, freq);
     egg_list->egg = egg;
     egg_list->next = NULL;
-    while (cur || cur->next)
+    while (cur && cur->next)
         cur = cur->next;
-    (cur) ? (cur->next = egg_list) : (trant->team->eggs = egg_list);
+    if (cur)
+        cur->next = egg_list;
+    else
+        trant->team->eggs = egg_list;
+    // (cur) ? (cur->next = egg_list) : (trant->team->eggs = egg_list);
     return (egg);
 }
 
 int fork_command(client_t *client, char **args, zappy_data_t *data)
 {
-    trantorians_t *trant = client->trant;
-    team_t *team = trant->team;
-    egg_list_t *list = team->eggs;
+    team_t *team = client->trant->team;
     egg_list_t *temp = NULL;
     egg_t *tmp = data->eggs;
     int nb_eggs = 0;
 
     (void) args;
-    while(tmp || tmp->next)  {
-        nb_eggs++;
-        tmp = tmp->next;
-    }
+    printf("\033[0;34mTrantorian %d drop an egg\033[0m\n", client->socket);
+    for (; tmp && tmp->next; nb_eggs++, tmp = tmp->next);
     if (tmp) {
-        tmp->next = init_egg(trant, nb_eggs + 1, data->freq);
+        tmp->next = init_egg(client->trant, nb_eggs + 1, data->freq);
         temp = malloc(sizeof(egg_list_t));
         temp->egg = tmp->next;
-        temp->next = list;
+        temp->next = team->eggs;
         team->eggs = temp;
         egg_layed(client->trant, tmp->next, data);
     } else {
-        data->eggs = init_egg(trant, nb_eggs + 1, data->freq);
+        data->eggs = init_egg(client->trant, nb_eggs + 1, data->freq);
         team->eggs = malloc(sizeof(egg_list_t));
         team->eggs->egg = data->eggs;
         team->eggs->next = NULL;
         egg_layed(client->trant, data->eggs, data);
     }
+    client->data_send = add_send(client->data_send, "ok\n");
     return (0);
 }
 
 bool added_in_egg(client_t *cli, server_t *info, team_t *team)
 {
-    char *line = NULL;
-
     (void) info;
-    if (!team || !team->eggs)
+    if (!team || !team->eggs) {
         return (false);
+    }
     for (egg_list_t *tmp = team->eggs; tmp; tmp = tmp->next) {
         if (!tmp->egg->cli) {
             cli->egg = tmp->egg;
@@ -79,9 +80,7 @@ bool added_in_egg(client_t *cli, server_t *info, team_t *team)
         }
     }
     if (!cli->egg) {
-        asprintf(&line, "ko\n");
-        cli->data_send = add_send(cli->data_send, line);
-        free(line);
+        cli->data_send = add_send(cli->data_send, "ko\n");
         return (false);
     }
     return (true);
@@ -91,8 +90,10 @@ void delete_egg_in_team(egg_t *egg, team_t *team)
 {
     egg_list_t *tmp = team->eggs;
     egg_list_t *to_del = NULL;
+    printf("Start find egg\n");
 
     if (tmp->egg == egg) {
+        printf("first egg in team\n");
         team->eggs = tmp->next;
         free(tmp);
         return;

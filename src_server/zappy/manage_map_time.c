@@ -23,7 +23,7 @@ void verif_life(server_t *info)
 
     while (temp) {
         if (temp->inventory[0] <= 0) {
-            printf("\033[0;31mTrantorian dead\033[0m\n");
+            printf("\033[1;31mTrantorian dead\033[0m\n");
             temp->client->is_quit = true;
             temp->client->data_send = add_send(temp->client->data_send,
             "dead\n");
@@ -40,11 +40,17 @@ void verif_life(server_t *info)
 void verif_egg_life(server_t *info)
 {
     egg_t *temp = info->data->eggs;
+    egg_t *next = NULL;
 
+    printf("verif egg life\n");
     while (temp) {
+        printf("egg client: %d sec: %ld usec: %ld\n", (temp->cli != NULL), temp->time_until_hatch.tv_sec, temp->time_until_hatch.tv_nsec);
+        next = temp->next;
         if (temp->time_until_hatch.tv_sec <= 0
         && temp->time_until_hatch.tv_nsec <= 0) {
-            
+            (temp->cli) ? egg_hatching_with_player(temp, info->data) :
+                kill_egg(temp, info->data);
         }
+        temp = next;
     }
 }
