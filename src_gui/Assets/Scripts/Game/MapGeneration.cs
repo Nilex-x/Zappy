@@ -201,6 +201,7 @@ public class MapGeneration : MonoBehaviour
         environnement.details.Add(Instantiate(RockLarge));
         environnement.details[environnement.nb_details].transform.position =
             new Vector3((float)(mapTilesX * TileOffset)/2 - (330 * scaleModify), -40, (float)(mapTilesY * TileOffset)/2 - (55 * scaleModify));
+        environnement.details[environnement.nb_details].transform.eulerAngles = new Vector3(0, 0, 180);
         environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
         environnement.details[environnement.nb_details].name = "Mountain";
         environnement.nb_details++;
