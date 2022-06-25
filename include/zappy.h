@@ -496,4 +496,11 @@ void remove_trant_in_team(team_t *team, trantorians_t *torm);
 */
 void refill_map(server_t *info);
 
+/*
+** @brief Free all trantorians
+**
+** @param trantorians
+*/
+void free_trants(trantorians_t *trantorians);
+
 #endif /* !ZAPPY_H_ */
