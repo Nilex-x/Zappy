@@ -67,7 +67,7 @@ int pick_item(client_t *client, char **args, zappy_data_t *data)
         client->trant->tile->ressources[object]--;
         client->trant->inventory[object]++;
         client->data_send = add_send(client->data_send, "ok\n");
-        ressource_collecting(client->trant, object);
+        ressource_collecting(client->trant, object, data);
         notif_inventory(client, data->server);
         notif_object(client, data->server);
         return 1;

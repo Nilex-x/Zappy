@@ -72,8 +72,11 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
     int dir = 0;
     int cdir = 0;
 
-    broadcast_message(current, args);
-    printf("----------------------------------FROM [%d][%d]\n", client->trant->tile->x, client->trant->tile->y);
+    if (len_array(args) < 2) {
+        client->data_send = add_send(client->data_send, "ko\n");
+        return 0;
+    }
+    broadcast_message(current, args, data);
     while (current != NULL) {
         if (current->client->socket != client->socket) {
             printf("----------------------------------to [%d][%d]\n", current->tile->x, current->tile->y);
