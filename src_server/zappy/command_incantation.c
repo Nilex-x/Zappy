@@ -87,22 +87,28 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
 static int end_incantation(client_t *cli, zappy_data_t *data)
 {
     char *l = NULL;
+    trantorians_list_t *next = NULL;
 
     (void) data;
+    printf("INCANT\n");
     for (int i = 1; i < 7; i++)
         cli->trant->tile->ressources[i] -=
         DATA_INCANT[cli->trant->lvl - 1].ressources_required[i - 1];
-    cli->trant->lvl ++;
+    printf("LVLUP\n");
+    cli->trant->lvl++;
+    printf("LVL: %d\n", cli->trant->lvl);
     asprintf(&l, "Current level: %d\n", cli->trant->lvl);
     printf("\033[0;32mTrantorian Level up lvl %d\033[0m\n", cli->trant->lvl);
     end_of_incantation(cli->trant->tile, cli->trant->lvl);
     cli->data_send = add_send(cli->data_send, l);
     gui_player_level(cli, data->server);
-    for (trantorians_list_t *t = cli->trant->incanting_with; t; t = t->next) {
+    for (trantorians_list_t *t = cli->trant->incanting_with; t; t = next) {
+        next = t->next;
         t->trant->client->data_send = add_send(t->trant->client->data_send, l);
         t->trant->is_incanting = false;
         t->trant->lvl++;
         gui_player_level(t->trant->client, data->server);
+        free(t);
     }
     free(l);
     return 1;
@@ -111,7 +117,6 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
 int incantation(client_t *cli, char **arg, zappy_data_t *data)
 {
     action_t *tmp = NULL;
-    printf("INCANT\n");
 
     (void) arg;
     if (check_trant(data->map, cli->trant) == -1

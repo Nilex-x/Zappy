@@ -14,11 +14,11 @@
 char *read_server(int socket)
 {
     int valread;
-    char *buff = calloc(1, 512);
+    char *buff = calloc(1, 2048);
 
     if (!buff)
         return NULL;
-    valread = read(socket, buff, 512);
+    valread = read(socket, buff, 2048);
     if (valread <= 0) {
         free(buff);
         return "end";
