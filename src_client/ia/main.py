@@ -327,13 +327,6 @@ class clientIA:
             return self.handleMessage(srvMsg)
         curr = self.currentCmd.split()[0]
         print("########SRVMSG: [" + srvMsg + " " + curr + "]#########")
-        if curr == "Look":
-            self.look(srvMsg)
-        elif curr == "Inventory":
-            self.inventory(srvMsg)
-            print(self.commonInventory)
-        elif curr == "Connect_nbr":
-            self.nbPlayers = int(srvMsg)
         if srvMsg == "Elevation underway":
             for i in range(0, 6):
                 self.commonInventory[ressources[i]] = 0
@@ -341,6 +334,13 @@ class clientIA:
             while (not self.toSend.empty()):
                 self.toSend().get()
             return 1
+        if curr == "Look":
+            self.look(srvMsg)
+        elif curr == "Inventory":
+            self.inventory(srvMsg)
+            print(self.commonInventory)
+        elif curr == "Connect_nbr":
+            self.nbPlayers = int(srvMsg)
         elif srvMsg.find("Current level") >= 0:
             self.lvl = self.lvl + 1
             self.isMeeting = False
