@@ -133,6 +133,7 @@ public class Main : MonoBehaviour
     enum Ressources_type { food, linemate, deraumere, sibur, mendiane, phiras, thystame };
     public int nb_teams = 0;
     float TileOffset = 5.73f;
+    bool send_data = false;
 
     float mainSpeed = 25f;
     float shiftAdd = 50f;
@@ -427,16 +428,22 @@ public class Main : MonoBehaviour
 
     private void ArrowsTimeUnit()
     {
-        int time_unit = map.time_unit;
         int augment = 1;
 
         if (Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.Tab)) {
-            time_unit+=augment;
-        } 
+            send_data = true;
+            map.time_unit += augment;
+            change_time_unit();
+        }
         if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.Tab)) {
-            if (map.time_unit > 2) {
-                time_unit-=augment;
-            }
+            send_data = true;
+            map.time_unit -= augment;
+            change_time_unit();
+        }
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow) && !Input.GetKey(KeyCode.Tab)) {
+            Debug.Log("Time unit : " + map.time_unit);
+            NetworkManager.WriteServer("sst " + map.time_unit);
+            NetworkManager.WriteServer("sgt");
         }
     }
 
@@ -575,7 +582,6 @@ public class Main : MonoBehaviour
                 foreach (Transform players in tab.GetComponentsInChildren<Transform>()) {
                     if (players.name == map.teams[i_team].name) {
                         foreach (Transform player in players.GetComponentsInChildren<Transform>()) {
-                            Debug.Log("Player nigga " + player);
                             if (player.name == playerTag) {
                                 Destroy(player.gameObject);
                                 next = true;
