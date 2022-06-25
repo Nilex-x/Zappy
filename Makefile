@@ -30,6 +30,7 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/zappy/handle_move_cmd.c \
 						src_server/zappy/manage_eject_cmd.c \
 						src_server/zappy/handle_look_command.c \
+						src_server/zappy/handle_look_command_2.c \
 						src_server/zappy/command_object.c \
 						src_server/zappy/manage_map_time.c \
 						src_server/zappy/gui_events1.c \
