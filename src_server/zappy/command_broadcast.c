@@ -79,6 +79,7 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
             printf("----------------------------------to [%d][%d], [%d]\n", current->tile->x, current->tile->y, current->direction);
             dir = find_path(client->trant, current, data);
             cdir = current->direction;
+            printf("DIR: %d\n", dir);
             if (dir)
                 dir = (dir + cdir * 2) % (8 + (dir + cdir * 2 == 8));
             printf("DIR: %d\n", dir);

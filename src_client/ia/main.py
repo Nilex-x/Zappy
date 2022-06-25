@@ -101,6 +101,7 @@ directions = {
 class clientIA:
     def __init__(self):
         self.nbClients = -1
+        self.team = None
         self.height = -1
         self.width = -1
         self.alive = True
@@ -148,9 +149,9 @@ class clientIA:
 
         if msg[1].find("here:") >= 0:
             if self.isCalling:
-                self.isCalling = False
-                self.ejected()
-                self.setRessources()
+                # self.isCalling = False
+                # self.ejected()
+                # self.setRessources()
                 return 0
             if self.isCalled:
                 if direction == 0 and not self.hasArrived:
@@ -361,12 +362,12 @@ class clientIA:
     def checkAction(self):
         if self.incantation:
             return "wait"
+        print(self.nbArrived ," >= ", self.nbMeeting, "and ", self.isCalling , "and ", self.nbMeeting ,">= ", upLvl[self.lvl - 1]["player"])
         if self.nbArrived >= self.nbMeeting and self.isCalling and self.nbMeeting >= upLvl[self.lvl - 1]["player"]:
             self.ejected()
             self.setRessources()
-            self.toSend.put("Incantation")
-            return "wait"
-        if self.isCalling:
+            return ("Incantation")
+        elif self.isCalling:
             self.toSend.put("Inventory")
             self.toSend.put("Right")
             self.toSend.put("Right")
@@ -375,7 +376,7 @@ class clientIA:
             action = ("Broadcast here:" + str(self.lvl))
             print("nb arrived: ", self.nbArrived, ", nbMetting ", self.nbMeeting, ", needed: ", upLvl[self.lvl - 1]["player"])
             return action
-        if self.isCalled or self.hasArrived:
+        elif self.isCalled or self.hasArrived:
             return "wait"
         self.toSend.put("Inventory")
         return "Look"
@@ -482,7 +483,6 @@ def displayHelp():
     print("\tname is the name of the team")
     print("\tmachine is the name of the machine; localhost by default")
     exit(0)
-
 
 def main():
     port = None
