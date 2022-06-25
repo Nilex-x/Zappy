@@ -95,7 +95,7 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
     cli->trant->lvl ++;
     asprintf(&l, "Current level: %d\n", cli->trant->lvl);
     printf("\033[0;32mTrantorian Level up lvl %d\033[0m\n", cli->trant->lvl);
-    end_of_incantation(cli->trant->tile, cli->trant->lvl);
+    end_of_incantation(cli->trant->tile, cli->trant->lvl, data);
     cli->data_send = add_send(cli->data_send, l);
     gui_player_level(cli, data->server);
     for (trantorians_list_t *t = cli->trant->incanting_with; t; t = t->next) {
@@ -128,7 +128,7 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data)
     }
     if (cli->trant->action->time_left.tv_sec > 0
     || cli->trant->action->time_left.tv_nsec > 0) {
-        start_of_incantation(cli->trant->tile, cli->trant->lvl);
+        start_of_incantation(cli->trant->tile, cli->trant->lvl, data);
         start_incantation_for_everyone(cli->trant);
         cli->data_send = add_send(cli->data_send, "Elevation underway\n");
         return (0);
