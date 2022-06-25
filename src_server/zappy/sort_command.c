@@ -223,7 +223,6 @@ void handle_command(server_t *info, client_t *cli)
         free(value);
         return;
     }
-    printf("buffer value: [%s]\n", value);
     if (!strcasecmp(value, "gui") || !strcasecmp(value, "graphic")) {
         connect_gui(cli, info->data);
         free(value);

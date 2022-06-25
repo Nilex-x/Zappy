@@ -84,7 +84,6 @@ upLvl = [
 ]
 
 directions = {
-    0 : "wait",
     1 : "Forward",
     2 : "Forward",
     3 : "Left",
@@ -101,7 +100,9 @@ directions = {
 
 class clientIA:
     def __init__(self):
+        self.myId = -1
         self.nbClients = -1
+        self.team = None
         self.height = -1
         self.width = -1
         self.alive = True
@@ -139,39 +140,47 @@ class clientIA:
         }
 
     def handleMessages(self, servMsg):
-        if self.incantation or self.hasArrived or self.lvl == 1:
+        if self.incantation or self.lvl == 1:
             return 0
         msg = servMsg.split(",")
         content = msg[1].split(":")
+        target = content[1].split(".")
+        sendTeam = target[0]
+        sendId = int(target[1])
+        sendLvl = int(target[2])
         direction = int(msg[0].split()[1])
-        if int(content[1]) != self.lvl:
+        if (sendLvl != self.lvl) or (sendTeam != self.team):
             return 0
 
-        if msg[1].find("here:") >= 0:
-            if self.isCalling:
-                print("STOP")
-                self.isCalling = False
+        if content[0].find("here") >= 0:
+            if self.isCalling and sendId > self.myId:
                 return 0
-            if self.isCalled:
-                if direction == 0 and not self.hasArrived:
-                    print("SEND ARRIVED")
-                    self.toSend.put("Broadcast arrived:" + str(self.lvl))
+            if self.isCalling and sendId <= self.myId:
+                print("OKAY")
+                self.isCalling = False
+                self.ejected()
+            if self.isCalled and not self.hasArrived:
+                if direction == 0:
+                    self.ejected()
+                    self.toSend.put("Broadcast arrived:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
                     self.hasArrived = True
+                    return 0
+                if direction == 0:
                     return 0
                 self.toSend.put(directions[direction])
             else:
-                if self.ressources["food"] >= 8:
+                if self.ressources["food"] >= 30:
                     self.isCalled = True
-                    self.toSend.put("Broadcast coming:" + str(self.lvl))
+                    self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
 
-        elif msg[1].find("cancel:") >= 0 and self.isCalled:
+        elif content[0].find("cancel") >= 0 and self.isCalled:
             self.isCalled = False
             self.hasArrived = False
 
-        elif msg[1].find("coming:") >= 0 and self.isCalling:
+        elif content[0].find("coming") >= 0 and self.isCalling:
             self.nbMeeting += 1
 
-        elif msg[1].find("arrived:") >= 0 and self.isCalling:
+        elif content[0].find("arrived") >= 0 and self.isCalling:
             self.nbArrived += 1
         return 0
 
@@ -227,13 +236,15 @@ class clientIA:
         for rsc in inv:
             a = rsc.split()
             self.ressources[a[0]] = int(a[1])
-        if self.checkRessourceForLevel() == None and self.ressources["food"] >= 8:
+        if self.checkRessourceForLevel() == None and self.ressources["food"] >= 30:
             self.isCalling = True
-        if self.isCalling and self.ressources["food"] <= 3:
+        else:
             self.isCalling = False
-            self.nbArrived = 0
+        if self.isCalling and self.ressources["food"] <= 5:
+            self.isCalling = False
+            self.nbArrived = 1
             self.nbMeeting = 1
-            self.toSend.put("Broadcast cancel:" + str(self.lvl))
+            self.toSend.put("Broadcast cancel:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
 
     # def setRessourcesFromTile(self, look_list, t):
     #     tile = {
@@ -272,35 +283,28 @@ class clientIA:
             self.nbMeeting = 1
         self.ressources[ressource] -= 1
 
-    # def searchFood(self, look_list):
-    #     i = 0
-
-    #     for x in look_list:
-    #         if x.find("food") >= 0:
-    #             self.findPathToTile(i)
-    #             self.toSend.put("Take food")
-    #         else:
-    #             i += 1
-
-
     def rmRedundantChar(self, srvMsg):
         x = 'x'
         res = ""
         for i in srvMsg:
             if not (i == ',' and x == ','):
                 res += i
+            else:
+                res += "empty,"
             x = i
         return res
 
     def look(self, srvMsg):
-        print("SRVMSG IN LOOK", srvMsg)
         i = 0
         srvMsg = srvMsg[1:-1]
         srvMsg = self.rmRedundantChar(srvMsg)
         look_list = srvMsg.split(",")
         ressource = self.checkRessourceForLevel()
-        if (self.ressources["food"] < 10):
+        if (self.ressources["food"] < 40):
             ressource = "food"
+        if ressource == None:
+            self.toSend.put("Forward")
+            return 0
         for x in look_list:
             if x.find(ressource) >= 0:
                 if self.findPathToTile(i):
@@ -314,7 +318,7 @@ class clientIA:
 
 
     def ejected(self):
-        while (not self.cmds.empty()):
+        while (not self.toSend.empty()):
             self.toSend.get()
         return 1
 
@@ -326,6 +330,10 @@ class clientIA:
             return 1
         if srvMsg == "dead":
             return -1
+        if self.myId < 0:
+            if self.currentCmd != "Connect_nbr":
+                return 0
+            self.myId = int(srvMsg)
         if srvMsg.find("eject") >= 0:
             return self.ejected()
         if srvMsg.find("message") >= 0:
@@ -363,26 +371,33 @@ class clientIA:
         return 1
 
     def checkAction(self):
-        if self.nbArrived >= self.nbMeeting and self.isCalling and self.nbMeeting >= upLvl[self.lvl - 1]["player"]:
-            self.setRessources()
-            self.toSend.put("Incantation")
+        if self.incantation:
             return "wait"
-        if self.isCalling:
+        if self.nbArrived >= self.nbMeeting and self.isCalling and self.nbMeeting >= upLvl[self.lvl - 1]["player"]:
+            self.ejected()
+            self.setRessources()
+            return ("Incantation")
+        elif self.isCalling:
             self.toSend.put("Inventory")
             self.toSend.put("Right")
-            self.toSend.put("Left")
-            action = ("Broadcast here:" + str(self.lvl))
+            self.toSend.put("Right")
+            self.toSend.put("Right")
+            self.toSend.put("Right")
+            action = ("Broadcast here:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
             print("nb arrived: ", self.nbArrived, ", nbMetting ", self.nbMeeting, ", needed: ", upLvl[self.lvl - 1]["player"])
             return action
-        if self.hasArrived or self.isCalled:
+        elif self.isCalled or self.hasArrived:
             return "wait"
         self.toSend.put("Inventory")
         return "Look"
 
     def actionAi(self):
+        if self.currentCmd == "Connect_nbr":
+            return "wait"
+        if self.myId < 0:
+            self.currentCmd = "Connect_nbr"
+            return "Connect_nbr"
         action = "wait"
-        if self.incantation:
-            return action
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
                 action = self.checkAction()
@@ -432,15 +447,16 @@ class clientInfo:
 
     def mainLoop(self):
         run = 1
+        print(self.ai.myId)
         while (run > -1):
-            run = clientLib.client_select()
-            if self.serverCommunication(run) < 0:
-                return -1
             self.writeBuff = self.ai.actionAi()
             self.readBuff = None
             if (self.writeBuff != "wait"):
                 self.writeBuff += '\n'
                 clientLib.test(self.writeBuff.encode('utf-8'))
+            run = clientLib.client_select()
+            if self.serverCommunication(run) < 0:
+                return -1
         return 0
 
 
@@ -469,7 +485,7 @@ class clientInfo:
 
 # ---------------------- BEGIN PROGRAM ----------------------
 
-def manageFlags(port, teamName, myIp):
+def manageFlags(port, teamName):
     if (port == None or teamName == None):
         print("wrong flags")
         exit(84)
@@ -504,7 +520,7 @@ def main():
             teamName = arg + '\n'
         elif opt in ("-h"):
             myIp = arg
-    manageFlags(port, teamName, myIp)
+    manageFlags(port, teamName)
     if (myIp == None):
         myIp = "127.0.0.1"
     mySocket = clientLib.create_client(ctypes.c_char_p(myIp.encode('utf-8')), ctypes.c_int(int(port)))
@@ -513,6 +529,7 @@ def main():
         return 84
     myClient = clientInfo(mySocket)
     myClient.connection(teamName)
+    myClient.ai.team = teamName[:-1]
     myClient.mainLoop()
     return 0
 

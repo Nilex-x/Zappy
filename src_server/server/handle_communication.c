@@ -16,8 +16,6 @@ int read_client(server_t *info, client_t *client)
     char *read_buffer = NULL;
     int read_value = -1;
 
-    if (client->trant)
-        printf("%d: [%d][%d]\n", client->socket, client->trant->tile->x, client->trant->tile->y);
     read_buffer = malloc(sizeof(char) * LENGTH_COMMAND);
     if (!read_buffer)
         return (-1);
@@ -32,7 +30,6 @@ int read_client(server_t *info, client_t *client)
         return (-1);
     }
     read_buffer[read_value] = '\0';
-    printf("READ: [%s]\n", read_buffer);
     add_to_write(client->buff_read, read_buffer, LENGTH_COMMAND);
     free(read_buffer);
     return (0);
@@ -47,7 +44,6 @@ void write_client(server_t *info, int s_client)
     char *data = get_next_data_to_send(&client->data_send);
     int len = (data) ? strlen(data) : 0;
 
-    printf("WRITE: [%s]\n", data);
     while (w_value < len && w_value > 0) {
         if (len < LENGTH_COMMAND)
             value_write = len;

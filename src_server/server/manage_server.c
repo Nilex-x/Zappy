@@ -61,7 +61,9 @@ void handler_connection(server_t *info)
     int retsel = 0;
     struct timeval time;
 
+
     while (1) {
+        trantorians_t *curr = info->data->trants;
         clear_list(info);
         TIMESPEC_TO_TIMEVAL(&time, &info->time_left);
         retsel = select(info->max_fd + 1, &info->rfds, &info->wfds,
@@ -71,5 +73,9 @@ void handler_connection(server_t *info)
         refill_map(info);
         verif_life(info);
         find_win(info->data);
+        while (curr != NULL) {
+            printf("id:%d [%d][%d], lvl[%d]\n", curr->client->socket, curr->tile->x, curr->tile->y, curr->lvl);
+            curr = curr->next;
+        }
     }
 }
