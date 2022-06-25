@@ -97,13 +97,15 @@ public class Main : MonoBehaviour
     public GameObject MountainSlopping;
     public GameObject FlyingShip;
 
-    public GameObject level1;
     public GameObject level2;
     public GameObject level3;
     public GameObject level4;
     public GameObject level5;
     public GameObject level6;
     public GameObject level7;
+    public GameObject level8;
+
+    private List<GameObject> levels = new List<GameObject>();
 
     private int count = 0;
     public GameObject foodPrefab;
@@ -379,10 +381,19 @@ public class Main : MonoBehaviour
                 if (map.teams[i_team].players[i_player].playerTag == int.Parse(content[1])) {
                     map.teams[i_team].players[i_player].level += 1;
                     foreach (Transform player in playerParent.GetComponentsInChildren<Transform>()) {
-                        int team = int.Parse(player.name.Split(",")[0]);
-                        int tag = int.Parse(player.name.Split(",")[1]);
-                        if (team == i_team && tag == i_player) {
-                            Debug.Log("Nice cock");
+                        if (player.name.ToString().IndexOf(",") != -1) {
+                            string team = player.name.Split(",")[0];
+                            int tag = int.Parse(player.name.Split(",")[1]);
+
+                            if (team == map.teams[i_team].name && tag == map.teams[i_team].players[i_player].playerTag) {
+                                map.teams[i_team].playersObj.Add(Instantiate(levels[map.teams[i_team].players[i_player].level - 2]));
+                                map.teams[i_team].playersObj[map.teams[i_team].playersObj.Count - 1].transform.position =  player.transform.position;
+                                map.teams[i_team].playersObj[map.teams[i_team].playersObj.Count - 1].transform.SetParent(playerParent.transform);
+                                map.teams[i_team].playersObj[map.teams[i_team].playersObj.Count - 1].name = player.name;
+                                Destroy(player.gameObject);
+                                map.teams[i_team].playersObj.Remove(player.gameObject);
+                                return;
+                            }
                         }
                     }
                 }
@@ -416,11 +427,15 @@ public class Main : MonoBehaviour
 
     private void ArrowsTimeUnit()
     {
+        int time_unit = map.time_unit;
+        int augment = 1;
+
         if (Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.Tab)) {
-            NetworkManager.WriteServer("sst " + (map.time_unit + 1));
-        } else if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.Tab)) {
+            time_unit+=augment;
+        } 
+        if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.Tab)) {
             if (map.time_unit > 2) {
-                NetworkManager.WriteServer("sst " + (map.time_unit - 1));
+                time_unit-=augment;
             }
         }
     }
@@ -469,7 +484,8 @@ public class Main : MonoBehaviour
                 }
             }
         }
-        created_tab = true;
+        if (map.teams.Count != 0)
+            created_tab = true;
     }
 
     private GameObject player_already_exist(Player player, Transform[] child, Transform reference, int pos) {
@@ -496,9 +512,6 @@ public class Main : MonoBehaviour
                         return;
                     for (int i = 0; i < team.nb_players; i++) {
                         GameObject player = player_already_exist(team.players[i], tab.GetComponents<Transform>(), child, i);
-                        // player.name = team.players[i].playerTag.ToString();
-                        // player.transform.SetParent(child, false);
-                        // player.transform.localPosition = new Vector3(player.transform.localPosition.x, -(3+i)*100, player.transform.localPosition.z);
                         player.transform.Find("player_id").GetComponent<TextMeshProUGUI>().text = team.players[i].playerTag.ToString();
                         player.transform.Find("player_lvl").GetComponent<TextMeshProUGUI>().text = team.players[i].level.ToString();
                         player.transform.Find("food").GetComponent<TextMeshProUGUI>().text = team.players[i].content.food.ToString();
@@ -558,6 +571,15 @@ public class Main : MonoBehaviour
                     Destroy(Temp);
                     map.teams[i_team].nb_players--;
                 }
+                foreach (Transform players in tab.GetComponentsInChildren<Transform>()) {
+                    if (players.name == map.teams[i_team].name) {
+                        foreach (Transform player in players.GetComponentsInChildren<Transform>()) {
+                            if (player.name == playerTag) {
+                                Destroy(player.gameObject);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -595,7 +617,7 @@ public class Main : MonoBehaviour
             );
             Debug.Log("Updated tile : " + content[1] + " " + content[2]);
         }
-        if (cmd.StartsWith("sgt ")) {
+        if (cmd.StartsWith("sgt ") || cmd.StartsWith("sst ")) {
             map.time_unit = int.Parse(content[1]);
             change_time_unit();
         }
@@ -636,6 +658,13 @@ void Start()
         Cursor.visible = false;
         if (NetworkManager.connected) {
             map.teams = new List<Team>();
+            levels.Add(level2);
+            levels.Add(level3);
+            levels.Add(level4);
+            levels.Add(level5);
+            levels.Add(level6);
+            levels.Add(level7);
+            levels.Add(level8);
             Debug.Log("Connected");
         } else {
             Debug.Log("Not connected");
