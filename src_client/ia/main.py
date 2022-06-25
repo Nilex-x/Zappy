@@ -289,14 +289,17 @@ class clientIA:
         for i in srvMsg:
             if not (i == ',' and x == ','):
                 res += i
+            else:
+                res += "empty,"
             x = i
         return res
 
     def look(self, srvMsg):
-        print("SRVMSG IN LOOK", srvMsg)
+        print("SRVMSG IN LOOK: ", srvMsg)
         i = 0
         srvMsg = srvMsg[1:-1]
         srvMsg = self.rmRedundantChar(srvMsg)
+        print("SRVMSG IN LOOK AFTER: ", srvMsg)
         look_list = srvMsg.split(",")
         ressource = self.checkRessourceForLevel()
         if (self.ressources["food"] < 10):
@@ -370,11 +373,14 @@ class clientIA:
         if self.isCalling:
             self.toSend.put("Inventory")
             self.toSend.put("Right")
-            self.toSend.put("Left")
+            self.toSend.put("Right")
             action = ("Broadcast here:" + str(self.lvl))
             print("nb arrived: ", self.nbArrived, ", nbMetting ", self.nbMeeting, ", needed: ", upLvl[self.lvl - 1]["player"])
             return action
-        if self.hasArrived or self.isCalled:
+        if self.hasArrived:
+            self.toSend.put("Inventory")
+            return "wait"
+        if self.isCalled:
             return "wait"
         self.toSend.put("Inventory")
         return "Look"
@@ -483,6 +489,7 @@ def displayHelp():
     print("\tname is the name of the team")
     print("\tmachine is the name of the machine; localhost by default")
     exit(0)
+
 
 def main():
     port = None
