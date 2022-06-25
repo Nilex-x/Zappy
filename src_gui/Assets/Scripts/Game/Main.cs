@@ -561,6 +561,7 @@ public class Main : MonoBehaviour
     private void KillPlayer(string playerTag)
     {
         GameObject Temp;
+        bool next = false;
 
         for (int i_team = 0; i_team < nb_teams; i_team++) {
             for (int i_player = 0; i_player < map.teams[i_team].nb_players; i_player++) {
@@ -574,8 +575,17 @@ public class Main : MonoBehaviour
                 foreach (Transform players in tab.GetComponentsInChildren<Transform>()) {
                     if (players.name == map.teams[i_team].name) {
                         foreach (Transform player in players.GetComponentsInChildren<Transform>()) {
+                            Debug.Log("Player nigga " + player);
                             if (player.name == playerTag) {
                                 Destroy(player.gameObject);
+                                next = true;
+                            }
+                            if (next == true) {
+                                foreach(Team team in map.teams) {
+                                    if (team.name == map.teams[i_team].name) {
+                                        player.position = new Vector3(player.position.x, player.position.y + 50, player.position.z);
+                                    }
+                                }
                             }
                         }
                     }
@@ -634,7 +644,7 @@ public class Main : MonoBehaviour
     }
 
     private void Update() {
-        CamMovement();
+        // CamMovement();
         ArrowsTimeUnit();
         TabShow();
         if (count > 1) {

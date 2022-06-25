@@ -1303,6 +1303,7 @@ GameObject:
   - component: {fileID: 869771446}
   - component: {fileID: 869771445}
   - component: {fileID: 869771448}
+  - component: {fileID: 869771449}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1430,6 +1431,32 @@ MonoBehaviour:
   tab_team2: {fileID: 8202453197488391374, guid: 500653f8bed2e520298138b9b2e5bbc7, type: 3}
   tab_player: {fileID: 6516424919470432922, guid: d1c58aa2f53164d6aaa330bc39187f9e, type: 3}
   nb_teams: 0
+--- !u!114 &869771449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869771444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 436275a13d4459746955fc6db5953473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _active: 1
+  _enableRotation: 1
+  _mouseSense: 1.8
+  _enableTranslation: 1
+  _translationSpeed: 55
+  _enableMovement: 1
+  _movementSpeed: 10
+  _boostedSpeed: 50
+  _boostSpeed: 304
+  _moveUp: 97
+  _moveDown: 101
+  _enableSpeedAcceleration: 1
+  _speedAccelerationFactor: 1.5
+  _initPositonButton: 114
 --- !u!1 &905408894
 GameObject:
   m_ObjectHideFlags: 0
