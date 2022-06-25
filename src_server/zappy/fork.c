@@ -28,20 +28,13 @@ egg_t *init_egg(trantorians_t *trant, int nb_eggs, int freq)
     egg->time_until_hatch = set_timespec(600, freq);
     egg_list->egg = egg;
     egg_list->next = NULL;
-    while (cur && cur->next)
-        cur = cur->next;
-    if (cur)
-        cur->next = egg_list;
-    else
-        trant->team->eggs = egg_list;
-    // (cur) ? (cur->next = egg_list) : (trant->team->eggs = egg_list);
+    for(; cur && cur->next; cur = cur->next);
+    (cur) ? (cur->next = egg_list) : (trant->team->eggs = egg_list);
     return (egg);
 }
 
 int fork_command(client_t *client, char **args, zappy_data_t *data)
 {
-    team_t *team = client->trant->team;
-    egg_list_t *temp = NULL;
     egg_t *tmp = data->eggs;
     int nb_eggs = 0;
 
@@ -50,16 +43,9 @@ int fork_command(client_t *client, char **args, zappy_data_t *data)
     for (; tmp && tmp->next; nb_eggs++, tmp = tmp->next);
     if (tmp) {
         tmp->next = init_egg(client->trant, nb_eggs + 1, data->freq);
-        temp = malloc(sizeof(egg_list_t));
-        temp->egg = tmp->next;
-        temp->next = team->eggs;
-        team->eggs = temp;
         egg_layed(client->trant, tmp->next, data);
     } else {
         data->eggs = init_egg(client->trant, nb_eggs + 1, data->freq);
-        team->eggs = malloc(sizeof(egg_list_t));
-        team->eggs->egg = data->eggs;
-        team->eggs->next = NULL;
         egg_layed(client->trant, data->eggs, data);
     }
     client->data_send = add_send(client->data_send, "ok\n");
