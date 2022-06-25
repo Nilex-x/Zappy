@@ -455,9 +455,9 @@ void unknown_gui_command(client_t *cli);
 
 void command_parameter(client_t *cli);
 
-void start_of_incantation(tile_t *tile, int level);
+void start_of_incantation(tile_t *tile, int level, zappy_data_t *data);
 
-void end_of_incantation(tile_t *tile, int level);
+void end_of_incantation(tile_t *tile, int level, zappy_data_t *data);
 
 void egg_laying(trantorians_t *trant, zappy_data_t *data);
 
