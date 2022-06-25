@@ -39,7 +39,7 @@ int eject(client_t *client, char **arg, zappy_data_t *data)
             move_trantorian(data->map, c->trant);
             c->trant->direction = dir;
             ejected = true;
-            expulsion_message(c->trant);
+            expulsion_message(c->trant, data);
             send_ejected_message(trant, c->trant);
         }
     if (ejected)

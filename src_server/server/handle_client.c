@@ -96,7 +96,6 @@ void accept_connect(server_t *info)
     int incomming_fd = accept(info->fd_server, (struct sockaddr *) &client, \
                                 &len);
     FD_SET(incomming_fd, &info->wfds);
-    printf("incoming: %d\n",incomming_fd);
     new_client = add_client(info, incomming_fd);
     new_client->data_send = add_send(new_client->data_send, "WELCOME\n");
     new_client->status = WRITE;

@@ -5,8 +5,6 @@
 ** client
 */
 
-// #include "lib.h"
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,7 +55,6 @@ void clear_fd()
     FD_ZERO(&info->writefds);
     FD_ZERO(&info->exceptfds);
     FD_SET(info->socket, &info->exceptfds);
-    FD_SET(0, &info->readfds);
     if (info->read_write == READ) {
         FD_SET(info->socket, &info->readfds);
     } else {

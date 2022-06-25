@@ -70,7 +70,7 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
     tile_t *tile = incanter->tile;
     trantorians_list_t *list = NULL;
 
-    for (trantorians_list_t *t = tile->trantorians; t; t = t->next)
+    for (trantorians_list_t *t = tile->trantorians; t; t = t->next) {
         if (t->trant->lvl == incanter->lvl && t->trant != incanter) {
             list = malloc(sizeof(trantorians_list_t));
             list->trant = t->trant;
@@ -78,25 +78,37 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
             incanter->incanting_with = list;
             list = NULL;
             t->trant->is_incanting = true;
+            t->trant->client->data_send =
+            add_send(t->trant->client->data_send, "Elevation underway\n");
         }
+    }
 }
 
 static int end_incantation(client_t *cli, zappy_data_t *data)
 {
     char *l = NULL;
+    trantorians_list_t *next = NULL;
 
     (void) data;
+    printf("INCANT\n");
     for (int i = 1; i < 7; i++)
         cli->trant->tile->ressources[i] -=
         DATA_INCANT[cli->trant->lvl - 1].ressources_required[i - 1];
-    cli->trant->lvl ++;
+    printf("LVLUP\n");
+    cli->trant->lvl++;
+    printf("LVL: %d\n", cli->trant->lvl);
     asprintf(&l, "Current level: %d\n", cli->trant->lvl);
-    end_of_incantation(cli->trant->tile, cli->trant->lvl);
+    printf("\033[0;32mTrantorian Level up lvl %d\033[0m\n", cli->trant->lvl);
+    end_of_incantation(cli->trant->tile, cli->trant->lvl, data);
     cli->data_send = add_send(cli->data_send, l);
-    for (trantorians_list_t *t = cli->trant->incanting_with; t; t = t->next) {
+    gui_player_level(cli, data->server);
+    for (trantorians_list_t *t = cli->trant->incanting_with; t; t = next) {
+        next = t->next;
         t->trant->client->data_send = add_send(t->trant->client->data_send, l);
         t->trant->is_incanting = false;
         t->trant->lvl++;
+        gui_player_level(t->trant->client, data->server);
+        free(t);
     }
     free(l);
     return 1;
@@ -121,7 +133,7 @@ int incantation(client_t *cli, char **arg, zappy_data_t *data)
     }
     if (cli->trant->action->time_left.tv_sec > 0
     || cli->trant->action->time_left.tv_nsec > 0) {
-        start_of_incantation(cli->trant->tile, cli->trant->lvl);
+        start_of_incantation(cli->trant->tile, cli->trant->lvl, data);
         start_incantation_for_everyone(cli->trant);
         cli->data_send = add_send(cli->data_send, "Elevation underway\n");
         return (0);
