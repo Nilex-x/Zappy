@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.53681797, g: 0.78196424, b: 0.94381815, a: 1}
+  m_IndirectSpecularColor: {r: 0.53683, g: 0.7819761, b: 0.9450248, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -660,6 +660,13 @@ MonoBehaviour:
   RockMedium: {fileID: 919132149155446097, guid: 741de0150f07e9840beae445cd954cfb, type: 3}
   MountainSlopping: {fileID: 919132149155446097, guid: e4148dc8c8062d543aae5ae8b6e21aa4, type: 3}
   FlyingShip: {fileID: 7795975927180455175, guid: de4e4d31372985b4ab7a2b47799efbd5, type: 3}
+  level1: {fileID: 0}
+  level2: {fileID: 0}
+  level3: {fileID: 0}
+  level4: {fileID: 0}
+  level5: {fileID: 0}
+  level6: {fileID: 0}
+  level7: {fileID: 0}
   foodPrefab: {fileID: 919132149155446097, guid: 9b5c812b7e5f69c2aa6af448233aab60, type: 3}
   linematePrefab: {fileID: 919132149155446097, guid: 0510994e7c3013d7388fe804069a90b6, type: 3}
   deraumerePrefab: {fileID: 919132149155446097, guid: e00cd99cb2e616598b7e84fe3baf2a59, type: 3}
@@ -667,7 +674,7 @@ MonoBehaviour:
   mendianePrefab: {fileID: 919132149155446097, guid: 0d6b6b74adaac62b4b611158f9de573a, type: 3}
   phirasPrefab: {fileID: 919132149155446097, guid: 71fc78157858a66888581cb8af894d78, type: 3}
   thystamePrefab: {fileID: 919132149155446097, guid: 175d106559b4e5bee9365c0a7867faa4, type: 3}
-  playerPrefab: {fileID: 1329802915595066745, guid: 71a14ce621a2be54e8e06f7722df3fef, type: 3}
+  playerPrefab: {fileID: 919132149155446097, guid: f2306e0d5373e664aa5e27a301771d16, type: 3}
   eggPrefab: {fileID: 0}
   tilePrefab: {fileID: 919132149155446097, guid: 8c507cf65e060caa88d4f20675f909f4, type: 3}
   tileParent: {fileID: 1257246384}
