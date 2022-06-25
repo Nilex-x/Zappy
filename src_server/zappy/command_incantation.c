@@ -87,6 +87,7 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
 static int end_incantation(client_t *cli, zappy_data_t *data)
 {
     char *l = NULL;
+    trantorians_list_t *next = NULL;
 
     (void) data;
     for (int i = 1; i < 7; i++)
@@ -98,11 +99,13 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
     end_of_incantation(cli->trant->tile, cli->trant->lvl, data);
     cli->data_send = add_send(cli->data_send, l);
     gui_player_level(cli, data->server);
-    for (trantorians_list_t *t = cli->trant->incanting_with; t; t = t->next) {
+    for (trantorians_list_t *t = cli->trant->incanting_with; t; t = next) {
+        next = t->next;
         t->trant->client->data_send = add_send(t->trant->client->data_send, l);
         t->trant->is_incanting = false;
         t->trant->lvl++;
         gui_player_level(t->trant->client, data->server);
+        free(t);
     }
     free(l);
     return 1;
