@@ -13,9 +13,8 @@ void command_parameter(client_t *cli)
     cli->data_send = add_send(cli->data_send, "sbp\n");
 }
 
-void start_of_incantation(tile_t *tile, int level)
+void start_of_incantation(tile_t *tile, int level, zappy_data_t *data)
 {
-    client_t *client = tile->trantorians->trant->client;
     char *str = NULL;
     char *temp = NULL;
 
@@ -28,26 +27,23 @@ void start_of_incantation(tile_t *tile, int level)
         }
     }
     str = strcatdup(str, "\n", "");
-    while (client->prev)
-        client = client->prev;
-    for (client_t *c = client; c; c = c->next) {
-        if (c->is_gui)
+    for (client_t *c = data->server->list_client; c; c = c->next) {
+        if (c->is_gui) {
             c->data_send = add_send(c->data_send, str);
+        }
     }
     free(str);
 }
 
-void end_of_incantation(tile_t *tile, int level)
+void end_of_incantation(tile_t *tile, int level, zappy_data_t *data)
 {
-    client_t *client = tile->trantorians->trant->client;
     char *str = NULL;
 
     asprintf(&str, "pie %ld %ld %d\n", tile->x, tile->y, level);
-    while (client->prev)
-        client = client->prev;
-    for (client_t *c = client; c; c = c->next) {
-        if (c->is_gui)
+    for (client_t *c = data->server->list_client; c; c = c->next) {
+        if (c->is_gui) {
             c->data_send = add_send(c->data_send, str);
+        }
     }
     free(str);
 }

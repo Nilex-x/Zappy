@@ -29,8 +29,9 @@ void player_connexion_for_egg(trantorians_t *t, egg_t *egg, zappy_data_t *data)
     (void) t;
     asprintf(&str, "ebo %d\n", egg->number);
     for (client_t *c = data->server->list_client; c; c = c->next) {
-        if (c->is_gui)
+        if (c->is_gui) {
             c->data_send = add_send(c->data_send, str);
+        }
     }
     free(str);
 }
