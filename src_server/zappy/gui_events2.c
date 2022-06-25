@@ -8,32 +8,28 @@
 #include "server.h"
 #include <stdio.h>
 
-void ressource_collecting(trantorians_t *t, int obj)
+void ressource_collecting(trantorians_t *t, int obj, zappy_data_t *data)
 {
     char *str = NULL;
-    client_t *client = t->client;
 
     asprintf(&str, "pgt %d %d\n", t->client->socket, obj);
-    while (client->prev)
-        client = client->prev;
-    for (client_t *c = client; c; c = c->next) {
-        if (c->is_gui)
+    for (client_t *c = data->server->list_client; c; c = c->next) {
+        if (c->is_gui) {
             c->data_send = add_send(c->data_send, str);
+        }
     }
     free(str);
 }
 
-void death_of_a_player(trantorians_t *t)
+void death_of_a_player(trantorians_t *t, zappy_data_t *data)
 {
     char *str = NULL;
-    client_t *client = t->client;
 
     asprintf(&str, "pdi %d\n", t->client->socket);
-    while (client->prev)
-        client = client->prev;
-    for (client_t *c = client; c; c = c->next) {
-        if (c->is_gui)
+    for (client_t *c = data->server->list_client; c; c = c->next) {
+        if (c->is_gui) {
             c->data_send = add_send(c->data_send, str);
+        }
     }
     free(str);
 }
@@ -41,27 +37,23 @@ void death_of_a_player(trantorians_t *t)
 void end_of_game(team_t *team, zappy_data_t *data)
 {
     char *str = NULL;
-    client_t *client = data->trants->client;
 
     asprintf(&str, "seg %s\n", team->name);
-    while (client->prev)
-        client = client->prev;
-    for (client_t *c = client; c; c = c->next) {
-        if (c->is_gui)
+    for (client_t *c = data->server->list_client; c; c = c->next) {
+        if (c->is_gui) {
             c->data_send = add_send(c->data_send, str);
+        }
     }
     free(str);
 }
 
-void message_from_server(client_t *cli, char *str)
+void message_from_server(client_t *cli, char *str, zappy_data_t *data)
 {
-    client_t *client = cli;
-
-    while (client->prev)
-        client = client->prev;
-    for (client_t *c = client; c; c = c->next) {
-        if (c->is_gui)
+    (void) cli;
+    for (client_t *c = data->server->list_client; c; c = c->next) {
+        if (c->is_gui) {
             c->data_send = add_send(c->data_send, str);
+        }
     }
 }
 

@@ -27,7 +27,7 @@ void verif_life(server_t *info)
             temp->client->is_quit = true;
             temp->client->data_send = add_send(temp->client->data_send,
             "dead\n");
-            death_of_a_player(temp);
+            death_of_a_player(temp, info->data);
         } else if (temp->timeleft.tv_sec <= 0 && temp->timeleft.tv_nsec <= 0) {
             temp->inventory[0]--;
             temp->timeleft = set_timespec(126, info->data->freq);

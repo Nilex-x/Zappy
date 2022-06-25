@@ -75,7 +75,7 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
         client->data_send = add_send(client->data_send, "ko\n");
         return 0;
     }
-    broadcast_message(current, args);
+    broadcast_message(current, args, data);
     while (current != NULL) {
         dir = find_path(client->trant, current, data);
         cdir = current->direction;
