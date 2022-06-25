@@ -62,8 +62,8 @@ void write_client(server_t *info, int s_client)
 static void free_data(zappy_data_t *data)
 {
     free_trants(data->trants);
+    free_eggs(&data->eggs);
     free_teams(data->teams);
-    free_eggs(data->eggs);
     free_map(data->map);
     free(data);
 }

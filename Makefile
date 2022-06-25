@@ -19,6 +19,7 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/server/manage_time.c \
 						src_server/zappy/inventory.c \
 						src_server/zappy/fork.c \
+						src_server/zappy/manage_eggs.c \
 						src_server/zappy/manage_team.c \
 						src_server/zappy/manage_trantorians.c \
 						src_server/zappy/sort_command.c \
@@ -32,12 +33,12 @@ SRC_SERVER		=		src_server/server/server.c \
 						src_server/zappy/handle_look_command.c \
 						src_server/zappy/handle_look_command_2.c \
 						src_server/zappy/command_object.c \
-						src_server/zappy/manage_map_time.c \
 						src_server/zappy/gui_events1.c \
 						src_server/zappy/gui_events2.c \
 						src_server/zappy/gui_events3.c \
 						src_server/zappy/gui_events4.c \
-						src_server/zappy/handle_win.c
+						src_server/zappy/handle_win.c \
+						src_server/zappy/manage_map_time.c
 
 OBJ_SERVER		=		$(SRC_SERVER:.c=.o)
 

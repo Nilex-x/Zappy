@@ -64,6 +64,8 @@ void get_shortest_time(server_t *info)
             find_time(&smallest, t->action->time_left);
         find_time(&smallest, t->timeleft);
     }
+    for (egg_t *e = info->data->eggs; e; e = e->next)
+        find_time(&smallest, e->time_until_hatch);
     find_time(&smallest, info->data->map->timeleft);
     if (smallest.tv_sec < 0)
         smallest.tv_sec = 0;
