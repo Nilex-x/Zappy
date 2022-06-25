@@ -28,7 +28,7 @@ trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *t
     return (new);
 }
 
-void free_trantoriant(trantorians_t *trant)
+static void free_trantoriant(trantorians_t *trant)
 {
     action_t *temp = NULL;
 
@@ -67,14 +67,13 @@ void remove_trantoriant(zappy_data_t *data, trantorians_t *torm)
     }
 }
 
-void free_trant(trantorians_t *trant)
+void free_trants(trantorians_t *trantorians)
 {
     trantorians_t *next = NULL;
 
-    while (trant) {
-        next = trant->next;
-        free(trant->team_name);
-        free(trant);
-        trant = next;
+    while (trantorians) {
+        next = trantorians->next;
+        free_trantoriant(trantorians);
+        trantorians = next;
     }
 }

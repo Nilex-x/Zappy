@@ -51,19 +51,6 @@ map_t *map_create(size_t width, size_t height)
     return (map);
 }
 
-void free_trantorians(trantorians_t *trantorians)
-{
-    trantorians_t *next = NULL;
-
-    while (trantorians) {
-        next = trantorians->next;
-        if (trantorians->team_name)
-            free(trantorians->team_name);
-        free(trantorians);
-        trantorians = next;
-    }
-}
-
 void free_tile(tile_t *tile)
 {
     if (tile == NULL)
@@ -74,8 +61,14 @@ void free_tile(tile_t *tile)
 
 void free_map(map_t *map)
 {
+    trantorians_list_t * next = NULL;
+
     for (size_t i = 0; i < map->width; i++) {
         for (size_t j = 0; j < map->height; j++) {
+            for (trantorians_list_t *temp = map->tiles[i][j]->trantorians; temp; temp = next) {
+                next = temp->next;
+                free(temp);
+            }
             free_tile(map->tiles[i][j]);
         }
         free(map->tiles[i]);

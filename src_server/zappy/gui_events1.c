@@ -69,15 +69,12 @@ void broadcast_message(trantorians_t *t, char **args)
     free(str);
 }
 
-void ressource_dropping(trantorians_t *t, int obj)
+void ressource_dropping(trantorians_t *t, int obj, zappy_data_t *data)
 {
     char *str = NULL;
-    client_t *client = t->client;
 
     asprintf(&str, "pdr %d %d\n", t->client->socket, obj);
-    while (client->prev)
-        client = client->prev;
-    for (client_t *c = client; c; c = c->next) {
+    for (client_t *c = data->server->list_client; c; c = c->next) {
         if (c->is_gui)
             c->data_send = add_send(c->data_send, str);
     }

@@ -77,10 +77,13 @@ int create_socket(server_t *info)
     my_addr.sin_addr.s_addr = INADDR_ANY;
     if (bind(info->fd_server, (struct sockaddr *) &my_addr, len) == -1) {
         perror("Bind()");
+        close_server(info);
         return -1;
     }
-    if (listen(info->fd_server, SOMAXCONN) == -1)
+    if (listen(info->fd_server, SOMAXCONN) == -1) {
+        close_server(info);
         return -1;
+    }
     info->max_fd = info->fd_server;
     FD_ZERO(&info->rfds);
     FD_ZERO(&info->wfds);
