@@ -503,4 +503,6 @@ void refill_map(server_t *info);
 */
 void free_trants(trantorians_t *trantorians);
 
+char *get_tile_content(int x, int y, zappy_data_t *data);
+
 #endif /* !ZAPPY_H_ */
