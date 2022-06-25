@@ -7,7 +7,8 @@
 
 NAME = libmap.a
 
-SRC = $(shell find -name '*.c')
+SRC = $(shell find -name '*.c') \
+	  ../lib/strcatdup.c
 
 OBJ = $(SRC:.c=.o)
 

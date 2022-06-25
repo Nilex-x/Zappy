@@ -433,43 +433,45 @@ int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 */
 int incantation(client_t *cli, char **arg, zappy_data_t *data);
 
-void new_player_connect(trantorians_t *t);
+void new_player_connect(trantorians_t *t, zappy_data_t *data);
 
 void gui_connect_new_player(client_t *gui, zappy_data_t *data);
 
-void expulsion_message(trantorians_t *t);
+void expulsion_message(trantorians_t *t, zappy_data_t *data);
 
-void broadcast_message(trantorians_t *t, char **args);
+void broadcast_message(trantorians_t *t, char **args, zappy_data_t *data);
 
-void ressource_dropping(trantorians_t *t, int obj);
+void ressource_dropping(trantorians_t *t, int obj, zappy_data_t *data);
 
-void ressource_collecting(trantorians_t *t, int obj);
+void ressource_collecting(trantorians_t *t, int obj, zappy_data_t *data);
 
-void death_of_a_player(trantorians_t *t);
+void death_of_a_player(trantorians_t *t, zappy_data_t *data);
 
 void end_of_game(team_t *team, zappy_data_t *data);
 
-void message_from_server(client_t *cli, char *str);
+void message_from_server(client_t *cli, char *str, zappy_data_t *data);
 
 void unknown_gui_command(client_t *cli);
 
 void command_parameter(client_t *cli);
 
-void start_of_incantation(tile_t *tile, int level);
+void start_of_incantation(tile_t *tile, int level, zappy_data_t *data);
 
-void end_of_incantation(tile_t *tile, int level);
+void end_of_incantation(tile_t *tile, int level, zappy_data_t *data);
 
-void egg_laying(trantorians_t *trant);
+void egg_laying(trantorians_t *trant, zappy_data_t *data);
 
-void egg_layed(trantorians_t *t, egg_t *egg);
+void egg_layed(trantorians_t *t, egg_t *egg, zappy_data_t *data);
 
-void egg_hatching(egg_t *egg, tile_t *tile);
+void egg_hatching(egg_t *egg, tile_t *tile, zappy_data_t *data);
 
-void player_connexion_for_egg(trantorians_t *t, egg_t *egg);
+void player_connexion_for_egg(trantorians_t *t, egg_t *egg, zappy_data_t *data);
 
 void death_hatched_egg(egg_t *egg, zappy_data_t *data);
 
 void gui_player_level(client_t *client, server_t *info);
+
+char *get_content(int new_x, int new_y, map_t *map, char *line);
 
 /*
 ** @brief Find if a team win a game
@@ -493,5 +495,14 @@ void remove_trant_in_team(team_t *team, trantorians_t *torm);
 ** @param info Server data struct
 */
 void refill_map(server_t *info);
+
+/*
+** @brief Free all trantorians
+**
+** @param trantorians
+*/
+void free_trants(trantorians_t *trantorians);
+
+char *get_tile_content(int x, int y, zappy_data_t *data);
 
 #endif /* !ZAPPY_H_ */

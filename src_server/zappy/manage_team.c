@@ -94,11 +94,12 @@ void free_teams(team_t *teams)
 {
     team_t *next = NULL;
     trantorians_list_t *next_list = NULL;
-    trantorians_list_t *list = teams->list;
+    trantorians_list_t *list = NULL;
 
     while (teams) {
         next = teams->next;
         free(teams->name);
+        list = teams->list;
         while (list) {
             next_list = list->next;
             free(list);
