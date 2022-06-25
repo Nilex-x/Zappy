@@ -73,15 +73,15 @@ int broadcast(client_t *client, char **args, zappy_data_t *data)
     int cdir = 0;
 
     broadcast_message(current, args);
-    printf("----------------------------------FROM [%d][%d]\n", client->trant->tile->x, client->trant->tile->y);
+    printf("----------------------------------FROM [%d][%d], [%d]\n", client->trant->tile->x, client->trant->tile->y, client->trant->direction);
     while (current != NULL) {
         if (current->client->socket != client->socket) {
-            printf("----------------------------------to [%d][%d]\n", current->tile->x, current->tile->y);
+            printf("----------------------------------to [%d][%d], [%d]\n", current->tile->x, current->tile->y, current->direction);
             dir = find_path(client->trant, current, data);
             cdir = current->direction;
-            printf("DIR: %d\n", dir);
             if (dir)
                 dir = (dir + cdir * 2) % (8 + (dir + cdir * 2 == 8));
+            printf("DIR: %d\n", dir);
             asprintf(&buff, "message %d, %s\n", dir, args[1]);
             current->client->data_send = add_send(current->client->data_send, buff);
             free(buff);

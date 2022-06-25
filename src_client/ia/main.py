@@ -84,7 +84,6 @@ upLvl = [
 ]
 
 directions = {
-    0 : "wait",
     1 : "Forward",
     2 : "Forward",
     3 : "Left",
@@ -139,7 +138,7 @@ class clientIA:
         }
 
     def handleMessages(self, servMsg):
-        if self.incantation or self.hasArrived or self.lvl == 1:
+        if self.incantation or self.lvl == 1:
             return 0
         msg = servMsg.split(",")
         content = msg[1].split(":")
@@ -149,18 +148,21 @@ class clientIA:
 
         if msg[1].find("here:") >= 0:
             if self.isCalling:
-                print("STOP")
                 self.isCalling = False
+                self.ejected()
+                self.setRessources()
                 return 0
             if self.isCalled:
                 if direction == 0 and not self.hasArrived:
-                    print("SEND ARRIVED")
+                    self.ejected()
                     self.toSend.put("Broadcast arrived:" + str(self.lvl))
                     self.hasArrived = True
                     return 0
+                if direction == 0:
+                    return 0
                 self.toSend.put(directions[direction])
             else:
-                if self.ressources["food"] >= 8:
+                if self.ressources["food"] >= 12:
                     self.isCalled = True
                     self.toSend.put("Broadcast coming:" + str(self.lvl))
 
@@ -173,6 +175,7 @@ class clientIA:
 
         elif msg[1].find("arrived:") >= 0 and self.isCalling:
             self.nbArrived += 1
+            print("ARRIVED: ", self.nbArrived)
         return 0
 
 
@@ -227,11 +230,11 @@ class clientIA:
         for rsc in inv:
             a = rsc.split()
             self.ressources[a[0]] = int(a[1])
-        if self.checkRessourceForLevel() == None and self.ressources["food"] >= 8:
+        if self.checkRessourceForLevel() == None and self.ressources["food"] >= 10:
             self.isCalling = True
         if self.isCalling and self.ressources["food"] <= 3:
             self.isCalling = False
-            self.nbArrived = 0
+            self.nbArrived = 1
             self.nbMeeting = 1
             self.toSend.put("Broadcast cancel:" + str(self.lvl))
 
@@ -272,17 +275,6 @@ class clientIA:
             self.nbMeeting = 1
         self.ressources[ressource] -= 1
 
-    # def searchFood(self, look_list):
-    #     i = 0
-
-    #     for x in look_list:
-    #         if x.find("food") >= 0:
-    #             self.findPathToTile(i)
-    #             self.toSend.put("Take food")
-    #         else:
-    #             i += 1
-
-
     def rmRedundantChar(self, srvMsg):
         x = 'x'
         res = ""
@@ -295,15 +287,16 @@ class clientIA:
         return res
 
     def look(self, srvMsg):
-        print("SRVMSG IN LOOK: ", srvMsg)
         i = 0
         srvMsg = srvMsg[1:-1]
         srvMsg = self.rmRedundantChar(srvMsg)
-        print("SRVMSG IN LOOK AFTER: ", srvMsg)
         look_list = srvMsg.split(",")
         ressource = self.checkRessourceForLevel()
-        if (self.ressources["food"] < 10):
+        if (self.ressources["food"] < 15):
             ressource = "food"
+        if ressource == None:
+            self.toSend.put("Forward")
+            return 0
         for x in look_list:
             if x.find(ressource) >= 0:
                 if self.findPathToTile(i):
@@ -317,7 +310,7 @@ class clientIA:
 
 
     def ejected(self):
-        while (not self.cmds.empty()):
+        while (not self.toSend.empty()):
             self.toSend.get()
         return 1
 
@@ -366,7 +359,10 @@ class clientIA:
         return 1
 
     def checkAction(self):
+        if self.incantation:
+            return "wait"
         if self.nbArrived >= self.nbMeeting and self.isCalling and self.nbMeeting >= upLvl[self.lvl - 1]["player"]:
+            self.ejected()
             self.setRessources()
             self.toSend.put("Incantation")
             return "wait"
@@ -374,21 +370,18 @@ class clientIA:
             self.toSend.put("Inventory")
             self.toSend.put("Right")
             self.toSend.put("Right")
+            self.toSend.put("Right")
+            self.toSend.put("Right")
             action = ("Broadcast here:" + str(self.lvl))
             print("nb arrived: ", self.nbArrived, ", nbMetting ", self.nbMeeting, ", needed: ", upLvl[self.lvl - 1]["player"])
             return action
-        if self.hasArrived:
-            self.toSend.put("Inventory")
-            return "wait"
-        if self.isCalled:
+        if self.isCalled or self.hasArrived:
             return "wait"
         self.toSend.put("Inventory")
         return "Look"
 
     def actionAi(self):
         action = "wait"
-        if self.incantation:
-            return action
         if self.toSend.empty():
             if self.cmds.empty() and self.currentCmd == "Nothing":
                 action = self.checkAction()
@@ -439,14 +432,14 @@ class clientInfo:
     def mainLoop(self):
         run = 1
         while (run > -1):
-            run = clientLib.client_select()
-            if self.serverCommunication(run) < 0:
-                return -1
             self.writeBuff = self.ai.actionAi()
             self.readBuff = None
             if (self.writeBuff != "wait"):
                 self.writeBuff += '\n'
                 clientLib.test(self.writeBuff.encode('utf-8'))
+            run = clientLib.client_select()
+            if self.serverCommunication(run) < 0:
+                return -1
         return 0
 
 
