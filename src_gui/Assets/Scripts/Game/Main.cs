@@ -79,6 +79,11 @@ public class Map {
     public int time_unit;
 }
 
+public class Incantation {
+    public int x;
+    public int y;
+}
+
 public class Main : MonoBehaviour
 {
     public GameObject EnvironnementHandler;
@@ -105,7 +110,13 @@ public class Main : MonoBehaviour
     public GameObject level7;
     public GameObject level8;
 
+    public GameObject incantationAnimation;
+
     private List<GameObject> levels = new List<GameObject>();
+    private List<GameObject> incantationsObj = new List<GameObject>();
+    private List <Incantation> incantations = new List<Incantation>();
+
+    int nbr_incantation = 0;
 
     private int count = 0;
     public GameObject foodPrefab;
@@ -600,6 +611,28 @@ public class Main : MonoBehaviour
         }
     }
 
+    private void StopIncantation(int x, int y)
+    {
+        for (int i_incantation = 0; i_incantation < nbr_incantation; i_incantation++) {
+            if (incantations[i_incantation].x == x && incantations[i_incantation].y == y) {
+                incantations.RemoveAt(i_incantation);
+                Destroy(incantationsObj[i_incantation]);
+                incantationsObj.RemoveAt(i_incantation);
+                nbr_incantation--;
+            }
+        }
+    }
+
+    private void StartIncantation(int x, int y)
+    {
+        incantations.Add(new Incantation());
+        incantations[nbr_incantation].x = x;
+        incantations[nbr_incantation].y = y;
+        incantationsObj.Add(Instantiate(incantationAnimation));
+        incantationsObj[nbr_incantation].transform.position = new Vector3(x * TileOffset, 2, y * TileOffset);
+        nbr_incantation++;
+    }
+
     private void HandleCommand(string cmd)
     {
         Debug.Log("Command: " + cmd);
@@ -647,6 +680,10 @@ public class Main : MonoBehaviour
             UpdatePlayerLevel(content);
         if (cmd.StartsWith("pdi "))
             KillPlayer(content[1]);
+        if (cmd.StartsWith("pic "))
+            StartIncantation(int.Parse(content[1]), int.Parse(content[2]));
+        if (cmd.StartsWith("pie "))
+            StopIncantation(int.Parse(content[1]), int.Parse(content[2]));
     }
 
     private void Update() {

@@ -1411,6 +1411,7 @@ MonoBehaviour:
   level6: {fileID: 2920734694046939340, guid: 2ff03f2485218747ba118be40de1da9f, type: 3}
   level7: {fileID: 6577800454995538900, guid: 819f136bb8d5fc341b1260fa42869a83, type: 3}
   level8: {fileID: 3672289455031062178, guid: 0171a0fc95674024f92d357eaef5c45e, type: 3}
+  incantationAnimation: {fileID: 6669984189317516750, guid: a2ee62b859884d41386471bacad434c1, type: 3}
   foodPrefab: {fileID: 919132149155446097, guid: 9b5c812b7e5f69c2aa6af448233aab60, type: 3}
   linematePrefab: {fileID: 919132149155446097, guid: 0510994e7c3013d7388fe804069a90b6, type: 3}
   deraumerePrefab: {fileID: 919132149155446097, guid: e00cd99cb2e616598b7e84fe3baf2a59, type: 3}
