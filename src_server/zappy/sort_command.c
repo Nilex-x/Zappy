@@ -147,7 +147,6 @@ static int append_action(trantorians_t *trant, char **args, int pos, zappy_data_
         curr->next = new;
     else {
         trant->action = new;
-        (new->action == &incantation) ? printf("New action is incantation !\n") : 0;
         (new->action == &incantation) ? incantation(trant->client, args, data)
         : 0;
     }
@@ -218,8 +217,6 @@ void handle_command(server_t *info, client_t *cli)
 {
     char *value = NULL;
     value = read_to_buffer(cli->buff_read, '\n', LENGTH_COMMAND);
-    // for (int i = 0; value[i]; i++)
-    //     printf("char %c value: %d\n", value[i], value[i]);
     if (!value || value[0] == '\n' || value[0] == 0) {
         free(value);
         return;
