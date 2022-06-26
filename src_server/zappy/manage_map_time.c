@@ -43,9 +43,7 @@ void verif_egg_life(server_t *info)
     egg_t *temp = info->data->eggs;
     egg_t *next = NULL;
 
-    printf("verif egg life\n");
     while (temp) {
-        printf("egg client: %d sec: %ld usec: %ld\n", (temp->cli != NULL), temp->time_until_hatch.tv_sec, temp->time_until_hatch.tv_nsec);
         next = temp->next;
         if (temp->time_until_hatch.tv_sec <= 0
         && temp->time_until_hatch.tv_nsec <= 0) {
