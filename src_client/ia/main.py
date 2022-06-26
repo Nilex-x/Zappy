@@ -179,9 +179,7 @@ class clientIA:
             self.hasArrived = False
 
         elif content[0].find("coming") >= 0 and self.isCalling:
-            print("meet: ", self.nbMeeting)
             self.nbMeeting += 1
-            print("--------------------------------------------meet: ", self.nbMeeting)
 
         elif content[0].find("arrived") >= 0 and self.isCalling:
             self.nbArrived += 1
@@ -195,7 +193,6 @@ class clientIA:
                     if (r == "food"):
                         continue
                     if (upLvl[lvl][r] > self.ressources[r]):
-                        print("need ",upLvl[lvl][r], self.ressources[r], r, self.lvl)
                         return r
         return (None)
 
@@ -325,8 +322,6 @@ class clientIA:
 
 
     def serverResponse(self, srvMsg):
-        print("CURRENT: ", self.currentCmd)
-        print("SRVMSG: [" + srvMsg + "]")
         if srvMsg == None:
             return 1
         if srvMsg == "dead":
@@ -374,10 +369,7 @@ class clientIA:
     def checkAction(self):
         if self.incantation:
             return "wait"
-        print("iscalling: ", self.isCalling)
-        print("1: nb arrived: ", self.nbArrived, ", nbMetting ", self.nbMeeting, ", needed: ", upLvl[self.lvl - 1]["player"])
         if (self.nbArrived >= self.nbMeeting) and self.isCalling and (self.nbMeeting >= upLvl[self.lvl - 1]["player"]):
-            print("ALLAH")
             self.ejected()
             self.setRessources()
             return ("Incantation")
@@ -388,11 +380,9 @@ class clientIA:
             self.toSend.put("Right")
             self.toSend.put("Right")
             action = ("Broadcast here:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
-            print("2: nb arrived: ", self.nbArrived, ", nbMetting ", self.nbMeeting, ", needed: ", upLvl[self.lvl - 1]["player"])
             return action
         if self.isCalled or self.hasArrived:
             return "wait"
-        print("WAT ????????????????")
         self.toSend.put("Inventory")
         return "Look"
 
@@ -439,7 +429,6 @@ class clientInfo:
             res = clientLib.read_server(self.socket)
             result = ctypes.cast(res, ctypes.c_char_p)
             self.readBuff = result.value.decode('utf-8')
-            print("[" + self.readBuff + "]")
             if self.readBuff == "end":
                 print("dead")
                 return -1
@@ -452,7 +441,6 @@ class clientInfo:
 
     def mainLoop(self):
         run = 1
-        print(self.ai.myId)
         while (run > -1):
             self.writeBuff = self.ai.actionAi()
             self.readBuff = None
