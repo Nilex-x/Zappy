@@ -22,7 +22,7 @@ team_t *get_team_by_name(char *name, zappy_data_t *data)
     return (NULL);
 }
 
-team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team)
+team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team, bool is_egg)
 {
     trantorians_list_t *new = NULL;
     trantorians_list_t *temp = team->list;
@@ -30,7 +30,7 @@ team_t *add_trantoriant_to_team(trantorians_t *trant, team_t *team)
     new = malloc(sizeof(trantorians_list_t));
     if (!new)
         return (NULL);
-    team->nb_player++;
+    (is_egg) ? team->egg_players++ : team->nb_player++;
     new->trant = trant;
     new->next = NULL;
     trant->team = team;
@@ -56,6 +56,8 @@ team_t *create_team(char *name, zappy_data_t *data)
     new->player_max = data->max_teams_player;
     new->next = NULL;
     new->list = NULL;
+    new->eggs = NULL;
+    new->egg_players = 0;
     if (!data->teams) {
         data->teams = new;
         return (new);
@@ -66,12 +68,12 @@ team_t *create_team(char *name, zappy_data_t *data)
     return (new);
 }
 
-void remove_trant_in_team(team_t *team, trantorians_t *torm)
+void remove_trant_in_team(team_t *team, trantorians_t *torm, bool is_egg)
 {
     trantorians_list_t *temp = team->list;
     trantorians_list_t *prev = NULL;
 
-    team->nb_player--;
+    (is_egg) ? team->egg_players-- : team->nb_player--;
     if (!torm)
         return;
     if (temp->trant == torm) {

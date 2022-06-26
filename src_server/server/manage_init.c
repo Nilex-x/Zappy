@@ -31,7 +31,7 @@ void init_data_struct(server_t *info)
     return;
 }
 
-void init_trantoriant(client_t *cli, server_t *info, team_t *team)
+void init_trantoriant(client_t *cli, server_t *info, team_t *team, bool fr_egg)
 {
     cli->trant->timeleft = set_timespec(126, info->data->freq);
     cli->trant->lvl = 1;
@@ -41,10 +41,14 @@ void init_trantoriant(client_t *cli, server_t *info, team_t *team)
     cli->trant->nb_action = 0;
     cli->trant->is_incanting = false;
     cli->trant->incanting_with = NULL;
+    cli->trant->nb_action = 0;
+    cli->trant->egg_born = fr_egg;
     for (int i = 1; i < 7; i++)
         cli->trant->inventory[i] = 0;
-    trantorian_spawn(info->data->map, cli->trant);
-    add_trantoriant_to_team(cli->trant, team);
+    if (!fr_egg) {
+        trantorian_spawn(info->data->map, cli->trant);
+        add_trantoriant_to_team(cli->trant, team, fr_egg);
+    }
 }
 
 void clear_list(server_t *info)

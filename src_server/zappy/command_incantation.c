@@ -90,13 +90,10 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
     trantorians_list_t *next = NULL;
 
     (void) data;
-    printf("INCANT\n");
     for (int i = 1; i < 7; i++)
         cli->trant->tile->ressources[i] -=
         DATA_INCANT[cli->trant->lvl - 1].ressources_required[i - 1];
-    printf("LVLUP\n");
     cli->trant->lvl++;
-    printf("LVL: %d\n", cli->trant->lvl);
     asprintf(&l, "Current level: %d\n", cli->trant->lvl);
     printf("\033[0;32mTrantorian Level up lvl %d\033[0m\n", cli->trant->lvl);
     end_of_incantation(cli->trant->tile, cli->trant->lvl, data);
@@ -110,6 +107,7 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
         gui_player_level(t->trant->client, data->server);
         free(t);
     }
+    cli->trant->incanting_with = NULL;
     free(l);
     return 1;
 }
