@@ -47,6 +47,7 @@ client_t *add_client(server_t *info, int client)
     node->data_send = NULL;
     node->is_quit = false;
     node->is_gui = false;
+    node->egg = NULL;
     init_buff_client(node);
     return (node);
 }

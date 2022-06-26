@@ -110,6 +110,7 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
         gui_player_level(t->trant->client, data->server);
         free(t);
     }
+    cli->trant->incanting_with = NULL;
     free(l);
     return 1;
 }
