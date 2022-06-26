@@ -507,6 +507,7 @@ public class Main : MonoBehaviour
         new_obj.name = player.playerTag.ToString();
         new_obj.transform.SetParent(reference, false);
         new_obj.transform.localPosition = new Vector3(new_obj.transform.localPosition.x, new_obj.transform.localPosition.y - pos*100, new_obj.transform.localPosition.z);
+        new_obj.transform.Find("food").GetComponent<TextMeshProUGUI>().text = "10";
         return new_obj;
     }
 
