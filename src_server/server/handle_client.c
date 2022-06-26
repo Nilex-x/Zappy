@@ -47,6 +47,7 @@ client_t *add_client(server_t *info, int client)
     node->data_send = NULL;
     node->is_quit = false;
     node->is_gui = false;
+    node->egg = NULL;
     init_buff_client(node);
     return (node);
 }
@@ -68,8 +69,8 @@ void remove_client(server_t *info, int client)
     client_t *cli = find_client(info, client);
 
     if (info->list_client->socket == client) {
-        info->list_client = info->list_client->next;
         remove_trantoriant(info->data, cli->trant);
+        info->list_client = info->list_client->next;
         free(cli->buff_read);
         free_data_send(cli->data_send);
         free(cli);
@@ -77,9 +78,9 @@ void remove_client(server_t *info, int client)
     }
     for (client_t *temp = info->list_client; temp; temp = temp->next) {
         if (temp->socket == client) {
+            remove_trantoriant(info->data, temp->trant);
             temp->prev->next = temp->next;
             (temp->next) ? (temp->next->prev = temp->prev) : 0;
-            remove_trantoriant(info->data, temp->trant);
             free(temp->buff_read);
             free_data_send(temp->data_send);
             free(temp);

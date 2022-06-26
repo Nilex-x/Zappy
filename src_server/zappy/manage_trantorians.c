@@ -32,7 +32,7 @@ static void free_trantoriant(trantorians_t *trant)
 {
     action_t *temp = NULL;
 
-    remove_trant_in_team(trant->team, trant);
+    remove_trant_in_team(trant->team, trant, (trant->egg_born) ? true : false);
     free(trant->team_name);
     while (trant->action) {
         temp = trant->action;
@@ -50,6 +50,7 @@ void remove_trantoriant(zappy_data_t *data, trantorians_t *torm)
 
     if (!torm)
         return;
+    death_of_a_player(torm, data);
     if (temp == torm) {
         data->trants = temp->next;
         free_trantoriant(torm);

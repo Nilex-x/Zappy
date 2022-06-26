@@ -46,6 +46,10 @@ static void sort_select_return(int ret, server_t *info)
         do_action(info);
         info->data->map->timeleft = sub_timespec(info->data->map->timeleft,
         info->time_ref);
+        for (egg_t *egg = info->data->eggs; egg; egg = egg->next) {
+            egg->time_until_hatch = sub_timespec(egg->time_until_hatch,
+                info->time_ref);
+        }
     }
     if (ret > 0) {
         select_interupt(info);
@@ -73,9 +77,6 @@ void handler_connection(server_t *info)
         refill_map(info);
         verif_life(info);
         find_win(info->data);
-        while (curr != NULL) {
-            printf("id:%d [%d][%d], lvl[%d]\n", curr->client->socket, curr->tile->x, curr->tile->y, curr->lvl);
-            curr = curr->next;
-        }
+        verif_egg_life(info);
     }
 }
