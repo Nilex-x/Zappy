@@ -63,7 +63,7 @@ void get_shortest_time(server_t *info)
     struct timespec smallest = set_timespec(900, info->data->freq);
 
     for (trantorians_t *t = info->data->trants; t; t = t->next) {
-        if (t->action)
+        if (t->action && !t->is_incanting)
             find_time(&smallest, t->action->time_left);
         find_time(&smallest, t->timeleft);
     }
