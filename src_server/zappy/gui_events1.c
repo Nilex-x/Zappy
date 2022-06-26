@@ -12,18 +12,6 @@ void new_player_connect(trantorians_t *t, zappy_data_t *data)
 {
     char *str = NULL;
 
-    if (!t->client->socket)
-        printf("Pas de chaussettes\n");
-    if (!t->tile->x)
-        printf("Pas de x dans tile\n");
-    if (!t->tile->y)
-        printf("Pas de y dans tile\n");
-    if (!t->direction)
-        printf("Pas de direction\n");
-    if (!t->lvl)
-        printf("Pas de lvl %d\n", t->lvl);
-    if (!t->team->name)
-        printf("Pas de team\n");
     asprintf(&str, "pnw #%d %ld %ld %d %d %s\n", t->client->socket,
     t->tile->x, t->tile->y, t->direction + 1, t->lvl, t->team->name);
     for (client_t *c = data->server->list_client; c; c = c->next) {
