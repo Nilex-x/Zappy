@@ -74,7 +74,7 @@ void handler_connection(server_t *info)
         verif_life(info);
         find_win(info->data);
         while (curr != NULL) {
-            printf("id:%d [%d][%d], lvl[%d]\n", curr->client->socket, curr->tile->x, curr->tile->y, curr->lvl);
+            printf("id:%d [%d][%d], lvl[%d], food[%d]\n", curr->client->socket, curr->tile->x, curr->tile->y, curr->lvl, curr->inventory[0]);
             curr = curr->next;
         }
     }
