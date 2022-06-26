@@ -386,7 +386,7 @@ class clientIA:
         if srvMsg.find("Current level") >= 0:
             self.incantation = False
             self.lvl = int(srvMsg.split()[2])
-            print("Level up " + self.lvl)
+            print("Level up " + str(self.lvl))
             if self.currentCmd != "Incantation":
                 return 1
         if self.incantation and srvMsg == "ko":
