@@ -41,6 +41,7 @@ void verif_life(server_t *info)
         } else if (temp->timeleft.tv_sec <= 0 && temp->timeleft.tv_nsec <= 0) {
             temp->inventory[0]--;
             temp->timeleft = set_timespec(126, info->data->freq);
+            printf("ID: [%d], FOOD: [%d]\n", temp->client->socket, temp->inventory[0]);
         }
         temp = temp->next;
     }
