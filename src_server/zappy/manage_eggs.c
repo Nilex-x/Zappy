@@ -76,7 +76,6 @@ void kill_egg(egg_t *egg, zappy_data_t *data)
     death_hatched_egg(egg, data);
     delete_egg_in_team(egg, egg->team);
     if (egg == tmp) {
-        printf("HERE\n");
         data->eggs = tmp->next;
         free(tmp);
         return;

@@ -175,7 +175,6 @@ int sort_command(client_t *client, zappy_data_t *data, char *arg)
         unknown_gui_command(client);
     free_array(args);
     client->data_send = add_send(client->data_send, "ko\n");
-    fprintf(stderr, "unknown command: [%s] (%d)\n", arg, (client->buff_read->rdonly - client->buff_read->buffer));
     return (1);
 }
 
@@ -221,7 +220,6 @@ void handle_command(server_t *info, client_t *cli)
         free(value);
         return;
     }
-    printf("buffer value: [%s]\n", value);
     if (!strcasecmp(value, "gui") || !strcasecmp(value, "graphic")) {
         connect_gui(cli, info->data);
         free(value);

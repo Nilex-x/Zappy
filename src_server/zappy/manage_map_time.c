@@ -32,7 +32,6 @@ void verif_life(server_t *info)
 
     while (temp) {
         if (temp->inventory[0] <= 0) {
-            printf("\033[1;31mTrantorian dead\033[0m\n");
             temp->client->is_quit = true;
             temp->client->data_send = add_send(temp->client->data_send,
             "dead\n");

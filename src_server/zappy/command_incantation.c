@@ -70,6 +70,7 @@ static void start_incantation_for_everyone(trantorians_t *incanter)
     tile_t *tile = incanter->tile;
     trantorians_list_t *list = NULL;
 
+    printf("\033[0;35mIncantation Trantorian level %d to level %d\033[0m\n", incanter->lvl, incanter->lvl + 1);
     for (trantorians_list_t *t = tile->trantorians; t; t = t->next) {
         if (t->trant->lvl == incanter->lvl && t->trant != incanter) {
             list = malloc(sizeof(trantorians_list_t));
@@ -115,7 +116,6 @@ static int end_incantation(client_t *cli, zappy_data_t *data)
 int incantation(client_t *cli, char **arg, zappy_data_t *data)
 {
     action_t *tmp = NULL;
-    printf("INCANT\n");
 
     (void) arg;
     if (check_trant(data->map, cli->trant) == -1
