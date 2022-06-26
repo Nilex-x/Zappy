@@ -76,10 +76,8 @@ void delete_egg_in_team(egg_t *egg, team_t *team)
 {
     egg_list_t *tmp = team->eggs;
     egg_list_t *to_del = NULL;
-    printf("Start find egg\n");
 
     if (tmp->egg == egg) {
-        printf("first egg in team\n");
         team->eggs = tmp->next;
         free(tmp);
         return;

@@ -21,8 +21,15 @@ static void interrupt_sig(int sigint)
 
 static void print_help(void)
 {
-    printf("USAGE:\t./myteams_server port\n\n\tport ");
-    printf("is the port number on which the server socket listens\n\n");
+    printf("USAGE: ./zappy_server -p port -x width -y height -n name1 ");
+    printf("name2 ... -c clientNb -f freq\n\tport ");
+    printf("is the port number on which the server socket listens\n");
+    printf("\twidth      is the width of the world\n");
+    printf("\theight     is the height of the world\n");
+    printf("\tnameX      is the name of the team X\n");
+    printf("\tclientNb   is the number of authorized clients per team\n");
+    printf("\tfreq       is the reciprocal of the time unit for execution ");
+    printf("of actions\n");
 }
 
 int main(int argc, char **argv)
