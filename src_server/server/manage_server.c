@@ -43,6 +43,7 @@ static void sort_select_return(int ret, server_t *info)
         perror("select()");
     }
     if (ret == 0) {
+        printf(" = 0 / sec: %d, nsec: %d\n", info->time_ref.tv_sec, info->time_ref.tv_nsec);
         do_action(info);
         info->data->map->timeleft = sub_timespec(info->data->map->timeleft,
         info->time_ref);
@@ -52,6 +53,7 @@ static void sort_select_return(int ret, server_t *info)
         }
     }
     if (ret > 0) {
+        printf(" > 0\n");
         select_interupt(info);
         for (client_t *temp = info->list_client; temp; temp = next) {
             next = temp->next;
