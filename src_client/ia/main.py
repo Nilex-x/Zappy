@@ -100,7 +100,7 @@ directions = {
 
 class clientIA:
     def __init__(self):
-        self.myId = -1
+        self.myId = -2
         self.nbClients = -1
         self.team = None
         self.height = -1
@@ -112,6 +112,9 @@ class clientIA:
         self.hasArrived = False # est arrivé
         self.isCalling = False # attend suffisement d'allié pour incanter
         self.elevation = False
+        self.uturn = 0
+        self.fork = False
+        self.following = -1
         self.lvl = 1
         self.N = None
         self.M = None
@@ -155,34 +158,53 @@ class clientIA:
         if content[0].find("here") >= 0:
             if self.isCalling and sendId > self.myId:
                 return 0
-            if self.isCalling and sendId <= self.myId:
+            if self.isCalling and sendId < self.myId:
+                self.nbMeeting = 1
+                self.nbArrived = 1
+                self.following = sendId
                 self.isCalling = False
                 self.isCalled = True
                 self.ejected()
                 self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
+                self.toSend.put("Broadcast cancel:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
             if self.isCalled and not self.hasArrived:
+                if self.following > sendId:
+                    self.following = sendId
+                    self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
                 if direction == 0:
                     self.ejected()
                     self.toSend.put("Broadcast arrived:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
                     self.hasArrived = True
                     return 0
+                if direction == 5:
+                    self.uturn += 1
+                if direction == 1 and self.uturn == 3:
+                    self.toSend.put("Right")
+                    self.uturn = 0
                 self.toSend.put(directions[direction])
+
             if not self.isCalled:
                 if self.ressources["food"] >= 30:
                     self.ejected()
                     self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
                     self.isCalling = False
                     self.isCalled = True
+                    self.following = sendId
 
-        elif content[0].find("cancel") >= 0 and self.isCalled:
+        elif content[0].find("cancel") >= 0 and self.isCalled and self.following == sendId:
             self.isCalled = False
             self.hasArrived = False
+            self.following = -1
 
         elif content[0].find("coming") >= 0 and self.isCalling:
             self.nbMeeting += 1
 
         elif content[0].find("arrived") >= 0 and self.isCalling:
             self.nbArrived += 1
+
+        elif content[0].find("feed") >= 0 and self.isCalling:
+            self.nbArrived -= 1
+            self.nbMeeting -= 1
         return 0
 
 
@@ -231,18 +253,29 @@ class clientIA:
         return (0)
 
     def inventory(self, srvMsg):
+        food = 30
+        if self.lvl >= 6:
+            food = 40
         srvMsg = srvMsg[1:-1]
         inv = srvMsg.split(",")
         for rsc in inv:
             a = rsc.split()
             self.ressources[a[0]] = int(a[1])
-        if self.checkRessourceForLevel() == None and self.ressources["food"] >= 30:
+        if self.ressources["food"] >= 10 and self.fork:
+            self.toSend.put("Fork")
+            self.fork = False
+        if self.lvl != 8 and self.checkRessourceForLevel() == None and self.ressources["food"] >= food:
             self.isCalling = True
         if self.isCalling and self.ressources["food"] <= 5:
             self.isCalling = False
             self.nbArrived = 1
             self.nbMeeting = 1
+            self.fork = True
             self.toSend.put("Broadcast cancel:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
+        if self.hasArrived and self.ressources["food"] <= 5:
+            self.hasArrived = False
+            self.isCalled = False
+            self.toSend.put("Broadcast feed:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
 
     # def setRessourcesFromTile(self, look_list, t):
     #     tile = {
@@ -291,13 +324,15 @@ class clientIA:
         return res
 
     def look(self, srvMsg):
+        ressource = None
         if self.isCalling or self.isCalled:
             return 0
         i = 0
         srvMsg = srvMsg[1:-1]
         srvMsg = self.rmRedundantChar(srvMsg)
         look_list = srvMsg.split(",")
-        ressource = self.checkRessourceForLevel()
+        if self.lvl != 8:
+            ressource = self.checkRessourceForLevel()
         if (self.ressources["food"] < 40):
             ressource = "food"
         if ressource == None:
@@ -305,7 +340,7 @@ class clientIA:
             return 0
         for x in look_list:
             if x.find(ressource) >= 0:
-                if self.findPathToTile(i):
+                if self.findPathToTile(i) and self.lvl != 8:
                     # self.toSend.put("Take " + ressource)
                     self.checkTile(ressource)
                     return 1
@@ -326,15 +361,20 @@ class clientIA:
             return 1
         if srvMsg == "dead":
             return -1
-        if self.myId < 0:
-            if self.currentCmd != "Connect_nbr":
-                return 0
-            self.myId = int(srvMsg)
         if srvMsg.find("eject") >= 0:
             return self.ejected()
         if srvMsg.find("message") >= 0:
-            return self.handleMessages(srvMsg)
+            if self.myId != -2:
+                return self.handleMessages(srvMsg)
+        if self.myId == -2:
+            if self.currentCmd == "Connect_nbr":
+                self.myId = int(srvMsg)
+            else:
+                return 0
         curr = self.currentCmd.split()[0]
+        if self.currentCmd == "Take Food":
+            if srvMsg == "ko":
+                self.toSend.put("Right")
         if srvMsg == "Elevation underway":
             self.nbArrived = 1
             self.nbMeeting = 1
@@ -346,6 +386,7 @@ class clientIA:
         if srvMsg.find("Current level") >= 0:
             self.incantation = False
             self.lvl = int(srvMsg.split()[2])
+            print("Level up " + self.lvl)
             if self.currentCmd != "Incantation":
                 return 1
         if self.incantation and srvMsg == "ko":
@@ -381,7 +422,9 @@ class clientIA:
             self.toSend.put("Right")
             action = ("Broadcast here:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
             return action
-        if self.isCalled or self.hasArrived:
+        if self.hasArrived:
+            self.toSend.put("Inventory")
+        if self.isCalled:
             return "wait"
         self.toSend.put("Inventory")
         return "Look"
