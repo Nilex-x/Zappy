@@ -47,37 +47,6 @@ void free_eggs_list(egg_list_t **egg_list)
     }
 }
 
-static int remove_egg_in_team(egg_t *torm, team_t *team)
-{
-    egg_list_t *next = NULL;
-    egg_list_t *prev = NULL;
-
-
-    printf("Start find egg\n");
-    if (!team->eggs)
-        return;
-    printf("egg is in temm\n");
-    if (torm == team->eggs->egg) {
-        printf("first egg in temm\n");
-        next = team->eggs;
-        team->eggs = team->eggs->next;
-        free(next);
-        return;
-    }
-    for (egg_list_t *egg = team->eggs; egg; egg = next) {
-        printf("find free egg in team\n");
-        next = egg->next;
-        if (egg->egg == torm) {
-            printf("find egg in team\n");
-            prev->next = egg->next;
-            free(egg);
-            break;
-        }
-        prev = egg;
-    }
-    return;
-}
-
 void kill_egg(egg_t *egg, zappy_data_t *data)
 {
     egg_t *tmp = data->eggs;
