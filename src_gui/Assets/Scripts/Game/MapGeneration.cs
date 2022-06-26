@@ -34,7 +34,7 @@ public class MapGeneration : MonoBehaviour
         environnement.details[environnement.nb_details].transform.position =
             new Vector3((float)(mapTilesX * TileOffset)/2, 0, (float)(mapTilesY * TileOffset)/2);
         environnement.details[environnement.nb_details].transform.localScale =
-            new Vector3(maxMapTiles * 0.3f, maxMapTiles * 0.3f, maxMapTiles * 0.3f);
+            new Vector3(maxMapTiles * 0.35f, maxMapTiles * 0.35f, maxMapTiles * 0.35f);
             environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
         environnement.details[environnement.nb_details].name = "Main Island";
         environnement.nb_details++;
@@ -42,7 +42,7 @@ public class MapGeneration : MonoBehaviour
         environnement.details[environnement.nb_details].transform.position =
             new Vector3((float)(mapTilesX * TileOffset)/2, 0.1f, (float)(mapTilesY * TileOffset)/2);
         environnement.details[environnement.nb_details].transform.localScale =
-            new Vector3(maxMapTiles * 0.3f, maxMapTiles * 0.3f, maxMapTiles * 0.3f);
+            new Vector3(maxMapTiles * 0.35f, maxMapTiles * 0.35f, maxMapTiles * 0.35f);
         environnement.details[environnement.nb_details].transform.SetParent(EnvironnementHandler.transform);
         environnement.details[environnement.nb_details].name = "Main Island Ground";
         environnement.nb_details++;
