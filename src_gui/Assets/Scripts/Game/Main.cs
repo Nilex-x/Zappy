@@ -588,7 +588,7 @@ public class Main : MonoBehaviour
                             }
                             if (next == true) {
                                 foreach(Team team in map.teams) {
-                                    if (team.name == map.teams[i_team].name) {
+                                    if (team.name == map.teams[i_team].name && player.name != map.teams[i_team].name) {
                                         player.position = new Vector3(player.position.x, player.position.y + 50, player.position.z);
                                     }
                                 }
