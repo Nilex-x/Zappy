@@ -44,6 +44,9 @@ void select_interupt(server_t *info)
             t->action->time_left = sub_timespec(t->action->time_left, to_sub);
         t->timeleft = sub_timespec(t->timeleft, to_sub);
     }
+    for (egg_t *egg = info->data->eggs; egg; egg = egg->next) {
+        egg->time_until_hatch = sub_timespec(egg->time_until_hatch, to_sub);
+    }
 }
 
 void find_time(struct timespec *small, struct timespec value)
@@ -64,6 +67,8 @@ void get_shortest_time(server_t *info)
             find_time(&smallest, t->action->time_left);
         find_time(&smallest, t->timeleft);
     }
+    for (egg_t *e = info->data->eggs; e; e = e->next)
+        find_time(&smallest, e->time_until_hatch);
     find_time(&smallest, info->data->map->timeleft);
     if (smallest.tv_sec < 0)
         smallest.tv_sec = 0;

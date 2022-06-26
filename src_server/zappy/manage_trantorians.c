@@ -32,7 +32,7 @@ static void free_trantoriant(trantorians_t *trant)
 {
     action_t *temp = NULL;
 
-    remove_trant_in_team(trant->team, trant);
+    remove_trant_in_team(trant->team, trant, (trant->egg_born) ? true : false);
     free(trant->team_name);
     while (trant->action) {
         temp = trant->action;
