@@ -442,44 +442,174 @@ int gui_time_unit_modif(client_t *cli, char **args, zappy_data_t *data);
 */
 int incantation(client_t *cli, char **arg, zappy_data_t *data);
 
+/*
+** @brief Send notif for new connection player
+**
+** @param t New trantorian connected
+** @param data
+*/
 void new_player_connect(trantorians_t *t, zappy_data_t *data);
 
+/*
+** @brief Send all player connected
+**
+** @param gui Gui client
+** @param data Data struct
+*/
 void gui_connect_new_player(client_t *gui, zappy_data_t *data);
 
+/*
+** @brief Gui eject notification
+**
+** @param t Trantorian to eject other player
+** @param data Data struct
+*/
 void expulsion_message(trantorians_t *t, zappy_data_t *data);
 
+/*
+** @brief Command gui of broadcast
+**
+** @param t Trantorian send message on broadcast
+** @param args Argument of broadcast
+** @param data Data struct
+*/
 void broadcast_message(trantorians_t *t, char **args, zappy_data_t *data);
 
+/*
+** @brief Notification gui when ressources was dropped by a player
+**
+** @param t Trantorian drop a item on ground
+** @param obj Item dropped
+** @param data Data struct
+*/
 void ressource_dropping(trantorians_t *t, int obj, zappy_data_t *data);
 
+/*
+** @brief Notification gui when ressources was collected by a player
+**
+** @param t Trantorian collected a item
+** @param obj Item collected
+** @param data Data struct
+*/
 void ressource_collecting(trantorians_t *t, int obj, zappy_data_t *data);
 
+/*
+** @brief Notification gui when player was dead
+**
+** @param t Trantorian dead
+** @param data Data struct
+*/
 void death_of_a_player(trantorians_t *t, zappy_data_t *data);
 
+/*
+** @brief Nofication of end game
+**
+** @param team Team Won
+** @param data Data struct
+*/
 void end_of_game(team_t *team, zappy_data_t *data);
 
+/*
+** @brief Send message from server to gui
+**
+** @param cli Client do the command
+** @param str Message for gui
+** @param data Data struct
+*/
 void message_from_server(client_t *cli, char *str, zappy_data_t *data);
 
+/*
+** @brief Notification when the command id unknown
+**
+** @param cli Client who do command
+*/
 void unknown_gui_command(client_t *cli);
 
+/*
+** @brief Does it
+**
+** @param cli Client who do command
+*/
 void command_parameter(client_t *cli);
 
+/*
+** @brief Notification when incantation started
+**
+** @param tile Tile where they do incantation
+** @param level Current level
+** @param data Data struct
+*/
 void start_of_incantation(tile_t *tile, int level, zappy_data_t *data);
 
+/*
+** @brief Notification when incantation end
+**
+** @param tile Tile where they do incantation
+** @param level next level
+** @param data Data struct
+*/
 void end_of_incantation(tile_t *tile, int level, zappy_data_t *data);
 
+/*
+** @brief
+**
+** @param trant
+** @param data Data struct
+*/
 void egg_laying(trantorians_t *trant, zappy_data_t *data);
 
+/*
+** @brief
+**
+** @param t
+** @param egg
+** @param data Data struct
+*/
 void egg_layed(trantorians_t *t, egg_t *egg, zappy_data_t *data);
 
+/*
+** @brief Notification when egg was hatched
+**
+** @param egg Egg hatched
+** @param tile Tile where egg hatched
+** @param data Data struct
+*/
 void egg_hatching(egg_t *egg, tile_t *tile, zappy_data_t *data);
 
+/*
+** @brief Notification when player was hatched of a egg
+**
+** @param t Trantorian hatched
+** @param egg
+** @param data
+*/
 void player_connexion_for_egg(trantorians_t *t, egg_t *egg, zappy_data_t *data);
 
+/*
+** @brief Notification when a egg dead
+**
+** @param egg Egg to dead
+** @param data Data struct
+*/
 void death_hatched_egg(egg_t *egg, zappy_data_t *data);
 
+/*
+** @brief Notification when player level up
+**
+** @param client Client whe do command
+** @param info Server data struct
+*/
 void gui_player_level(client_t *client, server_t *info);
 
+/*
+** @brief Add Content per line
+**
+** @param new_x X position
+** @param new_y Y position
+** @param map Map struct
+** @param line Line to add
+** @return char *
+*/
 char *get_content(int new_x, int new_y, map_t *map, char *line);
 
 /*
@@ -512,20 +642,92 @@ void refill_map(server_t *info);
 */
 void free_trants(trantorians_t *trantorians);
 
+/*
+** @brief Get the tile content
+**
+** @param x X position of tile
+** @param y Y position
+** @param data Data struct
+** @return char*
+*/
 char *get_tile_content(int x, int y, zappy_data_t *data);
 
+/*
+** @brief Add client in egg
+**
+** @param cli CLient to add
+** @param info info struct data
+** @param team Team to egg
+** @return true
+** @return false
+*/
 bool added_in_egg(client_t *cli, server_t *info, team_t *team);
 
+/*
+** @brief Remove egg in a team
+**
+** @param egg Egg to remove
+** @param team Team to remove egg
+*/
 void delete_egg_in_team(egg_t *egg, team_t *team);
 
+/*
+** @brief Remove a egg
+**
+** @param egg Egg to remove
+** @param data Data struct to remove egg
+*/
 void kill_egg(egg_t *egg, zappy_data_t *data);
 
+/*
+** @brief Egg hatching with player
+**
+** @param egg
+** @param data
+*/
 void egg_hatching_with_player(egg_t *egg, zappy_data_t *data);
 
+/*
+** @brief Free eggs struct
+**
+** @param egg Egg struct to free
+*/
 void free_eggs(egg_t **egg);
 
+/*
+** @brief Free egg list
+**
+** @param egg_list Egg list to remove
+*/
 void free_eggs_list(egg_list_t **egg_list);
 
+/*
+** @brief Free egg in data
+**
+** @param egg Egg struct to remove
+** @param data Data struct
+*/
+void free_egg_in_data(egg_t *egg, zappy_data_t *data);
+
+/*
+** @brief Verif life of eggs
+**
+** @param info Info struct data
+*/
 void verif_egg_life(server_t *info);
+
+/*
+** @brief Verif life of trantorian
+**
+** @param info Info struct data
+*/
+void verif_life(server_t *info);
+
+/*
+** @brief Does action for trantorian
+**
+** @param info Info struct data
+*/
+void do_action(server_t *info);
 
 #endif /* !ZAPPY_H_ */

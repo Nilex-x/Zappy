@@ -8,6 +8,26 @@
 #include "server.h"
 #include <stdio.h>
 
+void free_egg_in_data(egg_t *egg, zappy_data_t *data)
+{
+    egg_t *tmp = data->eggs;
+
+    if (tmp == egg) {
+        delete_egg_in_team(egg, egg->team);
+        data->eggs = tmp->next;
+        free(tmp);
+        return;
+    }
+    for (; tmp->next; tmp = tmp->next) {
+        if (tmp->next == egg) {
+            tmp->next = tmp->next->next;
+            delete_egg_in_team(egg, egg->team);
+            free(egg);
+            return;
+        }
+    }
+}
+
 void egg_hatching_with_player(egg_t *egg, zappy_data_t *data)
 {
     char *line = NULL;
@@ -17,12 +37,13 @@ void egg_hatching_with_player(egg_t *egg, zappy_data_t *data)
     asprintf(&line, "%d\n", (egg->team->player_max - egg->team->nb_player));
     egg->cli->data_send = add_send(egg->cli->data_send, line);
     free(line);
-    add_trantoriant_to_team(egg->cli->trant, egg->team, true);
+    init_trantoriant(egg->cli, data->server, egg->team, true);
     trantorian_spawn_from_tile(egg->cli->trant, egg->tile);
     new_player_connect(egg->cli->trant, data);
     asprintf(&line, "%d %d\n", data->width, data->height);
     egg->cli->data_send = add_send(egg->cli->data_send, line);
     free(line);
+    free_egg_in_data(egg, data);
 }
 
 void free_eggs(egg_t **egg)

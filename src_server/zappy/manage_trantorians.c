@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include <stdio.h>
 
 trantorians_t *create_add_trantoriant(client_t *cli, zappy_data_t *data, char *team_name)
 {
@@ -50,6 +51,7 @@ void remove_trantoriant(zappy_data_t *data, trantorians_t *torm)
 
     if (!torm)
         return;
+    printf("\033[1;31mTrantorian %d level %d joined the god of death\033[0m\n", temp->client->socket, temp->lvl);
     death_of_a_player(torm, data);
     if (temp == torm) {
         data->trants = temp->next;

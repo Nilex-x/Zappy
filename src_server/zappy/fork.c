@@ -82,8 +82,10 @@ void delete_egg_in_team(egg_t *egg, team_t *team)
         free(tmp);
         return;
     }
-    while (tmp->next->egg != egg)
+    while (tmp->next->egg != egg || !tmp)
         tmp = tmp->next;
+    if (!tmp)
+        return;
     to_del = tmp->next;
     tmp->next = tmp->next->next;
     free(to_del);
