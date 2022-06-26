@@ -167,8 +167,6 @@ class clientIA:
                     self.hasArrived = True
                     return 0
                 self.toSend.put(directions[direction])
-                if direction == 5:
-                    self.toSend.put("Left")
             if not self.isCalled:
                 if self.ressources["food"] >= 30:
                     self.ejected()
