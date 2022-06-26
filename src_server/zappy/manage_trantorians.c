@@ -50,6 +50,7 @@ void remove_trantoriant(zappy_data_t *data, trantorians_t *torm)
 
     if (!torm)
         return;
+    death_of_a_player(torm, data);
     if (temp == torm) {
         data->trants = temp->next;
         free_trantoriant(torm);
