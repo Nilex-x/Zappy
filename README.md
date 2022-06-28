@@ -21,7 +21,7 @@ make
 
 # launch GUI
 ``` bash
-./bin/zappy.x86_64
+./zappy_gui
 ```
 
 ![Action build status](https://github.com/Nilex-x/Zappy/actions/workflows/cmake.yml/badge.svg)
