@@ -2,8 +2,10 @@
 
 ## Zappy is simulation of life
 
-# instalation
+# installation
 ``` bash
+git clone https://github.com/Nilex-x/Zappy.git
+cd Zappy
 make
 ```
 
