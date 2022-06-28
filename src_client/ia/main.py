@@ -145,67 +145,70 @@ class clientIA:
     def handleMessages(self, servMsg):
         if self.incantation or self.lvl == 1:
             return 0
-        msg = servMsg.split(",")
-        content = msg[1].split(":")
-        target = content[1].split(".")
-        sendTeam = target[0]
-        sendId = int(target[1])
-        sendLvl = int(target[2])
-        direction = int(msg[0].split()[1])
-        if (sendLvl != self.lvl) or (sendTeam != self.team):
-            return 0
-
-        if content[0].find("here") >= 0:
-            if self.isCalling and sendId > self.myId:
+        try:
+            msg = servMsg.split(",")
+            content = msg[1].split(":")
+            target = content[1].split(".")
+            sendTeam = target[0]
+            sendId = int(target[1])
+            sendLvl = int(target[2])
+            direction = int(msg[0].split()[1])
+            if (sendLvl != self.lvl) or (sendTeam != self.team):
                 return 0
-            if self.isCalling and sendId < self.myId:
-                self.nbMeeting = 1
-                self.nbArrived = 1
-                self.following = sendId
-                self.isCalling = False
-                self.isCalled = True
-                self.ejected()
-                self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
-                self.toSend.put("Broadcast cancel:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
-            if self.isCalled and not self.hasArrived:
-                if self.following > sendId:
-                    self.following = sendId
-                    self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
-                if direction == 0:
-                    self.ejected()
-                    self.toSend.put("Broadcast arrived:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
-                    self.hasArrived = True
-                    return 0
-                if direction == 5:
-                    self.uturn += 1
-                if direction == 1 and self.uturn == 3:
-                    self.toSend.put("Right")
-                    self.uturn = 0
-                self.toSend.put(directions[direction])
 
-            if not self.isCalled:
-                if self.ressources["food"] >= 30:
-                    self.ejected()
-                    self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
+            if content[0].find("here") >= 0:
+                if self.isCalling and sendId > self.myId:
+                    return 0
+                if self.isCalling and sendId < self.myId:
+                    self.nbMeeting = 1
+                    self.nbArrived = 1
+                    self.following = sendId
                     self.isCalling = False
                     self.isCalled = True
-                    self.following = sendId
+                    self.ejected()
+                    self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
+                    self.toSend.put("Broadcast cancel:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
+                if self.isCalled and not self.hasArrived:
+                    if self.following > sendId:
+                        self.following = sendId
+                        self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
+                    if direction == 0:
+                        self.ejected()
+                        self.toSend.put("Broadcast arrived:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
+                        self.hasArrived = True
+                        return 0
+                    if direction == 5:
+                        self.uturn += 1
+                    if direction == 1 and self.uturn == 3:
+                        self.toSend.put("Right")
+                        self.uturn = 0
+                    self.toSend.put(directions[direction])
 
-        elif content[0].find("cancel") >= 0 and self.isCalled and self.following == sendId:
-            self.isCalled = False
-            self.hasArrived = False
-            self.following = -1
+                if not self.isCalled:
+                    if self.ressources["food"] >= 30:
+                        self.ejected()
+                        self.toSend.put("Broadcast coming:" + self.team + "." + str(self.myId) + "." + str(self.lvl))
+                        self.isCalling = False
+                        self.isCalled = True
+                        self.following = sendId
 
-        elif content[0].find("coming") >= 0 and self.isCalling:
-            self.nbMeeting += 1
+            elif content[0].find("cancel") >= 0 and self.isCalled and self.following == sendId:
+                self.isCalled = False
+                self.hasArrived = False
+                self.following = -1
 
-        elif content[0].find("arrived") >= 0 and self.isCalling:
-            self.nbArrived += 1
+            elif content[0].find("coming") >= 0 and self.isCalling:
+                self.nbMeeting += 1
 
-        elif content[0].find("feed") >= 0 and self.isCalling:
-            self.nbArrived -= 1
-            self.nbMeeting -= 1
-        return 0
+            elif content[0].find("arrived") >= 0 and self.isCalling:
+                self.nbArrived += 1
+
+            elif content[0].find("feed") >= 0 and self.isCalling:
+                self.nbArrived -= 1
+                self.nbMeeting -= 1
+            return 0
+        except:
+            return 0
 
 
     def checkRessourceForLevel(self):
